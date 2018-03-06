@@ -13,14 +13,15 @@ class DataController: NSObject {
 //  var managedObjectContext: NSManagedObjectContext
   var persistentContainer: NSPersistentContainer
   
-  init(completionClosure: @escaping () -> ()) {
-    persistentContainer = NSPersistentContainer(name: "DataModel")
-    persistentContainer.loadPersistentStores() { (description, error) in
-      if let error = error {
-        fatalError("Failed to load Core Data stack: \(error)")
-      }
-      completionClosure()
-    }
+  init(newPersistentContainer: NSPersistentContainer) {
+    persistentContainer = newPersistentContainer
+//    persistentContainer = NSPersistentContainer(name: "DataModel")
+//    persistentContainer.loadPersistentStores() { (description, error) in
+//      if let error = error {
+//        fatalError("Failed to load Core Data stack: \(error)")
+//      }
+//      completionClosure()
+//    }
   }
 
   func loadDataFromURL(_ url: URL) {
@@ -39,6 +40,7 @@ class DataController: NSObject {
       do {
         let jsonDict = try JSONSerialization.jsonObject(with: unwrappedData) as! [String: Any]
         let prayerPartners = jsonDict["prayer_partners"] as! [[String: Any]]
+        self.generatePrayerPartnerModel(from: prayerPartners)
         print(prayerPartners)
         // index 0. general info? = key:"nav" value:"Prayer Partners"
         //                          key:"icon" value:"ic_group"
@@ -46,6 +48,7 @@ class DataController: NSObject {
         // index 1-8 Partners = key:"students" value:"First Last\nFirst Last..."
         
         let housing = jsonDict["housing"] as! [String: Any]
+        self.generateHousingModel(from: housing)
         // General info
         // key:"nav" value "Housing"
         // key "icon" value:"ic_house"
@@ -112,14 +115,112 @@ extension DataController {
 
  */
   func generatePrayerPartnerModel(from partnerGroups: [[String: Any]]) {
+    let prayerPartnerGroupEntityName = "PrayerPartnerGroup"
+    deleteAll(forEntityName: prayerPartnerGroupEntityName)
+
+    //    let existingGroups = fetchAllEntities(forName: "PrayerPartnerGroup") as! [PrayerPartnerGroup]
     
+    var createdGroups = [NSManagedObject]()
     for obj in partnerGroups {
-      if if let partnerNames = obj["students"] {
-        let partners = NSEntityDescription.insertNewObject(forEntityName: "PrayerPartnerGroup", into: persistentContainer.viewContext)
+      if let partnerNames = obj["students"] {
+        if let createdGroup = createObject(prayerPartnerGroupEntityName, with: ["students": partnerNames]) {
+          createdGroups.append(createdGroup)
+        }
       }
       else {
-        
+        // it is for nav
       }
     }
   }
+  
+//  func generateContactsModel(from contacts: [String: Any]) {
+//    let contactsEntityName = "Contacts"
+//    deleteAll(forEntityName: contactsEntityName)
+//    
+//    var createdHouses = [NSManagedObject]()
+//    for (key, value) in contacts where key != "nav" && key != "icon" {
+//      var kvDict = value as! [String:Any]
+//      kvDict["hostName"] = key
+//      if let createdHousingUnit = createObject(contactsEntityName, with: kvDict) {
+//        createdHouses.append(createdHousingUnit)
+//      }
+//    }
+//    print(createdHouses)
+//    // Handle icon and nav
+//  }
+  func generateHousingModel(from housingUnits: [String: Any]) {
+    let housingEntityName = "HousingUnit"
+    deleteAll(forEntityName: housingEntityName)
+    
+    var createdHouses = [NSManagedObject]()
+    for (key, value) in housingUnits where key != "nav" && key != "icon" {
+      var kvDict = value as! [String:Any]
+      kvDict["hostName"] = key
+      if let createdHousingUnit = createObject(housingEntityName, with: kvDict) {
+        createdHouses.append(createdHousingUnit)
+      }
+    }
+    print(createdHouses)
+    // Handle icon and nav
+  }
+  /// <#Description#>
+  ///
+  /// - Parameters:
+  ///   - entityName: <#entityName description#>
+  ///   - keyValuePairs: <#keyValuePairs description#>
+  /// - Returns: The created object, or nil if the creation or save failed.
+  func createObject(_ entityName: String, with keyValuePairs: [String: Any]) -> NSManagedObject? {
+    let managedContext = persistentContainer.viewContext
+    
+    let entity = NSEntityDescription.entity(forEntityName: entityName,
+                                            in: managedContext)!
+    
+    let object = NSManagedObject(entity: entity,
+                                 insertInto: managedContext)
+    
+    object.setValuesForKeys(keyValuePairs)
+    
+    do {
+      try managedContext.save()
+      return object
+    } catch let error as NSError {
+      print("Could not save. \(error), \(error.userInfo)")
+      return nil
+    }
+  }
+  
+  func fetchAllEntities(forName entityName: String) -> [NSManagedObject]? {
+
+    let managedContext = persistentContainer.viewContext
+    
+    let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
+    do {
+      let entities = try managedContext.fetch(fetchRequest)
+      print(entities)
+      return entities
+    } catch let error as NSError {
+      print("Could not fetch. \(error), \(error.userInfo)")
+      return nil
+    }
+  }
+  
+  func deleteAllObjects() {
+    let managedContext = persistentContainer.viewContext
+    let dataModelEntities = persistentContainer.managedObjectModel.entitiesByName.keys
+    for entityName in dataModelEntities {
+      deleteAll(forEntityName: entityName)
+    }
+  }
+
+  func deleteAll(forEntityName entityName: String) {
+    let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
+    let request = NSBatchDeleteRequest(fetchRequest: fetch)
+    do {
+      try managedContext.execute(request)
+      try managedContext.save()
+    } catch let error as NSError {
+      print("Could not fetch. \(error), \(error.userInfo)")
+    }
+  }
+
 }
