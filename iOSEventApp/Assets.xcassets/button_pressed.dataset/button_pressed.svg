@@ -1,0 +1,10 @@
+
+<svg xmlns="http://www.w3.org/2000/svg">
+    <item
+        state_pressed="true"
+        drawable="@color/darker_gray"
+        />
+    <item
+        drawable="@color/transparent"
+        />
+</svg>

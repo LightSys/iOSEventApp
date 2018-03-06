@@ -1,0 +1,13 @@
+<svg xmlns="http://www.w3.org/2000/svg">
+    <item state_activated="true">
+        <shape  shape="rectangle">
+            <gradient angle="-180" startColor="@color/colorGray" endColor="@color/colorGray"/>
+        </shape>
+    </item>
+    <item >
+        <shape  shape="rectangle" >
+            <gradient angle="-180" startColor="@color/white" endColor="@color/white"/>
+        </shape>
+    </item>
+
+</svg>
