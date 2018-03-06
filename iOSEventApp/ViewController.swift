@@ -15,7 +15,8 @@ class ViewController: UIViewController {
   @IBOutlet weak var dimView: UIView!
   
   var embeddedNavigationController: UINavigationController!
-  
+  var sidebarViewController: SidebarTableViewController!
+
 //  override func viewDidLoad() {
 //    navigationControllerContainer.
 //  }
@@ -28,6 +29,10 @@ class ViewController: UIViewController {
     if segue.identifier == "embedNavigationController" {
       embeddedNavigationController = segue.destination as! UINavigationController
       (embeddedNavigationController.viewControllers[0] as? QRScannerViewController)?.delegate = self
+    }
+    else if segue.identifier == "embedSidebarViewController" {
+      sidebarViewController = segue.destination as! SidebarTableViewController
+      sidebarViewController.vcSwitchingDelegate = self
     }
   }
 }
@@ -44,5 +49,13 @@ extension ViewController: MenuButton {
         self.dimView.isHidden = true
       }
     }
+  }
+}
+
+extension ViewController: ViewControllerSwitching {
+  func switchTo(vcName: String, entityNameForData: String) {
+    let scannerVC = embeddedNavigationController.viewControllers[0] as! QRScannerViewController
+    scannerVC.loadViewController(identifier: vcName, entityNameForData: entityNameForData)
+    menuButtonTapped()
   }
 }

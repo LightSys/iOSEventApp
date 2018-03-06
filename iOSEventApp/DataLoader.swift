@@ -189,7 +189,7 @@ extension DataController {
     }
   }
   
-  func fetchAllEntities(forName entityName: String) -> [NSManagedObject]? {
+  func fetchAllObjects(forName entityName: String) -> [NSManagedObject]? {
 
     let managedContext = persistentContainer.viewContext
     
@@ -205,7 +205,6 @@ extension DataController {
   }
   
   func deleteAllObjects() {
-    let managedContext = persistentContainer.viewContext
     let dataModelEntities = persistentContainer.managedObjectModel.entitiesByName.keys
     for entityName in dataModelEntities {
       deleteAll(forEntityName: entityName)
@@ -213,6 +212,7 @@ extension DataController {
   }
 
   func deleteAll(forEntityName entityName: String) {
+    let managedContext = persistentContainer.viewContext
     let fetch = NSFetchRequest<NSFetchRequestResult>(entityName: entityName)
     let request = NSBatchDeleteRequest(fetchRequest: fetch)
     do {
