@@ -22,6 +22,7 @@
 		F149D6E0204DCE2F000DA81A /* iOSEventAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6DF204DCE2F000DA81A /* iOSEventAppTests.swift */; };
 		F149D6EB204DCE2F000DA81A /* iOSEventAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6EA204DCE2F000DA81A /* iOSEventAppUITests.swift */; };
 		F149D6F9204DE923000DA81A /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6F8204DE923000DA81A /* QRScannerViewController.swift */; };
+		F1E1D5D9204F6BA600BBE7C8 /* MainContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1E1D5D8204F6BA600BBE7C8 /* MainContainerViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -63,6 +64,7 @@
 		F149D6EA204DCE2F000DA81A /* iOSEventAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSEventAppUITests.swift; sourceTree = "<group>"; };
 		F149D6EC204DCE2F000DA81A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F149D6F8204DE923000DA81A /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
+		F1E1D5D8204F6BA600BBE7C8 /* MainContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainContainerViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -114,6 +116,7 @@
 			isa = PBXGroup;
 			children = (
 				F149D6C7204DCE2F000DA81A /* AppDelegate.swift */,
+				F1E1D5D8204F6BA600BBE7C8 /* MainContainerViewController.swift */,
 				F149D6C9204DCE2F000DA81A /* ViewController.swift */,
 				F149D6F8204DE923000DA81A /* QRScannerViewController.swift */,
 				F149D6CB204DCE2F000DA81A /* Main.storyboard */,
@@ -291,6 +294,7 @@
 				4DD00E13204F5B6D0000B10B /* PrayerPartnersTableViewController.swift in Sources */,
 				4DD00E11204F5B6D0000B10B /* DataLoader.swift in Sources */,
 				F149D6CA204DCE2F000DA81A /* ViewController.swift in Sources */,
+				F1E1D5D9204F6BA600BBE7C8 /* MainContainerViewController.swift in Sources */,
 				F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */,
 				F149D6D0204DCE2F000DA81A /* iOSEventApp.xcdatamodeld in Sources */,
 			);

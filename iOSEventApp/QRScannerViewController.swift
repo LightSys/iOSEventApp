@@ -7,53 +7,122 @@
 //
 
 import UIKit
+import AVFoundation
 
-protocol MenuButton: AnyObject {
-  func menuButtonTapped()
-}
+class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
 
-protocol TakesArrayData: AnyObject {
-  var dataArray: [Any]? { get set }
-}
-
-class QRScannerViewController: UIViewController {
   weak var delegate: MenuButton?
+
   let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
-  @IBAction func menuButtonTapped(_ sender: Any) {
-    delegate?.menuButtonTapped()
-  }
   
-  override func viewDidAppear(_ animated: Bool) {
-    loader.loadDataFromURL(URL(string: "https://lightsys.org/sbcat_event/2018-1-a64ffdcdf77818aba3ddbe1efbf680ae/")!)
-  }
+  var captureSession: AVCaptureSession!
+  var previewLayer: AVCaptureVideoPreviewLayer!
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    loadViewController(identifier: "notifications", entityNameForData: "")
-  }
-  
-  func loadViewController(identifier: String, entityNameForData: String) {
-    let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
-    if childViewControllers.count > 0 {
-      let childVC = childViewControllers[0]
-      childVC.view.removeFromSuperview()
-      childVC.willMove(toParentViewController: nil)
-      childVC.removeFromParentViewController()
-    }
-    addChildViewController(vc)
-    let childView = vc.view
-    childView?.frame.size = view.frame.size
-    view.addSubview(vc.view)
-    vc.didMove(toParentViewController: self)
+    view.backgroundColor = UIColor.black
+    captureSession = AVCaptureSession()
     
-    guard entityNameForData != "" else {
+    guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
+    let videoInput: AVCaptureDeviceInput
+    
+    do {
+      videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+    } catch {
       return
     }
-    if let data = loader.fetchAllObjects(forName: entityNameForData) {
-      if let takesArrayData = vc as? TakesArrayData {
-        takesArrayData.dataArray = data as [Any]
+    
+    if (captureSession.canAddInput(videoInput)) {
+      captureSession.addInput(videoInput)
+    } else {
+      failed()
+      return
+    }
+    
+    let metadataOutput = AVCaptureMetadataOutput()
+    
+    if (captureSession.canAddOutput(metadataOutput)) {
+      captureSession.addOutput(metadataOutput)
+      
+      metadataOutput.setMetadataObjectsDelegate(self, queue: DispatchQueue.main)
+      metadataOutput.metadataObjectTypes = [.qr]
+    } else {
+      failed()
+      return
+    }
+    
+    previewLayer = AVCaptureVideoPreviewLayer(session: captureSession)
+    previewLayer.frame = view.layer.bounds
+    previewLayer.videoGravity = .resizeAspectFill
+    view.layer.addSublayer(previewLayer)
+    
+    captureSession.startRunning()
+  }
+  
+  func failed() {
+    let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
+    ac.addAction(UIAlertAction(title: "OK", style: .default))
+    present(ac, animated: true)
+    captureSession = nil
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    super.viewWillAppear(animated)
+    
+    if (captureSession?.isRunning == false) {
+      captureSession.startRunning()
+    }
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    super.viewWillDisappear(animated)
+    
+    if (captureSession?.isRunning == true) {
+      captureSession.stopRunning()
+    }
+  }
+  
+  func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
+    captureSession.stopRunning()
+    
+    if let metadataObject = metadataObjects.first {
+      guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
+      guard let stringValue = readableObject.stringValue else { return }
+      AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
+      if found(code: stringValue) == true {
+        performSegue(withIdentifier: "PresentMainContainer", sender: nil)
       }
+      else {
+        captureSession.startRunning()
+      }
+    }
+    else {
+      captureSession.startRunning()
+    }
+  }
+  
+  func found(code: String) -> Bool {
+    if let url = URL(string: code) {
+      loader.loadDataFromURL(url)
+      return true
+    }
+    else {
+      return false
+    }
+  }
+  
+  override var prefersStatusBarHidden: Bool {
+    return true
+  }
+  
+  override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
+    return .portrait
+  }
+
+  override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+    if let mainContainer = segue.destination as? MainContainerViewController {
+      mainContainer.delegate = delegate
     }
   }
 }

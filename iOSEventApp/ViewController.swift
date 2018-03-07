@@ -54,8 +54,8 @@ extension ViewController: MenuButton {
 
 extension ViewController: ViewControllerSwitching {
   func switchTo(vcName: String, entityNameForData: String) {
-    let scannerVC = embeddedNavigationController.viewControllers[0] as! QRScannerViewController
-    scannerVC.loadViewController(identifier: vcName, entityNameForData: entityNameForData)
+    let mainContainerVC = embeddedNavigationController.viewControllers[1] as! MainContainerViewController
+    mainContainerVC.loadViewController(identifier: vcName, entityNameForData: entityNameForData)
     menuButtonTapped()
   }
 }
