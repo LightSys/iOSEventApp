@@ -24,6 +24,7 @@ class DataController: NSObject {
 //    }
   }
 
+  // TODO: Change the deletion of old data to happen just once, after data is loaded.
   func loadDataFromURL(_ url: URL) {
     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
       guard error == nil else {
@@ -35,8 +36,6 @@ class DataController: NSObject {
         return
       }
       
-      
-//      JSONSerialization.ReadingOptions
       do {
         let jsonDict = try JSONSerialization.jsonObject(with: unwrappedData) as! [String: Any]
         let prayerPartners = jsonDict["prayer_partners"] as! [[String: Any]]
@@ -57,6 +56,7 @@ class DataController: NSObject {
         // key: (hostname) value ["students": "(students)", "driver": "(driver)"]
         
         let general = jsonDict["general"] as! [String: Any]
+        self.generateGeneralModel(from: general)
         // Keys: "time_zone" "notifications_url" "welcome_message" "year" "refresh" "refresh_expire" "logo"
         
         let contactPage = jsonDict["contact_page"] as! [String: Any]
@@ -71,6 +71,7 @@ class DataController: NSObject {
         // value "Contacts"
         
         let contacts = jsonDict["contacts"] as! [String: Any]
+        self.generateContactModel(from: contacts)
         // key: "name"
         // value: ["address":(address), "phone":(phone?)]
         // NO NAV?
@@ -133,21 +134,21 @@ extension DataController {
     }
   }
   
-//  func generateContactsModel(from contacts: [String: Any]) {
-//    let contactsEntityName = "Contacts"
-//    deleteAll(forEntityName: contactsEntityName)
-//    
-//    var createdHouses = [NSManagedObject]()
-//    for (key, value) in contacts where key != "nav" && key != "icon" {
-//      var kvDict = value as! [String:Any]
-//      kvDict["hostName"] = key
-//      if let createdHousingUnit = createObject(contactsEntityName, with: kvDict) {
-//        createdHouses.append(createdHousingUnit)
-//      }
-//    }
-//    print(createdHouses)
-//    // Handle icon and nav
-//  }
+  func generateContactModel(from contacts: [String: Any]) {
+    let contactEntityName = "Contact"
+    deleteAll(forEntityName: contactEntityName)
+    
+    var createdContacts = [NSManagedObject]()
+    for (key, value) in contacts {
+      var kvDict = value as! [String:Any]
+      kvDict["name"] = key
+      if let createdContact = createObject(contactEntityName, with: kvDict) {
+        createdContacts.append(createdContact)
+      }
+    }
+    print(createdContacts)
+  }
+
   func generateHousingModel(from housingUnits: [String: Any]) {
     let housingEntityName = "HousingUnit"
     deleteAll(forEntityName: housingEntityName)
@@ -163,6 +164,46 @@ extension DataController {
     print(createdHouses)
     // Handle icon and nav
   }
+  
+  func generateGeneralModel(from general: [String: Any]) {
+    let generalEntityName = "General"
+    deleteAll(forEntityName: generalEntityName)
+
+    var newGeneral = general.filter { (key, _) -> Bool in
+      if key != "logo" {
+        return true
+      }
+      else {
+        return false
+      }
+    }
+    let logoImage = (general["logo"] as! String).data(using: .utf8)!
+    newGeneral["logo"] = logoImage
+    if let createdGeneral = createObject(generalEntityName, with: newGeneral) {
+      print(createdGeneral)
+    }
+    
+  }
+  
+  func generateContactPageModel(from contactPage: [[String: Any]]) {
+    let contactPageEntityName = "ContactPage"
+    deleteAll(forEntityName: contactPageEntityName)
+    
+//    ALSO SECTIONS
+    
+//    var createdGroups = [NSManagedObject]()
+//    for (key, value) in housingUnits where key != "nav" && key != "icon" {
+//      var kvDict = value as! [String:Any]
+//      kvDict["hostName"] = key
+//      if let createdHousingUnit = createObject(housingEntityName, with: kvDict) {
+//        createdHouses.append(createdHousingUnit)
+//      }
+//      else {
+//        // it is for nav
+//      }
+//    }
+  }
+  
   /// <#Description#>
   ///
   /// - Parameters:

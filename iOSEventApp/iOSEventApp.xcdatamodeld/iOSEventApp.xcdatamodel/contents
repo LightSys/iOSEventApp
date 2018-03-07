@@ -2,27 +2,20 @@
 <model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="13772" systemVersion="17D47" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Contact" representedClassName="Contact" syncable="YES" codeGenerationType="class">
         <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="ContactPage" representedClassName="ContactPage" syncable="YES" codeGenerationType="class">
-        <relationship name="appearance" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SidebarAppearance" syncable="YES"/>
-    </entity>
-    <entity name="Contacts" representedClassName="Contacts" syncable="YES" codeGenerationType="class">
-        <relationship name="contact" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Contact" syncable="YES"/>
-    </entity>
+    <entity name="ContactPage" representedClassName="ContactPage" parentEntity="SidebarAppearance" syncable="YES" codeGenerationType="class"/>
     <entity name="General" representedClassName="General" syncable="YES" codeGenerationType="class">
         <attribute name="logo" optional="YES" attributeType="Binary" syncable="YES"/>
-        <attribute name="notifications_url" optional="YES" attributeType="URI" syncable="YES"/>
-        <attribute name="refresh" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="refresh_expire" optional="YES" attributeType="Date" usesScalarValueType="NO" syncable="YES"/>
+        <attribute name="notifications_url" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="refresh" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="refresh_expire" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="time_zone" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="welcome_message" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="year" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <relationship name="appearance" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SidebarAppearance" syncable="YES"/>
+        <attribute name="year" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="Housing" representedClassName="Housing" syncable="YES" codeGenerationType="class">
-        <relationship name="appearance" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SidebarAppearance" syncable="YES"/>
-    </entity>
+    <entity name="Housing" representedClassName="Housing" parentEntity="SidebarAppearance" syncable="YES" codeGenerationType="class"/>
     <entity name="HousingUnit" representedClassName="HousingUnit" syncable="YES" codeGenerationType="class">
         <attribute name="driver" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="hostName" optional="YES" attributeType="String" syncable="YES"/>
@@ -32,11 +25,12 @@
     <entity name="PrayerPartnerGroup" representedClassName="PrayerPartnerGroup" syncable="YES" codeGenerationType="class">
         <attribute name="students" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="PrayerPartners" representedClassName="PrayerPartners" syncable="YES" codeGenerationType="class">
-        <relationship name="appearance" optional="YES" maxCount="1" deletionRule="Cascade" destinationEntity="SidebarAppearance" syncable="YES"/>
-    </entity>
+    <entity name="PrayerPartners" representedClassName="PrayerPartners" parentEntity="SidebarAppearance" syncable="YES" codeGenerationType="class"/>
     <entity name="Schedule" representedClassName="Schedule" syncable="YES" codeGenerationType="class"/>
-    <entity name="SidebarAppearance" representedClassName="SidebarAppearance" syncable="YES" codeGenerationType="class"/>
+    <entity name="SidebarAppearance" representedClassName="SidebarAppearance" syncable="YES" codeGenerationType="class">
+        <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nav" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="Theme" representedClassName="Theme" syncable="YES" codeGenerationType="class">
         <attribute name="themeName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="themeValue" optional="YES" attributeType="String" syncable="YES"/>
@@ -45,18 +39,17 @@
         <relationship name="theme" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Theme" syncable="YES"/>
     </entity>
     <elements>
-        <element name="PrayerPartners" positionX="-63" positionY="-18" width="128" height="60"/>
-        <element name="Themes" positionX="-54" positionY="-9" width="128" height="60"/>
-        <element name="InformationPage" positionX="-36" positionY="9" width="128" height="45"/>
-        <element name="Contacts" positionX="-18" positionY="27" width="128" height="60"/>
-        <element name="ContactPage" positionX="0" positionY="45" width="128" height="60"/>
-        <element name="General" positionX="18" positionY="63" width="128" height="165"/>
-        <element name="Housing" positionX="36" positionY="81" width="128" height="60"/>
-        <element name="Schedule" positionX="-9" positionY="36" width="128" height="45"/>
-        <element name="PrayerPartnerGroup" positionX="0" positionY="45" width="128" height="60"/>
-        <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="45"/>
+        <element name="Contact" positionX="27" positionY="126" width="128" height="90"/>
+        <element name="ContactPage" positionX="0" positionY="45" width="128" height="45"/>
+        <element name="General" positionX="18" positionY="63" width="128" height="150"/>
+        <element name="Housing" positionX="36" positionY="81" width="128" height="45"/>
         <element name="HousingUnit" positionX="18" positionY="63" width="128" height="90"/>
-        <element name="Contact" positionX="27" positionY="126" width="128" height="75"/>
+        <element name="InformationPage" positionX="-36" positionY="9" width="128" height="45"/>
+        <element name="PrayerPartnerGroup" positionX="0" positionY="45" width="128" height="60"/>
+        <element name="PrayerPartners" positionX="-63" positionY="-18" width="128" height="45"/>
+        <element name="Schedule" positionX="-9" positionY="36" width="128" height="45"/>
+        <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="75"/>
         <element name="Theme" positionX="36" positionY="135" width="128" height="75"/>
+        <element name="Themes" positionX="-54" positionY="-9" width="128" height="60"/>
     </elements>
 </model>
