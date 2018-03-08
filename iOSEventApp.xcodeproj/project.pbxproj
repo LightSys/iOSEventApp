@@ -8,6 +8,11 @@
 
 /* Begin PBXBuildFile section */
 		4DD00E09204E1A6D0000B10B /* SidebarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */; };
+		4DD00E0F204F5B6D0000B10B /* SidebarTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */; };
+		4DD00E10204F5B6D0000B10B /* PrayerPartnersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */; };
+		4DD00E11204F5B6D0000B10B /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0C204F5B6D0000B10B /* DataLoader.swift */; };
+		4DD00E12204F5B6D0000B10B /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */; };
+		4DD00E13204F5B6D0000B10B /* PrayerPartnersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0E204F5B6D0000B10B /* PrayerPartnersTableViewController.swift */; };
 		F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6C7204DCE2F000DA81A /* AppDelegate.swift */; };
 		F149D6CA204DCE2F000DA81A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6C9204DCE2F000DA81A /* ViewController.swift */; };
 		F149D6CD204DCE2F000DA81A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F149D6CB204DCE2F000DA81A /* Main.storyboard */; };
@@ -17,11 +22,6 @@
 		F149D6E0204DCE2F000DA81A /* iOSEventAppTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6DF204DCE2F000DA81A /* iOSEventAppTests.swift */; };
 		F149D6EB204DCE2F000DA81A /* iOSEventAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6EA204DCE2F000DA81A /* iOSEventAppUITests.swift */; };
 		F149D6F9204DE923000DA81A /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6F8204DE923000DA81A /* QRScannerViewController.swift */; };
-		F1D746B1204DF51E0059B17F /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D746B0204DF51E0059B17F /* DataLoader.swift */; };
-		F1D746D8204F3FE90059B17F /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D746D7204F3FE90059B17F /* NotificationsViewController.swift */; };
-		F1D746DA204F432F0059B17F /* SidebarTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D746D9204F432F0059B17F /* SidebarTableViewController.swift */; };
-		F1D746DC204F4A950059B17F /* PrayerPartnersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D746DB204F4A950059B17F /* PrayerPartnersTableViewCell.swift */; };
-		F1D746DE204F4BD20059B17F /* PrayerPartnersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1D746DD204F4BD20059B17F /* PrayerPartnersTableViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -43,6 +43,11 @@
 
 /* Begin PBXFileReference section */
 		4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarTableViewCell.swift; sourceTree = "<group>"; };
+		4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableViewController.swift; sourceTree = "<group>"; };
+		4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrayerPartnersTableViewCell.swift; sourceTree = "<group>"; };
+		4DD00E0C204F5B6D0000B10B /* DataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
+		4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
+		4DD00E0E204F5B6D0000B10B /* PrayerPartnersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrayerPartnersTableViewController.swift; sourceTree = "<group>"; };
 		F149D6C4204DCE2F000DA81A /* iOSEventApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSEventApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F149D6C7204DCE2F000DA81A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F149D6C9204DCE2F000DA81A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
@@ -58,11 +63,6 @@
 		F149D6EA204DCE2F000DA81A /* iOSEventAppUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = iOSEventAppUITests.swift; sourceTree = "<group>"; };
 		F149D6EC204DCE2F000DA81A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F149D6F8204DE923000DA81A /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
-		F1D746B0204DF51E0059B17F /* DataLoader.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
-		F1D746D7204F3FE90059B17F /* NotificationsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
-		F1D746D9204F432F0059B17F /* SidebarTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarTableViewController.swift; sourceTree = "<group>"; };
-		F1D746DB204F4A950059B17F /* PrayerPartnersTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerPartnersTableViewCell.swift; sourceTree = "<group>"; };
-		F1D746DD204F4BD20059B17F /* PrayerPartnersTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PrayerPartnersTableViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -113,15 +113,15 @@
 		F149D6C6204DCE2F000DA81A /* iOSEventApp */ = {
 			isa = PBXGroup;
 			children = (
-				F1D746D7204F3FE90059B17F /* NotificationsViewController.swift */,
 				F149D6C7204DCE2F000DA81A /* AppDelegate.swift */,
-				F1D746DB204F4A950059B17F /* PrayerPartnersTableViewCell.swift */,
-				F1D746DD204F4BD20059B17F /* PrayerPartnersTableViewController.swift */,
 				F149D6C9204DCE2F000DA81A /* ViewController.swift */,
-				F1D746D9204F432F0059B17F /* SidebarTableViewController.swift */,
 				F149D6F8204DE923000DA81A /* QRScannerViewController.swift */,
-				F1D746B0204DF51E0059B17F /* DataLoader.swift */,
 				F149D6CB204DCE2F000DA81A /* Main.storyboard */,
+				4DD00E0C204F5B6D0000B10B /* DataLoader.swift */,
+				4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */,
+				4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */,
+				4DD00E0E204F5B6D0000B10B /* PrayerPartnersTableViewController.swift */,
+				4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */,
 				4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */,
 				F149D6D1204DCE2F000DA81A /* Assets.xcassets */,
 				F149D6D3204DCE2F000DA81A /* LaunchScreen.storyboard */,
@@ -283,15 +283,15 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F1D746DC204F4A950059B17F /* PrayerPartnersTableViewCell.swift in Sources */,
-				F1D746DA204F432F0059B17F /* SidebarTableViewController.swift in Sources */,
+				4DD00E12204F5B6D0000B10B /* NotificationsViewController.swift in Sources */,
 				4DD00E09204E1A6D0000B10B /* SidebarTableViewCell.swift in Sources */,
-				F1D746B1204DF51E0059B17F /* DataLoader.swift in Sources */,
 				F149D6F9204DE923000DA81A /* QRScannerViewController.swift in Sources */,
-				F1D746DE204F4BD20059B17F /* PrayerPartnersTableViewController.swift in Sources */,
+				4DD00E0F204F5B6D0000B10B /* SidebarTableViewController.swift in Sources */,
+				4DD00E10204F5B6D0000B10B /* PrayerPartnersTableViewCell.swift in Sources */,
+				4DD00E13204F5B6D0000B10B /* PrayerPartnersTableViewController.swift in Sources */,
+				4DD00E11204F5B6D0000B10B /* DataLoader.swift in Sources */,
 				F149D6CA204DCE2F000DA81A /* ViewController.swift in Sources */,
 				F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */,
-				F1D746D8204F3FE90059B17F /* NotificationsViewController.swift in Sources */,
 				F149D6D0204DCE2F000DA81A /* iOSEventApp.xcdatamodeld in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
