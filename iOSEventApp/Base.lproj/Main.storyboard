@@ -1,15 +1,20 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14101" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="13771" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14086"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="13772"/>
         <capability name="Constraints with non-1.0 multipliers" minToolsVersion="5.1"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
+    <customFonts key="customFonts">
+        <array key="HelveticaNeue.ttc">
+            <string>HelveticaNeue</string>
+        </array>
+    </customFonts>
     <scenes>
         <!--View Controller-->
         <scene sceneID="tne-QT-ifu">
@@ -721,7 +726,7 @@
                         <autoresizingMask key="autoresizingMask"/>
                     </navigationBar>
                     <connections>
-                        <segue destination="ED7-5z-P1d" kind="relationship" relationship="rootViewController" id="fnV-Xz-2D5"/>
+                        <segue destination="ozD-MV-NIX" kind="relationship" relationship="rootViewController" id="0mG-ZD-E4L"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="jv5-Aj-pbv" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -729,9 +734,28 @@
             <point key="canvasLocation" x="910" y="134"/>
         </scene>
         <!--Scanner View Controller-->
+        <scene sceneID="3G3-Jl-Uus">
+            <objects>
+                <viewController id="ozD-MV-NIX" customClass="QRScannerViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="aPz-s8-JLZ">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <viewLayoutGuide key="safeArea" id="z0R-se-1XN"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="EMW-sS-9iy"/>
+                    <connections>
+                        <segue destination="ED7-5z-P1d" kind="show" identifier="PresentMainContainer" id="hS5-6P-MeK"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="VDf-KB-FPY" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1834" y="134"/>
+        </scene>
+        <!--Main Container View Controller-->
         <scene sceneID="twc-0b-qzb">
             <objects>
-                <viewController id="ED7-5z-P1d" customClass="QRScannerViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ED7-5z-P1d" customClass="MainContainerViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="90x-Ll-ouj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -741,14 +765,14 @@
                     <navigationItem key="navigationItem" id="q3d-7t-WMH">
                         <barButtonItem key="leftBarButtonItem" title="Menu" id="ugo-XG-QKX">
                             <connections>
-                                <action selector="menuButtonTapped:" destination="ED7-5z-P1d" id="wOw-5a-14m"/>
+                                <action selector="menuButtonTapped:" destination="ED7-5z-P1d" id="PDz-DN-nB7"/>
                             </connections>
                         </barButtonItem>
                     </navigationItem>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="DZ0-nW-w4n" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1796" y="133.5832083958021"/>
+            <point key="canvasLocation" x="2703" y="134"/>
         </scene>
         <!--Notifications View Controller-->
         <scene sceneID="Rir-z4-7OY">
@@ -1033,7 +1057,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Xiw-FH-38Q" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2834" y="134"/>
+            <point key="canvasLocation" x="3500" y="134"/>
         </scene>
         <!--Sidebar Table View Controller-->
         <scene sceneID="x3k-y8-aZW">
@@ -1137,7 +1161,7 @@
                 <pinchGestureRecognizer id="XPF-V4-VbY"/>
                 <pinchGestureRecognizer id="WEm-cv-lnI"/>
             </objects>
-            <point key="canvasLocation" x="1823" y="904"/>
+            <point key="canvasLocation" x="2426" y="1047"/>
         </scene>
         <!--Prayer Partners Table View Controller-->
         <scene sceneID="38d-bH-jHf">
@@ -1197,7 +1221,7 @@ Person 3</string>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Nt9-3d-tQX" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2832.8000000000002" y="837.93103448275872"/>
+            <point key="canvasLocation" x="3500" y="858"/>
         </scene>
     </scenes>
 </document>
