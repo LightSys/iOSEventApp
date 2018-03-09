@@ -40,10 +40,10 @@ class MainContainerViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    loadViewController(identifier: "notifications", entityNameForData: "")
+    loadViewController(identifier: "notifications", entityNameForData: "", informationPageName: nil)
   }
   
-  func loadViewController(identifier: String, entityNameForData: String) {
+  func loadViewController(identifier: String, entityNameForData: String, informationPageName pageName: String?) {
     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
     if childViewControllers.count > 0 {
       let childVC = childViewControllers[0]
@@ -51,8 +51,18 @@ class MainContainerViewController: UIViewController {
       childVC.willMove(toParentViewController: nil)
       childVC.removeFromParentViewController()
     }
-    if entityNameForData != "", let data = loader.fetchAllObjects(forName: entityNameForData) {
+    if entityNameForData != "", var data = loader.fetchAllObjects(forName: entityNameForData) {
+      if pageName != nil {
+        let infoPage = (data.first(where: { (object) -> Bool in
+          if let infoPage = object as? InformationPage {
+            return infoPage.infoNav?.nav == pageName
+          }
+          return false
+        }) as! InformationPage)
+        data = infoPage.infoSections?.sortedArray(using: [NSSortDescriptor(key: "order", ascending: true)]) as! [InformationPageSection]
+      }
       if let takesArrayData = vc as? TakesArrayData {
+        // TODO: Handle infoPage name. Perhaps add a takesDictData?
         takesArrayData.dataArray = data as [Any]
       }
     }
@@ -66,7 +76,7 @@ class MainContainerViewController: UIViewController {
     
     for view in containerView.subviews {
       view.frame.size = containerView.frame.size
-      view.center = containerView.center
+      view.frame.origin = CGPoint.zero
     }
   }
 }
