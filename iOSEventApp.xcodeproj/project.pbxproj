@@ -142,6 +142,7 @@
 				F149D6C7204DCE2F000DA81A /* AppDelegate.swift */,
 				F149D6C9204DCE2F000DA81A /* RootViewController.swift */,
 				F149D6F8204DE923000DA81A /* QRScannerViewController.swift */,
+				4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */,
 				F1AF666E2053247200B8820D /* SidebarItemViewControllers */,
 				F149D6CB204DCE2F000DA81A /* Main.storyboard */,
 				4DD00E142051A6590000B10B /* MainContainerViewController.swift */,
@@ -189,7 +190,6 @@
 		F1AF666E2053247200B8820D /* SidebarItemViewControllers */ = {
 			isa = PBXGroup;
 			children = (
-				4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */,
 				F1AF6670205324B600B8820D /* Schedule */,
 				F1AF665F2052F65400B8820D /* ContactsViewController.swift */,
 				F1AF66612052F66A00B8820D /* InformationPageViewController.swift */,
@@ -543,7 +543,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GTLNVLZ9SH;
+                DEVELOPMENT_TEAM = GTLNVLZ9SH;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
@@ -558,7 +558,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GTLNVLZ9SH;
+                DEVELOPMENT_TEAM = GTLNVLZ9SH;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
