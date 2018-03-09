@@ -6,19 +6,33 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
+/*
+ These variables are linked up to the database. The images of a phone
+    and a car should appear if contact information and a location
+    respectively are avalible (unless we don't get around to
+    finalizing images before tonight). The eventName box is set to two
+    lines, which may accomodate longer event names. Should the issue
+    with overly long lines occur in the other two, there is an
+    option in the attributes inspector to increase that size, but
+    I don't like how the interface moves with that. 
+ 
+ 
+ */
+
 import UIKit
 
 class ScheduleTableViewCell: UITableViewCell {
 
   @IBOutlet weak var startLabel: UILabel!
   @IBOutlet weak var endLabel: UILabel!
-  @IBOutlet weak var eventName: UITextField!
-  @IBOutlet weak var eventLocation: UITextField!
-  @IBOutlet weak var eventContact: UITextField!
   @IBOutlet weak var phoneImageView: UIImageView!
   @IBOutlet weak var carImageView: UIImageView!
-  
-  override func awakeFromNib() {
+  @IBOutlet weak var eventName: UILabel!
+  @IBOutlet weak var eventLocation: UILabel!
+  @IBOutlet weak var eventContact: UILabel!
+    
+    
+    override func awakeFromNib() {
         super.awakeFromNib()
         // Initialization code
     }
