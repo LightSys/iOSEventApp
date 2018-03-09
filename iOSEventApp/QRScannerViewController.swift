@@ -18,6 +18,11 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
   var captureSession: AVCaptureSession!
   var previewLayer: AVCaptureVideoPreviewLayer!
   
+  func shouldRunScan() -> Bool {
+    let isDataLoaded = UserDefaults.standard.object(forKey: "dataLoaded") as? Int ?? 0
+    return isDataLoaded == 0
+  }
+  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -57,6 +62,11 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
     previewLayer.videoGravity = .resizeAspectFill
     view.layer.addSublayer(previewLayer)
     
+    // Don't actually run the camera if the data is already loaded
+    guard shouldRunScan() else {
+      return
+    }
+    
     captureSession.startRunning()
   }
   
@@ -70,8 +80,21 @@ class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsD
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
+    // Don't scan unless data is not loaded (or needs to be reloaded).
+    guard shouldRunScan() else {
+      return
+    }
+    
     if (captureSession?.isRunning == false) {
       captureSession.startRunning()
+    }
+  }
+  
+  override func viewDidAppear(_ animated: Bool) {
+    super.viewDidAppear(animated)
+    
+    if let isDataLoaded = UserDefaults.standard.object(forKey: "dataLoaded") as? Int, isDataLoaded == 1 {
+      performSegue(withIdentifier: "PresentMainContainer", sender: nil)
     }
   }
   
