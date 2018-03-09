@@ -35,6 +35,7 @@
 		F1AF666A2052FB7600B8820D /* HousingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66692052FB7600B8820D /* HousingViewController.swift */; };
 		F1AF666C2052FBA600B8820D /* HousingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF666B2052FBA600B8820D /* HousingTableViewCell.swift */; };
 		F1AF66722053292300B8820D /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66712053292300B8820D /* ContactTableViewCell.swift */; };
+		F1AF66742053433B00B8820D /* NotificationTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66732053433B00B8820D /* NotificationTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -89,6 +90,7 @@
 		F1AF66692052FB7600B8820D /* HousingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousingViewController.swift; sourceTree = "<group>"; };
 		F1AF666B2052FBA600B8820D /* HousingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousingTableViewCell.swift; sourceTree = "<group>"; };
 		F1AF66712053292300B8820D /* ContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
+		F1AF66732053433B00B8820D /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -183,6 +185,7 @@
 				F1AF66652052F86400B8820D /* SettingsTableViewCell.swift */,
 				4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */,
 				4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */,
+				F1AF66732053433B00B8820D /* NotificationTableViewCell.swift */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -366,6 +369,7 @@
 				F1AF66602052F65400B8820D /* ContactsViewController.swift in Sources */,
 				4DD00E10204F5B6D0000B10B /* PrayerPartnersTableViewCell.swift in Sources */,
 				4DD00E13204F5B6D0000B10B /* PrayerPartnersViewController.swift in Sources */,
+				F1AF66742053433B00B8820D /* NotificationTableViewCell.swift in Sources */,
 				F1AF66622052F66A00B8820D /* InformationPageViewController.swift in Sources */,
 				4DD00E11204F5B6D0000B10B /* DataController.swift in Sources */,
 				F1AF665C20524CB500B8820D /* ScheduleTableViewCell.swift in Sources */,
@@ -543,7 +547,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GTLNVLZ9SH;
+                DEVELOPMENT_TEAM = GTLNVLZ9SH;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
@@ -558,7 +562,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GTLNVLZ9SH;
+                DEVELOPMENT_TEAM = GTLNVLZ9SH;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
