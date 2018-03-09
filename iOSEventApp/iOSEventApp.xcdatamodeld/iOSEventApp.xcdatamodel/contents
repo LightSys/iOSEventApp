@@ -5,6 +5,12 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="ContactPageSection" representedClassName="ContactPageSection" syncable="YES" codeGenerationType="class">
+        <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="header" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+    </entity>
     <entity name="General" representedClassName="General" syncable="YES" codeGenerationType="class">
         <attribute name="logo" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="notifications_url" optional="YES" attributeType="String" syncable="YES"/>
@@ -19,12 +25,21 @@
         <attribute name="hostName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="students" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
+    <entity name="InformationPage" representedClassName="InformationPage" syncable="YES" codeGenerationType="class">
+        <attribute name="pageName" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="infoSections" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="InformationPageSection" inverseName="infoPage" inverseEntity="InformationPageSection" syncable="YES"/>
+    </entity>
+    <entity name="InformationPageSection" representedClassName="InformationPageSection" syncable="YES" codeGenerationType="class">
+        <attribute name="information" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="infoPage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="InformationPage" inverseName="infoSections" inverseEntity="InformationPage" syncable="YES"/>
+    </entity>
     <entity name="PrayerPartnerGroup" representedClassName="PrayerPartnerGroup" syncable="YES" codeGenerationType="class">
         <attribute name="students" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="ScheduleDay" representedClassName="ScheduleDay" syncable="YES" codeGenerationType="class">
         <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="items" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduleItem" inverseName="day" inverseEntity="ScheduleItem" syncable="YES"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ScheduleItem" inverseName="day" inverseEntity="ScheduleItem" syncable="YES"/>
     </entity>
     <entity name="ScheduleItem" representedClassName="ScheduleItem" syncable="YES" codeGenerationType="class">
         <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
@@ -44,9 +59,6 @@
         <attribute name="themeName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="themeValue" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="Themes" representedClassName="Themes" syncable="YES" codeGenerationType="class">
-        <relationship name="theme" optional="YES" toMany="YES" deletionRule="Cascade" destinationEntity="Theme" syncable="YES"/>
-    </entity>
     <elements>
         <element name="Contact" positionX="27" positionY="126" width="128" height="90"/>
         <element name="General" positionX="18" positionY="63" width="128" height="150"/>
@@ -56,6 +68,8 @@
         <element name="ScheduleItem" positionX="0" positionY="90" width="128" height="135"/>
         <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="105"/>
         <element name="Theme" positionX="36" positionY="135" width="128" height="75"/>
-        <element name="Themes" positionX="-54" positionY="-9" width="128" height="60"/>
+        <element name="ContactPageSection" positionX="-9" positionY="90" width="128" height="105"/>
+        <element name="InformationPage" positionX="18" positionY="126" width="128" height="75"/>
+        <element name="InformationPageSection" positionX="27" positionY="135" width="128" height="90"/>
     </elements>
 </model>

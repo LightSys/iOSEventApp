@@ -21,8 +21,9 @@ class QRScannerViewController: UIViewController,
 
   weak var delegate: MenuButton?
 
-  let loader = DataController(newPersistentContainer:
-        (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+
+  let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+  var activityIndicator: UIActivityIndicatorView!
   
   var captureSession: AVCaptureSession!
   var previewLayer: AVCaptureVideoPreviewLayer!
@@ -70,6 +71,11 @@ class QRScannerViewController: UIViewController,
     previewLayer.frame = view.layer.bounds
     previewLayer.videoGravity = .resizeAspectFill
     view.layer.addSublayer(previewLayer)
+    
+    activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    activityIndicator.center = view.center
+    activityIndicator.hidesWhenStopped = true
+    view.addSubview(activityIndicator)
     
     // Don't actually run the camera if the data is already loaded
     guard shouldRunScan() else {
@@ -122,25 +128,38 @@ class QRScannerViewController: UIViewController,
       guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
       guard let stringValue = readableObject.stringValue else { return }
       AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
-      if found(code: stringValue) == true {
-        performSegue(withIdentifier: "PresentMainContainer", sender: nil)
-      }
-      else {
-        captureSession.startRunning()
-      }
+      found(code: stringValue, completion: { (success) in
+        if success == true {
+          self.performSegue(withIdentifier: "PresentMainContainer", sender: nil)
+        }
+        else {
+          self.captureSession.startRunning()
+        }
+      })
     }
     else {
       captureSession.startRunning()
     }
   }
   
-  func found(code: String) -> Bool {
+  /// <#Description#>
+  ///
+  /// - Parameters:
+  ///   - code: <#code description#>
+  ///   - completion: Performed on the main thread
+  func found(code: String, completion: @escaping ((_ success: Bool) -> Void)) {
     if let url = URL(string: code) {
-      loader.loadDataFromURL(url)
-      return true
+      activityIndicator.startAnimating()
+      loader.loadDataFromURL(url, completion: { (success) in
+        DispatchQueue.main.async {
+          self.activityIndicator.stopAnimating()
+          completion(success)
+        }
+        // TODO: what to do in case of failure?
+      })
     }
     else {
-      return false
+      completion(false)
     }
   }
   

@@ -34,10 +34,14 @@ class DataController: NSObject {
 //    }
   }
 
-  // TODO: Change the deletion of old data to happen just once, after data is loaded.
-  func loadDataFromURL(_ url: URL) {
+  /// <#Description#>
+  ///
+  /// - Parameters:
+  ///   - url: url linking to a webpage of json
+  ///   - completion: This will NOT be put on the main thread
+  func loadDataFromURL(_ url: URL, completion: @escaping ((_ success: Bool) -> Void)) {
     
-    deleteAll(forEntityName: "SidebarAppearance")
+    deleteAllObjects() // TODO: only delete data AFTER successful load. Perhaps use different stores?
     
     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
       guard error == nil else {
@@ -54,11 +58,6 @@ class DataController: NSObject {
             as! [String: Any]
         let prayerPartners = jsonDict["prayer_partners"] as! [[String: Any]]
         self.generatePrayerPartnerModel(from: prayerPartners)
-//        print(prayerPartners)
-        // index 0. general info? = key:"nav" value:"Prayer Partners"
-        //                          key:"icon" value:"ic_group"
-        
-        // index 1-8 Partners = key:"students" value:"First Last\nFirst Last..."
         
         let housing = jsonDict["housing"] as! [String: Any]
         self.generateHousingModel(from: housing)
@@ -91,7 +90,8 @@ class DataController: NSObject {
         // value: ["address":(address), "phone":(phone?)]
         // NO NAV?
         
-        let theme = jsonDict["theme"] as! [[String: Any]]
+        let themes = jsonDict["theme"] as! [[String: Any]]
+        self.generateThemeModel(from: themes)
         // array of ["key":"#XXXXXX"]
         
         
@@ -110,10 +110,13 @@ class DataController: NSObject {
         
         UserDefaults.standard.set(1, forKey: "dataLoaded")
         UserDefaults.standard.synchronize()
+        
+        completion(true)
+        // TODO: Do one save here???
       }
       catch {
         print(error)
-        print("Error!")
+        completion(false)
       }
 //      if let jsonDict = JSONSerialization.jsonObject(with: unwrappedData)  {
 //        print(jsonDict)
@@ -223,31 +226,14 @@ extension DataController {
   
   func generateContactPageModel(from contactPageDict: [String: Any]) {
 //    deleteAll(forEntityName: contactPageEntityName)
+
+    for (key, value) in contactPageDict where key != sidebarIconKey && key != sidebarNameKey {
+      var kvDict = value as! [String: Any]
+      kvDict["key"] = key
+      _ = createObject("ContactPageSection", with: kvDict)
+    }
     
     var contactPageKVPairs = [String: String]()
-//    var createdHouses = [NSManagedObject]()
-//    for (key, value) in contactPageDict where key != sidebarNameKey && key != "icon" {
-//      var kvDict = value as! [String:Any]
-//      kvDict["hostName"] = key
-//      if let createdHousingUnit = createObject(contactPageEntityName, with: kvDict) {
-//        createdHouses.append(createdHousingUnit)
-//      }
-//    }
-
-    //    ALSO SECTIONS
-    
-    //    var createdGroups = [NSManagedObject]()
-    //    for (key, value) in housingUnits where key != "nav" && key != "icon" {
-    //      var kvDict = value as! [String:Any]
-    //      kvDict["hostName"] = key
-    //      if let createdHousingUnit = createObject(housingEntityName, with: kvDict) {
-    //        createdHouses.append(createdHousingUnit)
-    //      }
-    //      else {
-    //        // it is for nav
-    //      }
-    //    }
-
     if let navName = contactPageDict[sidebarNameKey] as? String {
       contactPageKVPairs[sidebarNameKey] = navName
     }
@@ -258,12 +244,28 @@ extension DataController {
     _ = createObject(sidebarAppearanceEntityName, with: contactPageKVPairs)
   }
   
+  func generateThemeModel(from themeDictArray: [[String: Any]]) {
+    for theme in themeDictArray {
+      _ = createObject("Theme", with: ["themeName": theme.keys.first!, "themeValue": theme.values.first!])
+    }
+  }
+  
   func generateInformationPageModel(from informationPageDict: [String: Any]) {
 //    deleteAll(forEntityName: informationPageEntityName)
     
     var pageNum = 0
     for (key, value) in (informationPageDict as! [String: [[String: Any]]]) {
+      
       let pageIdentifier = key
+      let infoPageDict = ["pageName": pageIdentifier]
+      let createdPage = createObject("InformationPage", with: infoPageDict) as! InformationPage
+
+      for i in 1..<value.count {
+        let section = value[i]
+        let kvDict = ["title": section["title"]!, "information": section["description"]!, "infoPage": createdPage]
+        _ = createObject("InformationPageSection", with: kvDict) as! InformationPageSection
+      }
+      
       let sidebarName = value[0][sidebarNameKey] as! String
       let sidebarIconName = value[0][sidebarIconKey] as! String
       let kvDict = ["optionalIdentifier": pageIdentifier, sidebarNameKey:
@@ -276,9 +278,21 @@ extension DataController {
   
   func generateSchedulePageModel(from schedulePageDict: [String: Any]) {
 //    deleteAll(forEntityName: schedulePageEntityName)
-    let kvDict = [sidebarNameKey: schedulePageDict[sidebarNameKey]!,
-                  sidebarIconKey: schedulePageDict[sidebarIconKey]!,
-                  orderKey: "2"]
+    
+    for (date, values) in schedulePageDict where date != sidebarNameKey && date != sidebarIconKey {
+      let dayDict = ["date": date] as [String : Any]
+      let createdDay = createObject("ScheduleDay", with: dayDict) as! ScheduleDay
+      for value in values as! [[String: Any]] {
+        let itemsDict = ["startTime": String(describing: value["start_time"]!),
+                         "itemDescription": value["description"]!,
+                         "category": value["category"]!,
+                         "length": String(describing: value["length"]!),
+                         "location": value["location"]!,
+                         "day": createdDay]
+        _ = createObject("ScheduleItem", with: itemsDict) as! ScheduleItem
+      }
+    }
+    let kvDict = [sidebarNameKey: schedulePageDict[sidebarNameKey]!, sidebarIconKey: schedulePageDict[sidebarIconKey]!, orderKey: "2"]
     _ = createObject(sidebarAppearanceEntityName, with: kvDict)
   }
   
