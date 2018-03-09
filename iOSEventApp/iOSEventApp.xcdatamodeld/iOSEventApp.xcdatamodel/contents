@@ -5,7 +5,6 @@
         <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="ContactPage" representedClassName="ContactPage" parentEntity="SidebarAppearance" syncable="YES" codeGenerationType="class"/>
     <entity name="General" representedClassName="General" syncable="YES" codeGenerationType="class">
         <attribute name="logo" optional="YES" attributeType="Binary" syncable="YES"/>
         <attribute name="notifications_url" optional="YES" attributeType="String" syncable="YES"/>
@@ -15,21 +14,31 @@
         <attribute name="welcome_message" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="year" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="Housing" representedClassName="Housing" parentEntity="SidebarAppearance" syncable="YES" codeGenerationType="class"/>
     <entity name="HousingUnit" representedClassName="HousingUnit" syncable="YES" codeGenerationType="class">
         <attribute name="driver" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="hostName" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="students" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="InformationPage" representedClassName="InformationPage" syncable="YES" codeGenerationType="class"/>
     <entity name="PrayerPartnerGroup" representedClassName="PrayerPartnerGroup" syncable="YES" codeGenerationType="class">
         <attribute name="students" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
-    <entity name="PrayerPartners" representedClassName="PrayerPartners" parentEntity="SidebarAppearance" syncable="YES" codeGenerationType="class"/>
-    <entity name="Schedule" representedClassName="Schedule" syncable="YES" codeGenerationType="class"/>
+    <entity name="ScheduleDay" representedClassName="ScheduleDay" syncable="YES" codeGenerationType="class">
+        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="items" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduleItem" inverseName="day" inverseEntity="ScheduleItem" syncable="YES"/>
+    </entity>
+    <entity name="ScheduleItem" representedClassName="ScheduleItem" syncable="YES" codeGenerationType="class">
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="itemDescription" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="length" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="startTime" optional="YES" attributeType="String" syncable="YES"/>
+        <relationship name="day" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduleDay" inverseName="items" inverseEntity="ScheduleDay" syncable="YES"/>
+    </entity>
     <entity name="SidebarAppearance" representedClassName="SidebarAppearance" syncable="YES" codeGenerationType="class">
         <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="nav" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="nav" attributeType="String" syncable="YES"/>
+        <attribute name="optionalIdentifier" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="order" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="Theme" representedClassName="Theme" syncable="YES" codeGenerationType="class">
         <attribute name="themeName" optional="YES" attributeType="String" syncable="YES"/>
@@ -40,15 +49,12 @@
     </entity>
     <elements>
         <element name="Contact" positionX="27" positionY="126" width="128" height="90"/>
-        <element name="ContactPage" positionX="0" positionY="45" width="128" height="45"/>
         <element name="General" positionX="18" positionY="63" width="128" height="150"/>
-        <element name="Housing" positionX="36" positionY="81" width="128" height="45"/>
         <element name="HousingUnit" positionX="18" positionY="63" width="128" height="90"/>
-        <element name="InformationPage" positionX="-36" positionY="9" width="128" height="45"/>
         <element name="PrayerPartnerGroup" positionX="0" positionY="45" width="128" height="60"/>
-        <element name="PrayerPartners" positionX="-63" positionY="-18" width="128" height="45"/>
-        <element name="Schedule" positionX="-9" positionY="36" width="128" height="45"/>
-        <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="75"/>
+        <element name="ScheduleDay" positionX="-9" positionY="81" width="128" height="75"/>
+        <element name="ScheduleItem" positionX="0" positionY="90" width="128" height="135"/>
+        <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="105"/>
         <element name="Theme" positionX="36" positionY="135" width="128" height="75"/>
         <element name="Themes" positionX="-54" positionY="-9" width="128" height="60"/>
     </elements>

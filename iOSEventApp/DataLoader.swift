@@ -12,6 +12,10 @@ import CoreData
 class DataController: NSObject {
 //  var managedObjectContext: NSManagedObjectContext
   var persistentContainer: NSPersistentContainer
+  let sidebarNameKey = "nav"
+  let sidebarIconKey = "icon"
+  let sidebarAppearanceEntityName = "SidebarAppearance"
+  let orderKey = "order"
   
   init(newPersistentContainer: NSPersistentContainer) {
     persistentContainer = newPersistentContainer
@@ -26,6 +30,9 @@ class DataController: NSObject {
 
   // TODO: Change the deletion of old data to happen just once, after data is loaded.
   func loadDataFromURL(_ url: URL) {
+    
+    deleteAll(forEntityName: "SidebarAppearance")
+    
     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
       guard error == nil else {
         print("Error: \(error!)")
@@ -40,7 +47,7 @@ class DataController: NSObject {
         let jsonDict = try JSONSerialization.jsonObject(with: unwrappedData) as! [String: Any]
         let prayerPartners = jsonDict["prayer_partners"] as! [[String: Any]]
         self.generatePrayerPartnerModel(from: prayerPartners)
-        print(prayerPartners)
+//        print(prayerPartners)
         // index 0. general info? = key:"nav" value:"Prayer Partners"
         //                          key:"icon" value:"ic_group"
         
@@ -60,6 +67,7 @@ class DataController: NSObject {
         // Keys: "time_zone" "notifications_url" "welcome_message" "year" "refresh" "refresh_expire" "logo"
         
         let contactPage = jsonDict["contact_page"] as! [String: Any]
+        self.generateContactPageModel(from: contactPage)
 /*    - key : "icon"
  - value : ic_contact
 */
@@ -82,10 +90,13 @@ class DataController: NSObject {
         
         // DATA MODEL PAUSE
         
-//        let informationPage = jsonDict["information_page"] as! [String: Any]
+        let informationPage = jsonDict["information_page"] as! [String: Any]
+        self.generateInformationPageModel(from: informationPage)
 //        // "page_1": (something), "page_2": (something)
 //
-//        let schedule = jsonDict["schedule"] as! [String: Any]
+        let schedule = jsonDict["schedule"] as! [String: Any]
+        self.generateSchedulePageModel(from: schedule)
+        
 //        // Keyed by date "03/04/2018"
 //        // Value: Array of dictionaries
 //        // Dictionaries: ["category":cat, length:(minutes), start_time:(1015), description:(string), location:(string)
@@ -120,7 +131,7 @@ extension DataController {
     deleteAll(forEntityName: prayerPartnerGroupEntityName)
 
     //    let existingGroups = fetchAllEntities(forName: "PrayerPartnerGroup") as! [PrayerPartnerGroup]
-    
+    var prayerPartnersKVPairs = [String: String]()
     var createdGroups = [NSManagedObject]()
     for obj in partnerGroups {
       if let partnerNames = obj["students"] {
@@ -128,10 +139,15 @@ extension DataController {
           createdGroups.append(createdGroup)
         }
       }
-      else {
-        // it is for nav
+      else if let navName = obj[sidebarNameKey] as? String {
+        prayerPartnersKVPairs[sidebarNameKey] = navName
+        if let iconName = obj[sidebarIconKey] as? String {
+          prayerPartnersKVPairs[sidebarIconKey] = iconName
+        }
       }
     }
+    prayerPartnersKVPairs[orderKey] = "4"
+    _ = createObject(sidebarAppearanceEntityName, with: prayerPartnersKVPairs)
   }
   
   func generateContactModel(from contacts: [String: Any]) {
@@ -148,21 +164,28 @@ extension DataController {
     }
     print(createdContacts)
   }
-
-  func generateHousingModel(from housingUnits: [String: Any]) {
+  
+  func generateHousingModel(from housingDict: [String: Any]) {
     let housingEntityName = "HousingUnit"
     deleteAll(forEntityName: housingEntityName)
     
+    var housingKVPairs = [String: String]()
     var createdHouses = [NSManagedObject]()
-    for (key, value) in housingUnits where key != "nav" && key != "icon" {
+    for (key, value) in housingDict where key != sidebarNameKey && key != sidebarIconKey {
       var kvDict = value as! [String:Any]
       kvDict["hostName"] = key
       if let createdHousingUnit = createObject(housingEntityName, with: kvDict) {
         createdHouses.append(createdHousingUnit)
       }
     }
-    print(createdHouses)
-    // Handle icon and nav
+    if let navName = housingDict[sidebarNameKey] as? String {
+      housingKVPairs[sidebarNameKey] = navName
+    }
+    if let iconName = housingDict[sidebarIconKey] as? String {
+      housingKVPairs[sidebarIconKey] = iconName
+    }
+    housingKVPairs[orderKey] = "3"
+    _ = createObject(sidebarAppearanceEntityName, with: housingKVPairs)
   }
   
   func generateGeneralModel(from general: [String: Any]) {
@@ -185,23 +208,61 @@ extension DataController {
     
   }
   
-  func generateContactPageModel(from contactPage: [[String: Any]]) {
-    let contactPageEntityName = "ContactPage"
-    deleteAll(forEntityName: contactPageEntityName)
+  func generateContactPageModel(from contactPageDict: [String: Any]) {
+//    deleteAll(forEntityName: contactPageEntityName)
     
-//    ALSO SECTIONS
-    
-//    var createdGroups = [NSManagedObject]()
-//    for (key, value) in housingUnits where key != "nav" && key != "icon" {
+    var contactPageKVPairs = [String: String]()
+//    var createdHouses = [NSManagedObject]()
+//    for (key, value) in contactPageDict where key != sidebarNameKey && key != "icon" {
 //      var kvDict = value as! [String:Any]
 //      kvDict["hostName"] = key
-//      if let createdHousingUnit = createObject(housingEntityName, with: kvDict) {
+//      if let createdHousingUnit = createObject(contactPageEntityName, with: kvDict) {
 //        createdHouses.append(createdHousingUnit)
 //      }
-//      else {
-//        // it is for nav
-//      }
 //    }
+
+    //    ALSO SECTIONS
+    
+    //    var createdGroups = [NSManagedObject]()
+    //    for (key, value) in housingUnits where key != "nav" && key != "icon" {
+    //      var kvDict = value as! [String:Any]
+    //      kvDict["hostName"] = key
+    //      if let createdHousingUnit = createObject(housingEntityName, with: kvDict) {
+    //        createdHouses.append(createdHousingUnit)
+    //      }
+    //      else {
+    //        // it is for nav
+    //      }
+    //    }
+
+    if let navName = contactPageDict[sidebarNameKey] as? String {
+      contactPageKVPairs[sidebarNameKey] = navName
+    }
+    if let iconName = contactPageDict[sidebarIconKey] as? String {
+      contactPageKVPairs[sidebarIconKey] = iconName
+    }
+    contactPageKVPairs[orderKey] = "1"
+    _ = createObject(sidebarAppearanceEntityName, with: contactPageKVPairs)
+  }
+  
+  func generateInformationPageModel(from informationPageDict: [String: Any]) {
+//    deleteAll(forEntityName: informationPageEntityName)
+    
+    var pageNum = 0
+    for (key, value) in (informationPageDict as! [String: [[String: Any]]]) {
+      let pageIdentifier = key
+      let sidebarName = value[0][sidebarNameKey] as! String
+      let sidebarIconName = value[0][sidebarIconKey] as! String
+      let kvDict = ["optionalIdentifier": pageIdentifier, sidebarNameKey: sidebarName, sidebarIconKey: sidebarIconName, orderKey: String(5+pageNum)]
+      pageNum += 1
+     _ = createObject(sidebarAppearanceEntityName, with: kvDict)
+    }
+  }
+  
+  func generateSchedulePageModel(from schedulePageDict: [String: Any]) {
+//    deleteAll(forEntityName: schedulePageEntityName)
+    let kvDict = [sidebarNameKey: schedulePageDict[sidebarNameKey]!, sidebarIconKey: schedulePageDict[sidebarIconKey]!, orderKey: "2"]
+    _ = createObject(sidebarAppearanceEntityName, with: kvDict)
   }
   
   /// <#Description#>
