@@ -10,5 +10,6 @@ import UIKit
 
 class SidebarTableViewCell: UITableViewCell {
     
-    
+  @IBOutlet weak var sideImageView: UIImageView!
+  @IBOutlet weak var label: UILabel!
 }
