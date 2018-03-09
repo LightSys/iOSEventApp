@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_nav_menu.png"
+      "filename" : "ic_nav_menu.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }

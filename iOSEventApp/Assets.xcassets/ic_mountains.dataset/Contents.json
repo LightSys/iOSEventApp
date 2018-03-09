@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_mountains.png"
+      "filename" : "ic_mountains.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }

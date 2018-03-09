@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_call_phone.png"
+      "filename" : "ic_call_phone.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }

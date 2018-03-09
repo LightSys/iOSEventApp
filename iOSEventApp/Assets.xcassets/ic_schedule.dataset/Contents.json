@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_schedule.png"
+      "filename" : "ic_schedule.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }

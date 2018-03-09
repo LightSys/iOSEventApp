@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_drop_down.png"
+      "filename" : "ic_drop_down.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }

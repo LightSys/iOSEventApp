@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_clipboard.png"
+      "filename" : "ic_clipboard.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }

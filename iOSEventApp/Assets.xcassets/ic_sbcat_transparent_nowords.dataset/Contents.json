@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_sbcat_transparent_nowords.png"
+      "filename" : "ic_sbcat_transparent_nowords.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }

@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_camera.png"
+      "filename" : "ic_camera.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }

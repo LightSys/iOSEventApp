@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_group.png"
+      "filename" : "ic_group.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }

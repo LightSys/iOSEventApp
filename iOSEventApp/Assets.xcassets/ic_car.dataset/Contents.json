@@ -6,7 +6,8 @@
   "data" : [
     {
       "idiom" : "universal",
-      "filename" : "ic_car.png"
+      "filename" : "ic_car.pdf",
+      "universal-type-identifier" : "com.adobe.pdf"
     }
   ]
 }
