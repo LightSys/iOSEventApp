@@ -27,6 +27,7 @@ class MainContainerViewController: UIViewController {
   let loader = DataController(newPersistentContainer:
     (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
 
+  @IBOutlet weak var containerView: UIView!
   weak var delegate: MenuButton?
 
   @IBAction func menuButtonTapped(_ sender: Any) {
@@ -50,18 +51,22 @@ class MainContainerViewController: UIViewController {
       childVC.willMove(toParentViewController: nil)
       childVC.removeFromParentViewController()
     }
-    addChildViewController(vc)
-    let childView = vc.view
-    childView?.frame.size = view.frame.size
-    view.addSubview(vc.view)
-    vc.didMove(toParentViewController: self)
-    
-    guard entityNameForData != "" else {
-      return
-    }
-    if let data = loader.fetchAllObjects(forName: entityNameForData) {
+    if entityNameForData != "", let data = loader.fetchAllObjects(forName: entityNameForData) {
       if let takesArrayData = vc as? TakesArrayData {
         takesArrayData.dataArray = data as [Any]
       }
     }
-  }}
+    addChildViewController(vc)
+    containerView.addSubview(vc.view)
+    vc.didMove(toParentViewController: self)
+  }
+  
+  override func viewWillLayoutSubviews() {
+    super.viewWillLayoutSubviews()
+    
+    for view in containerView.subviews {
+      view.frame.size = containerView.frame.size
+      view.center = containerView.center
+    }
+  }
+}

@@ -65,6 +65,9 @@ class SidebarTableViewController: UITableViewController {
         if variableSidebarItems[indexPath.row-1].nav == "Prayer Partners" {
           vcSwitchingDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup")
         }
+        else if variableSidebarItems[indexPath.row-1].nav == "Schedule" {
+          vcSwitchingDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay")
+        }
       }
       print("case \(indexPath.row)")
     case variableSidebarItems.count+1:

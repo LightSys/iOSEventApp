@@ -25,14 +25,18 @@ class ScheduleViewController: UIPageViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    dataSource = self
+    // Do any additional setup after loading the view.
+  }
+  
+  func loadViewControllers() {
     if let day = scheduleDays?[0] {
       let dayLabel = scheduleLabelTexts![0]
       let dayVC = newPage(forDay: day, dayName: dayLabel)
-
+      
       viewControllerDict[dayLabel] = dayVC
       setViewControllers([dayVC], direction: .forward, animated: false, completion: nil)
     }
-    // Do any additional setup after loading the view.
   }
   
   override func didReceiveMemoryWarning() {
@@ -47,10 +51,11 @@ extension ScheduleViewController: UIPageViewControllerDelegate {
 
 extension ScheduleViewController: UIPageViewControllerDataSource {
   func newPage(forDay day: ScheduleDay, dayName: String) -> ScheduleDayTableViewController {
-    let newVC = storyboard?.instantiateViewController(withIdentifier: "ID!!") as! ScheduleDayTableViewController
+    let newVC = storyboard?.instantiateViewController(withIdentifier: "ScheduleDayPrototype") as! ScheduleDayTableViewController
     newVC.scheduleItems = day.items?.sortedArray(using: [NSSortDescriptor(key: "startTime", ascending: true)]) as? [ScheduleItem]
-    newVC.dayLabel.text = day.date
+    newVC.dayLabelText = day.date
     viewControllerDict[dayName] = newVC
+    newVC.view.frame = view.frame
     return newVC
   }
   
@@ -77,7 +82,7 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
     if let dayVC = viewController as? ScheduleDayTableViewController {
       let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabel.text!)!
       
-      if vcIndex < scheduleDays!.count {
+      if vcIndex < scheduleDays!.count-1 {
         let newIndex = vcIndex+1
         let newDayLabel = scheduleLabelTexts![newIndex]
         if let existingVC = viewControllerDict[newDayLabel] {
