@@ -14,7 +14,7 @@
     lines, which may accomodate longer event names. Should the issue
     with overly long lines occur in the other two, there is an
     option in the attributes inspector to increase that size, but
-    I don't like how the interface moves with that. 
+    I don't like how the interface moves with that. Can't think of a better way though.
  
  
  */
