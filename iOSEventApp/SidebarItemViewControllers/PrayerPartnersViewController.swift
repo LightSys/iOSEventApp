@@ -8,8 +8,9 @@
 
 import UIKit
 
-class PrayerPartnersTableViewController: UITableViewController, TakesArrayData {
+class PrayerPartnersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
 
+  @IBOutlet weak var tableView: UITableView!
   var _dataArray: [PrayerPartnerGroup]?
   var dataArray: [Any]? {
     set {
@@ -41,11 +42,11 @@ class PrayerPartnersTableViewController: UITableViewController, TakesArrayData {
   
   // MARK: - Table view data source
   
-  override func numberOfSections(in tableView: UITableView) -> Int {
+  func numberOfSections(in tableView: UITableView) -> Int {
     return 1
   }
   
-  override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
     if section == 0 {
       return stringArray?.count ?? 0
     }
@@ -54,7 +55,7 @@ class PrayerPartnersTableViewController: UITableViewController, TakesArrayData {
     }
   }
   
-  override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell: PrayerPartnersTableViewCell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! PrayerPartnersTableViewCell
     
     cell.groupNumberLabel.text = "Group ".appending(String(indexPath.row + 1))
@@ -63,7 +64,7 @@ class PrayerPartnersTableViewController: UITableViewController, TakesArrayData {
     return cell
   }
 
-  override func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 120
   }
     /*

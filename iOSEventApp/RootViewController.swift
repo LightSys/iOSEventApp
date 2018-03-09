@@ -14,7 +14,7 @@
 
 import UIKit
 
-class ViewController: UIViewController {
+class RootViewController: UIViewController {
 
   @IBOutlet weak var navigationControllerContainer: UIView!
   @IBOutlet weak var sidebarContainer: UIView!
@@ -42,7 +42,7 @@ class ViewController: UIViewController {
   }
 }
 
-extension ViewController: MenuButton {
+extension RootViewController: MenuButton {
   func menuButtonTapped() {
 
     sidebarViewController.loadSidebarItemsIfNeeded()
@@ -61,7 +61,7 @@ extension ViewController: MenuButton {
   }
 }
 
-extension ViewController: ViewControllerSwitching {
+extension RootViewController: ViewControllerSwitching {
   func switchTo(vcName: String, entityNameForData: String, informationPageName pageName: String?) {
     let mainContainerVC = embeddedNavigationController.viewControllers[1]
         as! MainContainerViewController

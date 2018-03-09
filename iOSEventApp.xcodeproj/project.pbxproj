@@ -10,12 +10,12 @@
 		4DD00E09204E1A6D0000B10B /* SidebarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */; };
 		4DD00E0F204F5B6D0000B10B /* SidebarTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */; };
 		4DD00E10204F5B6D0000B10B /* PrayerPartnersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */; };
-		4DD00E11204F5B6D0000B10B /* DataLoader.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0C204F5B6D0000B10B /* DataLoader.swift */; };
+		4DD00E11204F5B6D0000B10B /* DataController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0C204F5B6D0000B10B /* DataController.swift */; };
 		4DD00E12204F5B6D0000B10B /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */; };
-		4DD00E13204F5B6D0000B10B /* PrayerPartnersTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0E204F5B6D0000B10B /* PrayerPartnersTableViewController.swift */; };
+		4DD00E13204F5B6D0000B10B /* PrayerPartnersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0E204F5B6D0000B10B /* PrayerPartnersViewController.swift */; };
 		4DD00E152051A65F0000B10B /* MainContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E142051A6590000B10B /* MainContainerViewController.swift */; };
 		F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6C7204DCE2F000DA81A /* AppDelegate.swift */; };
-		F149D6CA204DCE2F000DA81A /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6C9204DCE2F000DA81A /* ViewController.swift */; };
+		F149D6CA204DCE2F000DA81A /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6C9204DCE2F000DA81A /* RootViewController.swift */; };
 		F149D6CD204DCE2F000DA81A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F149D6CB204DCE2F000DA81A /* Main.storyboard */; };
 		F149D6D0204DCE2F000DA81A /* iOSEventApp.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = F149D6CE204DCE2F000DA81A /* iOSEventApp.xcdatamodeld */; };
 		F149D6D2204DCE2F000DA81A /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = F149D6D1204DCE2F000DA81A /* Assets.xcassets */; };
@@ -34,6 +34,7 @@
 		F1AF66682052FA2B00B8820D /* InformationPageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66672052FA2B00B8820D /* InformationPageTableViewCell.swift */; };
 		F1AF666A2052FB7600B8820D /* HousingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66692052FB7600B8820D /* HousingViewController.swift */; };
 		F1AF666C2052FBA600B8820D /* HousingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF666B2052FBA600B8820D /* HousingTableViewCell.swift */; };
+		F1AF66722053292300B8820D /* ContactTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66712053292300B8820D /* ContactTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,13 +58,13 @@
 		4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarTableViewCell.swift; sourceTree = "<group>"; };
 		4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableViewController.swift; sourceTree = "<group>"; };
 		4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrayerPartnersTableViewCell.swift; sourceTree = "<group>"; };
-		4DD00E0C204F5B6D0000B10B /* DataLoader.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataLoader.swift; sourceTree = "<group>"; };
+		4DD00E0C204F5B6D0000B10B /* DataController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = DataController.swift; sourceTree = "<group>"; };
 		4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
-		4DD00E0E204F5B6D0000B10B /* PrayerPartnersTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrayerPartnersTableViewController.swift; sourceTree = "<group>"; };
+		4DD00E0E204F5B6D0000B10B /* PrayerPartnersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrayerPartnersViewController.swift; sourceTree = "<group>"; };
 		4DD00E142051A6590000B10B /* MainContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContainerViewController.swift; sourceTree = "<group>"; };
 		F149D6C4204DCE2F000DA81A /* iOSEventApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSEventApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		F149D6C7204DCE2F000DA81A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		F149D6C9204DCE2F000DA81A /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
+		F149D6C9204DCE2F000DA81A /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		F149D6CC204DCE2F000DA81A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
 		F149D6CF204DCE2F000DA81A /* iOSEventApp.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iOSEventApp.xcdatamodel; sourceTree = "<group>"; };
 		F149D6D1204DCE2F000DA81A /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -87,6 +88,7 @@
 		F1AF66672052FA2B00B8820D /* InformationPageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationPageTableViewCell.swift; sourceTree = "<group>"; };
 		F1AF66692052FB7600B8820D /* HousingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousingViewController.swift; sourceTree = "<group>"; };
 		F1AF666B2052FBA600B8820D /* HousingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousingTableViewCell.swift; sourceTree = "<group>"; };
+		F1AF66712053292300B8820D /* ContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -138,31 +140,16 @@
 			isa = PBXGroup;
 			children = (
 				F149D6C7204DCE2F000DA81A /* AppDelegate.swift */,
-				F149D6C9204DCE2F000DA81A /* ViewController.swift */,
+				F149D6C9204DCE2F000DA81A /* RootViewController.swift */,
 				F149D6F8204DE923000DA81A /* QRScannerViewController.swift */,
-				F15E98DF20521C4B00C088D3 /* ScheduleViewController.swift */,
-				F15E98E120521D2700C088D3 /* ScheduleDayTableViewController.swift */,
-				F1AF665B20524CB500B8820D /* ScheduleTableViewCell.swift */,
+				F1AF666E2053247200B8820D /* SidebarItemViewControllers */,
 				F149D6CB204DCE2F000DA81A /* Main.storyboard */,
 				4DD00E142051A6590000B10B /* MainContainerViewController.swift */,
-				F1AF665F2052F65400B8820D /* ContactsViewController.swift */,
-				F1AF66612052F66A00B8820D /* InformationPageViewController.swift */,
-				F1AF66672052FA2B00B8820D /* InformationPageTableViewCell.swift */,
-				F1AF66692052FB7600B8820D /* HousingViewController.swift */,
-				F1AF666B2052FBA600B8820D /* HousingTableViewCell.swift */,
-				F1AF66632052F67300B8820D /* SettingsViewController.swift */,
-				F1AF66652052F86400B8820D /* SettingsTableViewCell.swift */,
-				4DD00E0C204F5B6D0000B10B /* DataLoader.swift */,
-				4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */,
-				4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */,
-				4DD00E0E204F5B6D0000B10B /* PrayerPartnersTableViewController.swift */,
-				4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */,
-				F1AF665D205251E700B8820D /* ScheduleContainerViewController.swift */,
-				4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */,
+				F1AF666F2053249700B8820D /* Model */,
+				F1AF666D2053243B00B8820D /* TableViewCells */,
 				F149D6D1204DCE2F000DA81A /* Assets.xcassets */,
 				F149D6D3204DCE2F000DA81A /* LaunchScreen.storyboard */,
 				F149D6D6204DCE2F000DA81A /* Info.plist */,
-				F149D6CE204DCE2F000DA81A /* iOSEventApp.xcdatamodeld */,
 			);
 			path = iOSEventApp;
 			sourceTree = "<group>";
@@ -183,6 +170,54 @@
 				F149D6EC204DCE2F000DA81A /* Info.plist */,
 			);
 			path = iOSEventAppUITests;
+			sourceTree = "<group>";
+		};
+		F1AF666D2053243B00B8820D /* TableViewCells */ = {
+			isa = PBXGroup;
+			children = (
+				F1AF665B20524CB500B8820D /* ScheduleTableViewCell.swift */,
+				F1AF66712053292300B8820D /* ContactTableViewCell.swift */,
+				F1AF66672052FA2B00B8820D /* InformationPageTableViewCell.swift */,
+				F1AF666B2052FBA600B8820D /* HousingTableViewCell.swift */,
+				F1AF66652052F86400B8820D /* SettingsTableViewCell.swift */,
+				4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */,
+				4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */,
+			);
+			path = TableViewCells;
+			sourceTree = "<group>";
+		};
+		F1AF666E2053247200B8820D /* SidebarItemViewControllers */ = {
+			isa = PBXGroup;
+			children = (
+				4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */,
+				F1AF6670205324B600B8820D /* Schedule */,
+				F1AF665F2052F65400B8820D /* ContactsViewController.swift */,
+				F1AF66612052F66A00B8820D /* InformationPageViewController.swift */,
+				F1AF66692052FB7600B8820D /* HousingViewController.swift */,
+				F1AF66632052F67300B8820D /* SettingsViewController.swift */,
+				4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */,
+				4DD00E0E204F5B6D0000B10B /* PrayerPartnersViewController.swift */,
+			);
+			path = SidebarItemViewControllers;
+			sourceTree = "<group>";
+		};
+		F1AF666F2053249700B8820D /* Model */ = {
+			isa = PBXGroup;
+			children = (
+				4DD00E0C204F5B6D0000B10B /* DataController.swift */,
+				F149D6CE204DCE2F000DA81A /* iOSEventApp.xcdatamodeld */,
+			);
+			path = Model;
+			sourceTree = "<group>";
+		};
+		F1AF6670205324B600B8820D /* Schedule */ = {
+			isa = PBXGroup;
+			children = (
+				F1AF665D205251E700B8820D /* ScheduleContainerViewController.swift */,
+				F15E98DF20521C4B00C088D3 /* ScheduleViewController.swift */,
+				F15E98E120521D2700C088D3 /* ScheduleDayTableViewController.swift */,
+			);
+			path = Schedule;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -330,11 +365,12 @@
 				F1AF66662052F86400B8820D /* SettingsTableViewCell.swift in Sources */,
 				F1AF66602052F65400B8820D /* ContactsViewController.swift in Sources */,
 				4DD00E10204F5B6D0000B10B /* PrayerPartnersTableViewCell.swift in Sources */,
-				4DD00E13204F5B6D0000B10B /* PrayerPartnersTableViewController.swift in Sources */,
+				4DD00E13204F5B6D0000B10B /* PrayerPartnersViewController.swift in Sources */,
 				F1AF66622052F66A00B8820D /* InformationPageViewController.swift in Sources */,
-				4DD00E11204F5B6D0000B10B /* DataLoader.swift in Sources */,
+				4DD00E11204F5B6D0000B10B /* DataController.swift in Sources */,
 				F1AF665C20524CB500B8820D /* ScheduleTableViewCell.swift in Sources */,
-				F149D6CA204DCE2F000DA81A /* ViewController.swift in Sources */,
+				F1AF66722053292300B8820D /* ContactTableViewCell.swift in Sources */,
+				F149D6CA204DCE2F000DA81A /* RootViewController.swift in Sources */,
 				F15E98E220521D2700C088D3 /* ScheduleDayTableViewController.swift in Sources */,
 				4DD00E152051A65F0000B10B /* MainContainerViewController.swift in Sources */,
 				F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */,
@@ -507,10 +543,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GTLNVLZ9SH;
+				DEVELOPMENT_TEAM = 9M753LXZ5L;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-        PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
+				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -522,10 +558,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = GTLNVLZ9SH;
+				DEVELOPMENT_TEAM = 9M753LXZ5L;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-        PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
+				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
