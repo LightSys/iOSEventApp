@@ -6,6 +6,13 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
+/*
+ The menu button reveals the sidebar, and tapping beside the sidebar removes
+    the menu. 
+ 
+ */
+
+
 import UIKit
 
 protocol MenuButton: AnyObject {
@@ -17,7 +24,8 @@ protocol TakesArrayData: AnyObject {
 }
 
 class MainContainerViewController: UIViewController {
-  let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+  let loader = DataController(newPersistentContainer:
+    (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
 
   @IBOutlet weak var containerView: UIView!
   weak var delegate: MenuButton?

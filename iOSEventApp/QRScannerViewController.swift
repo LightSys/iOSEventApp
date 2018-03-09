@@ -6,10 +6,18 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
+/*
+ So the idea is that you go in to the QR scanner when you open the app. Once the
+    QR code has been scanned, the app will stay on that event, sourcing data
+    through that hyperlink, until otherwise notified. The ability to change the
+    QR code being used is in settings. We downloaded the QR code reader.
+ */
+
 import UIKit
 import AVFoundation
 
-class QRScannerViewController: UIViewController, AVCaptureMetadataOutputObjectsDelegate {
+class QRScannerViewController: UIViewController,
+        AVCaptureMetadataOutputObjectsDelegate {
 
   weak var delegate: MenuButton?
 
