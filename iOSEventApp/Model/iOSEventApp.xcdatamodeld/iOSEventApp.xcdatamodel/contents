@@ -27,7 +27,7 @@
     </entity>
     <entity name="InformationPage" representedClassName="InformationPage" syncable="YES" codeGenerationType="class">
         <attribute name="pageName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="infoNav" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SidebarAppearance" syncable="YES"/>
+        <relationship name="infoNav" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SidebarAppearance" inverseName="infoPage" inverseEntity="SidebarAppearance" syncable="YES"/>
         <relationship name="infoSections" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="InformationPageSection" inverseName="infoPage" inverseEntity="InformationPageSection" syncable="YES"/>
     </entity>
     <entity name="InformationPageSection" representedClassName="InformationPageSection" syncable="YES" codeGenerationType="class">
@@ -56,6 +56,7 @@
         <attribute name="nav" attributeType="String" syncable="YES"/>
         <attribute name="optionalIdentifier" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="order" attributeType="String" syncable="YES"/>
+        <relationship name="infoPage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="InformationPage" inverseName="infoNav" inverseEntity="InformationPage" syncable="YES"/>
     </entity>
     <entity name="Theme" representedClassName="Theme" syncable="YES" codeGenerationType="class">
         <attribute name="themeName" optional="YES" attributeType="String" syncable="YES"/>
@@ -71,7 +72,7 @@
         <element name="PrayerPartnerGroup" positionX="0" positionY="45" width="128" height="60"/>
         <element name="ScheduleDay" positionX="-9" positionY="81" width="128" height="75"/>
         <element name="ScheduleItem" positionX="0" positionY="90" width="128" height="135"/>
-        <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="105"/>
+        <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="120"/>
         <element name="Theme" positionX="36" positionY="135" width="128" height="75"/>
     </elements>
 </model>
