@@ -71,34 +71,34 @@ class SidebarTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return variableSidebarItems.count + 3 // Notifications, About, and Settings
+    return variableSidebarItems.count + 2 // About, and Settings
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     switch indexPath.row {
-    case 0:
-      
-      vcSwitchingDelegate?.switchTo(vcName: "notifications", entityNameForData: "", informationPageName: nil)
-    case 1...(variableSidebarItems.count == 0 ? 1 : variableSidebarItems.count):
+    case 0...(variableSidebarItems.count == 0 ? 0 : variableSidebarItems.count-1):
       if variableSidebarItems.count > 0 {
-        if variableSidebarItems[indexPath.row-1].nav == "Contacts" {
+        if variableSidebarItems[indexPath.row].nav == "Notifications" {
+          vcSwitchingDelegate?.switchTo(vcName: "notifications", entityNameForData: "Notification", informationPageName: nil)
+        }
+        else if variableSidebarItems[indexPath.row].nav == "Contacts" {
           vcSwitchingDelegate?.switchTo(vcName: "contacts", entityNameForData: "Contact", informationPageName: nil)
         }
-        else if variableSidebarItems[indexPath.row-1].nav == "Housing" {
+        else if variableSidebarItems[indexPath.row].nav == "Housing" {
           vcSwitchingDelegate?.switchTo(vcName: "housing", entityNameForData: "HousingUnit", informationPageName: nil)
         }
-        else if variableSidebarItems[indexPath.row-1].nav == "Schedule" {
+        else if variableSidebarItems[indexPath.row].nav == "Schedule" {
           vcSwitchingDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay", informationPageName: nil)
         }
-        else if variableSidebarItems[indexPath.row-1].nav == "Prayer Partners" {
+        else if variableSidebarItems[indexPath.row].nav == "Prayer Partners" {
           vcSwitchingDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup", informationPageName: nil)
         }
         else {
-          vcSwitchingDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row-1].nav)
+          vcSwitchingDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row].nav)
         }
       }
       print("case \(indexPath.row)")
-    case variableSidebarItems.count+1:
+    case variableSidebarItems.count:
       print("About selected")
     default:
       vcSwitchingDelegate?.switchTo(vcName: "settings", entityNameForData: "", informationPageName: nil)
@@ -110,16 +110,12 @@ class SidebarTableViewController: UITableViewController {
     let cell = tableView.dequeueReusableCell(withIdentifier: "sidebarCell", for: indexPath) as! SidebarTableViewCell
     
     let row = indexPath.row
-    if row == 0 {
-      cell.sideImageView.image = UIImage(named: "ic_bell.png")
-      cell.label.text = "Notifications"
+    if row < variableSidebarItems.count {
+      cell.sideImageView.image = UIImage(named: variableSidebarItems[row].icon!)
+      cell.label.text = variableSidebarItems[row].nav!
     }
-    else if row <= variableSidebarItems.count {
-      cell.sideImageView.image = UIImage(named: variableSidebarItems[row-1].icon!)
-      cell.label.text = variableSidebarItems[row-1].nav!
-    }
-    else if row == variableSidebarItems.count+1 {
-      cell.sideImageView.image = UIImage(named: "ic_info.png")
+    else if row == variableSidebarItems.count {
+      cell.sideImageView.image = UIImage(named: "ic_info")
       cell.label.text = "About"
     }
     else {

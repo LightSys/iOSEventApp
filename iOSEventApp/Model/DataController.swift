@@ -61,84 +61,86 @@ class DataController: NSObject {
         
         let housing = jsonDict["housing"] as! [String: Any]
         self.generateHousingModel(from: housing)
-        // General info
-        // key:"nav" value "Housing"
-        // key "icon" value:"ic_house"
-        
-        // Hosts:
-        // key: (hostname) value ["students": "(students)", "driver": "(driver)"]
         
         let general = jsonDict["general"] as! [String: Any]
         self.generateGeneralModel(from: general)
-        // Keys: "time_zone" "notifications_url" "welcome_message" "year" "refresh" "refresh_expire" "logo"
         
         let contactPage = jsonDict["contact_page"] as! [String: Any]
         self.generateContactPageModel(from: contactPage)
-/*    - key : "icon"
- - value : ic_contact
-*/
-        // key: "section_1"
-        // value ["content":(string), "id":0, "header":(string)]
-        // key: "section_2"
-        // value ["content":(string), "id":1, "header":(string)]
-        // key: "nav"
-        // value "Contacts"
         
         let contacts = jsonDict["contacts"] as! [String: Any]
         self.generateContactModel(from: contacts)
-        // key: "name"
-        // value: ["address":(address), "phone":(phone?)]
-        // NO NAV?
-        
+
         let themes = jsonDict["theme"] as! [[String: Any]]
         self.generateThemeModel(from: themes)
-        // array of ["key":"#XXXXXX"]
-        
-        
-        // DATA MODEL PAUSE
-        
+
         let informationPage = jsonDict["information_page"] as! [String: Any]
         self.generateInformationPageModel(from: informationPage)
-//        // "page_1": (something), "page_2": (something)
-//
+
         let schedule = jsonDict["schedule"] as! [String: Any]
         self.generateSchedulePageModel(from: schedule)
-        
-//        // Keyed by date "03/04/2018"
-//        // Value: Array of dictionaries
-//        // Dictionaries: ["category":cat, length:(minutes), start_time:(1015), description:(string), location:(string)
         
         UserDefaults.standard.set(1, forKey: "dataLoaded")
         UserDefaults.standard.synchronize()
         
-        completion(true)
+        if let notificationsURLString = general["notifications_url"] as? String {
+          self.loadNotificationsFromURL(URL(string: notificationsURLString)!, completion: completion)
+        }
+        else {
+          completion(true)
+        }
         // TODO: Do one save here???
       }
       catch {
         print(error)
         completion(false)
       }
-//      if let jsonDict = JSONSerialization.jsonObject(with: unwrappedData)  {
-//        print(jsonDict)
-//      }
     }
     task.resume()
   }
+ 
   
+  func loadNotificationsFromURL(_ url: URL, completion: @escaping ((_ success: Bool) -> Void)) {
+    // Because notifications may be refreshed more frequently...
+    deleteAll(forEntityName: "Notification")
+    
+    let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
+      guard error == nil else {
+        print("Error: \(error!)")
+        return
+      }
+      guard let unwrappedData = data else {
+        print("There was no data")
+        return
+      }
+      
+      do {
+        let jsonDict = try JSONSerialization.jsonObject(with: unwrappedData)
+          as! [String: Any]
+        let notificationDict = jsonDict["notifications"] as! [String: Any]
+        self.generateNotificationsModel(from: notificationDict)
+        
+        UserDefaults.standard.set(1, forKey: "notificationsLoaded") // TODO: When reloading data, reset userdefaults
+        UserDefaults.standard.synchronize()
+        
+        try? self.persistentContainer.viewContext.save()
+        // TODO: Do one save here???
+
+        completion(true)
+        
+      }
+      catch {
+        print(error)
+        completion(false)
+      }
+    }
+    task.resume()
+  }
 }
 
 
 // This is used to compartmentalize creating objects out of dictionaries...
 extension DataController {
-  /*        let jsonDict = try JSONSerialization.jsonObject(with: unwrappedData) as! [String: Any]
-   let prayerPartners = jsonDict["prayer_partners"] as! [[String: Any]]
-   print(prayerPartners)
-   // index 0. general info? = key:"nav" value:"Prayer Partners"
-   //                          key:"icon" value:"ic_group"
-   
-   // index 1-8 Partners = key:"students" value:"First Last\nFirst Last..."
-
- */
   func generatePrayerPartnerModel(from partnerGroups: [[String: Any]]) {
     let prayerPartnerGroupEntityName = "PrayerPartnerGroup"
     deleteAll(forEntityName: prayerPartnerGroupEntityName)
@@ -276,8 +278,23 @@ extension DataController {
     }
   }
   
+  func generateNotificationsModel(from notificationsDict: [String: Any]) {
+    //    deleteAll(forEntityName: schedulePageEntityName)
+    // TODO: What is the refresh key?
+    
+    let kvDict = [sidebarNameKey: notificationsDict[sidebarNameKey]!, sidebarIconKey: notificationsDict[sidebarIconKey]!, orderKey: "0"]
+    _ = createObject(sidebarAppearanceEntityName, with: kvDict) as! SidebarAppearance
+    
+    
+    for (key, value) in notificationsDict where key != sidebarNameKey && key != sidebarIconKey {
+      let valueDict = value as! [String: Any]
+      let notificationDict = ["notificationNumber": Int(key)!, "title": valueDict["title"]!, "body": valueDict["body"]!] as [String: Any]
+      _ = createObject("Notification", with: notificationDict)
+    }
+  }
+
   func generateSchedulePageModel(from schedulePageDict: [String: Any]) {
-//    deleteAll(forEntityName: schedulePageEntityName)
+    //    deleteAll(forEntityName: schedulePageEntityName)
     
     for (date, values) in schedulePageDict where date != sidebarNameKey && date != sidebarIconKey {
       let dayDict = ["date": date] as [String : Any]
@@ -295,7 +312,7 @@ extension DataController {
     let kvDict = [sidebarNameKey: schedulePageDict[sidebarNameKey]!, sidebarIconKey: schedulePageDict[sidebarIconKey]!, orderKey: "2"]
     _ = createObject(sidebarAppearanceEntityName, with: kvDict)
   }
-  
+
   /// <#Description#>
   ///
   /// - Parameters:

@@ -8,15 +8,33 @@
 
 import UIKit
 
-class NotificationsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+class NotificationsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
+  var dataArray: [Any]?
+  
+  func numberOfSections(in tableView: UITableView) -> Int {
+    return 1
+  }
+  
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return 0
+    return dataArray?.count ?? 0
   }
   
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-    return UITableViewCell()
+    let cell = tableView.dequeueReusableCell(withIdentifier: "notificationCell", for: indexPath) as! NotificationTableViewCell
+    
+    let notificationArray = dataArray as! [Notification]
+    
+    cell.titleLabel.text = notificationArray[indexPath.row].title
+    cell.bodyTextView.text = notificationArray[indexPath.row].body
+    cell.dateLabel.text = notificationArray[indexPath.row].date
+
+    return cell
   }
 
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 142
+  }
+  
   @IBOutlet weak var headerLabel: UILabel!
   
   override func viewDidLoad() {

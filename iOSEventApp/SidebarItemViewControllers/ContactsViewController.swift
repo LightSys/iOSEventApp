@@ -52,7 +52,7 @@ class ContactsViewController: UIViewController, TakesArrayData, UITableViewDataS
       cell.cellHeader.text = "Contact List"
     }
     
-    if row < contactPageSections?.count ?? 0 {
+    if row < (contactPageSections?.count ?? 1)-1 {
       // Only display the section info
     }
     else {
@@ -70,6 +70,7 @@ class ContactsViewController: UIViewController, TakesArrayData, UITableViewDataS
           bodyText?.append("\n\(phone)")
         }
       }
+      cell.cellBody.text = bodyText
     }
     
     return cell
