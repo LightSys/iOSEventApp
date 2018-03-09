@@ -21,8 +21,8 @@ class QRScannerViewController: UIViewController,
 
   weak var delegate: MenuButton?
 
-  let loader = DataController(newPersistentContainer:
-        (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+  let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+  var activityIndicator: UIActivityIndicatorView!
   
   var captureSession: AVCaptureSession!
   var previewLayer: AVCaptureVideoPreviewLayer!

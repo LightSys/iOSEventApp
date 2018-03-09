@@ -278,9 +278,21 @@ extension DataController {
   
   func generateSchedulePageModel(from schedulePageDict: [String: Any]) {
 //    deleteAll(forEntityName: schedulePageEntityName)
-    let kvDict = [sidebarNameKey: schedulePageDict[sidebarNameKey]!,
-                  sidebarIconKey: schedulePageDict[sidebarIconKey]!,
-                  orderKey: "2"]
+    
+    for (date, values) in schedulePageDict where date != sidebarNameKey && date != sidebarIconKey {
+      let dayDict = ["date": date] as [String : Any]
+      let createdDay = createObject("ScheduleDay", with: dayDict) as! ScheduleDay
+      for value in values as! [[String: Any]] {
+        let itemsDict = ["startTime": String(describing: value["start_time"]!),
+                         "itemDescription": value["description"]!,
+                         "category": value["category"]!,
+                         "length": String(describing: value["length"]!),
+                         "location": value["location"]!,
+                         "day": createdDay]
+        _ = createObject("ScheduleItem", with: itemsDict) as! ScheduleItem
+      }
+    }
+    let kvDict = [sidebarNameKey: schedulePageDict[sidebarNameKey]!, sidebarIconKey: schedulePageDict[sidebarIconKey]!, orderKey: "2"]
     _ = createObject(sidebarAppearanceEntityName, with: kvDict)
   }
   
