@@ -44,17 +44,9 @@ class ViewController: UIViewController {
 
 extension ViewController: MenuButton {
   func menuButtonTapped() {
-    let loader = DataController(newPersistentContainer:
-        (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
 
-    let sidebarItems = (loader.fetchAllObjects(forName: "SidebarAppearance")
-        as! [SidebarAppearance]).sorted(by: { (item1, item2) -> Bool in
-      return item1.order! < item2.order!
-    })
-    sidebarViewController.variableSidebarItems = sidebarItems
+    sidebarViewController.loadSidebarItemsIfNeeded()
     
-    print("Data loaded successfully!")
-
     UIView.animate(withDuration: 0.2) {
       if self.sidebarContainer.frame.origin.x != 0 {
         self.sidebarContainer.frame.origin.x = 0
@@ -70,11 +62,12 @@ extension ViewController: MenuButton {
 }
 
 extension ViewController: ViewControllerSwitching {
-  func switchTo(vcName: String, entityNameForData: String) {
+  func switchTo(vcName: String, entityNameForData: String, informationPageName pageName: String?) {
     let mainContainerVC = embeddedNavigationController.viewControllers[1]
         as! MainContainerViewController
     mainContainerVC.loadViewController(identifier: vcName,
-                                       entityNameForData: entityNameForData)
+                                       entityNameForData: entityNameForData,
+                                       informationPageName: pageName)
     menuButtonTapped()
   }
 }

@@ -52,7 +52,10 @@ extension ScheduleViewController: UIPageViewControllerDelegate {
 extension ScheduleViewController: UIPageViewControllerDataSource {
   func newPage(forDay day: ScheduleDay, dayName: String) -> ScheduleDayTableViewController {
     let newVC = storyboard?.instantiateViewController(withIdentifier: "ScheduleDayPrototype") as! ScheduleDayTableViewController
-    newVC.scheduleItems = day.items?.sortedArray(using: [NSSortDescriptor(key: "startTime", ascending: true)]) as? [ScheduleItem]
+    if day.items?.count ?? 0 > 0 {
+      newVC.scheduleItems = Array(day.items!) as? [ScheduleItem]
+      newVC.scheduleItems?.sort() // This is to handle the am/pm string sort mixup introduced by the above line
+    }
     newVC.dayLabelText = day.date
     viewControllerDict[dayName] = newVC
     newVC.view.frame = view.frame
@@ -98,4 +101,10 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
   }
   
   
+}
+
+extension ScheduleItem: Comparable {
+  public static func <(lhs: ScheduleItem, rhs: ScheduleItem) -> Bool {
+    return Int(lhs.startTime!)! < Int(rhs.startTime!)!
+  }
 }

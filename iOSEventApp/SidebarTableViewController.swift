@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ViewControllerSwitching:AnyObject {
-  func switchTo(vcName: String, entityNameForData: String)
+  func switchTo(vcName: String, entityNameForData: String, informationPageName pageName: String?)
 }
 
 class SidebarTableViewController: UITableViewController {
@@ -25,6 +25,24 @@ class SidebarTableViewController: UITableViewController {
       _variableSidebarItems = newValue
       tableView.reloadData()
     }
+  }
+  
+  func loadSidebarItemsIfNeeded() {
+    guard variableSidebarItems.count == 0 else {
+      return
+    }
+    reloadSidebarItems()
+  }
+  
+  func reloadSidebarItems() {
+    let loader = DataController(newPersistentContainer:
+      (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+    
+    let sidebarItems = (loader.fetchAllObjects(forName: "SidebarAppearance")
+      as! [SidebarAppearance]).sorted(by: { (item1, item2) -> Bool in
+        return item1.order! < item2.order!
+      })
+    variableSidebarItems = sidebarItems
   }
   
   override func viewWillAppear(_ animated: Bool) {
@@ -59,14 +77,24 @@ class SidebarTableViewController: UITableViewController {
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     switch indexPath.row {
     case 0:
-      vcSwitchingDelegate?.switchTo(vcName: "notifications", entityNameForData: "")
+      
+      vcSwitchingDelegate?.switchTo(vcName: "notifications", entityNameForData: "", informationPageName: nil)
     case 1...(variableSidebarItems.count == 0 ? 1 : variableSidebarItems.count):
       if variableSidebarItems.count > 0 {
-        if variableSidebarItems[indexPath.row-1].nav == "Prayer Partners" {
-          vcSwitchingDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup")
+        if variableSidebarItems[indexPath.row-1].nav == "Contacts" {
+          //          vcSwitchingDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay", informationPageName: nil)
+        }
+        else if variableSidebarItems[indexPath.row-1].nav == "Housing" {
+          vcSwitchingDelegate?.switchTo(vcName: "housing", entityNameForData: "HousingUnit", informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row-1].nav == "Schedule" {
-          vcSwitchingDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay")
+          vcSwitchingDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay", informationPageName: nil)
+        }
+        else if variableSidebarItems[indexPath.row-1].nav == "Prayer Partners" {
+          vcSwitchingDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup", informationPageName: nil)
+        }
+        else {
+          vcSwitchingDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row-1].nav)
         }
       }
       print("case \(indexPath.row)")
@@ -83,21 +111,22 @@ class SidebarTableViewController: UITableViewController {
     
     let row = indexPath.row
     if row == 0 {
-//      cell.sideImageView.image = UIImage(imageLiteralResourceName: "ic_bell")
+      cell.sideImageView.image = UIImage(named: "ic_bell.png")
       cell.label.text = "Notifications"
     }
     else if row <= variableSidebarItems.count {
-//      cell.sideImageView.image = UIImage(imageLiteralResourceName: variableSidebarItems[row-1].icon!)
+      cell.sideImageView.image = UIImage(named: variableSidebarItems[row-1].icon!)
       cell.label.text = variableSidebarItems[row-1].nav!
     }
     else if row == variableSidebarItems.count+1 {
-//      cell.sideImageView.image = UIImage(imageLiteralResourceName: "ic_info")
+      cell.sideImageView.image = UIImage(named: "ic_info.png")
       cell.label.text = "About"
     }
     else {
-//      cell.sideImageView.image = nil
+      cell.sideImageView.image = nil
       cell.label.text = "Settings"
     }
     return cell
   }
 }
+

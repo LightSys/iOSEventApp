@@ -255,24 +255,24 @@ extension DataController {
     
     var pageNum = 0
     for (key, value) in (informationPageDict as! [String: [[String: Any]]]) {
-      
       let pageIdentifier = key
-      let infoPageDict = ["pageName": pageIdentifier]
-      let createdPage = createObject("InformationPage", with: infoPageDict) as! InformationPage
 
-      for i in 1..<value.count {
-        let section = value[i]
-        let kvDict = ["title": section["title"]!, "information": section["description"]!, "infoPage": createdPage]
-        _ = createObject("InformationPageSection", with: kvDict) as! InformationPageSection
-      }
-      
       let sidebarName = value[0][sidebarNameKey] as! String
       let sidebarIconName = value[0][sidebarIconKey] as! String
       let kvDict = ["optionalIdentifier": pageIdentifier, sidebarNameKey:
         sidebarName, sidebarIconKey: sidebarIconName,
                      orderKey: String(5+pageNum)]
       pageNum += 1
-     _ = createObject(sidebarAppearanceEntityName, with: kvDict)
+      let createdAppearance = createObject(sidebarAppearanceEntityName, with: kvDict) as! SidebarAppearance
+
+      let infoPageDict = ["pageName": pageIdentifier, "infoNav": createdAppearance] as [String : Any]
+      let createdPage = createObject("InformationPage", with: infoPageDict) as! InformationPage
+
+      for i in 1..<value.count {
+        let section = value[i]
+        let kvDict = ["title": section["title"]!, "information": section["description"]!, "infoPage": createdPage, "order": i]
+        _ = createObject("InformationPageSection", with: kvDict) as! InformationPageSection
+      }
     }
   }
   

@@ -240,7 +240,7 @@
         <!--CodeAThonInfo-->
         <scene sceneID="6lq-S8-QxO">
             <objects>
-                <viewController title="CodeAThonInfo" id="o6C-Xp-oMz" customClass="InformationPageViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="informationPage" title="CodeAThonInfo" id="o6C-Xp-oMz" customClass="InformationPageViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="97b-25-hZM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
