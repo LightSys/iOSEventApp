@@ -6,6 +6,13 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
+/*
+ The menu button reveals the sidebar, and tapping beside the sidebar removes
+    the menu. 
+ 
+ */
+
+
 import UIKit
 
 protocol MenuButton: AnyObject {
