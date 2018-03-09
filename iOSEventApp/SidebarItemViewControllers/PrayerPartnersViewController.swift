@@ -16,7 +16,9 @@ class PrayerPartnersViewController: UIViewController, UITableViewDataSource, UIT
     set {
       _dataArray = newValue as? [PrayerPartnerGroup]
       stringArray = _dataArray?.map { $0.students! }
-      tableView.reloadData()
+        if let tv = tableView {
+            tv.reloadData()
+        }
     }
     get {
       return _dataArray
