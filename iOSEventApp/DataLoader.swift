@@ -100,6 +100,9 @@ class DataController: NSObject {
 //        // Keyed by date "03/04/2018"
 //        // Value: Array of dictionaries
 //        // Dictionaries: ["category":cat, length:(minutes), start_time:(1015), description:(string), location:(string)
+        
+        UserDefaults.standard.set(1, forKey: "dataLoaded")
+        UserDefaults.standard.synchronize()
       }
       catch {
         print(error)
