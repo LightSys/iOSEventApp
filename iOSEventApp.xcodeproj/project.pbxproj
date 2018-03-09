@@ -25,6 +25,15 @@
 		F149D6F9204DE923000DA81A /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6F8204DE923000DA81A /* QRScannerViewController.swift */; };
 		F15E98E020521C4B00C088D3 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15E98DF20521C4B00C088D3 /* ScheduleViewController.swift */; };
 		F15E98E220521D2700C088D3 /* ScheduleDayTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15E98E120521D2700C088D3 /* ScheduleDayTableViewController.swift */; };
+		F1AF665C20524CB500B8820D /* ScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF665B20524CB500B8820D /* ScheduleTableViewCell.swift */; };
+		F1AF665E205251E700B8820D /* ScheduleContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF665D205251E700B8820D /* ScheduleContainerViewController.swift */; };
+		F1AF66602052F65400B8820D /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF665F2052F65400B8820D /* ContactsViewController.swift */; };
+		F1AF66622052F66A00B8820D /* InformationPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66612052F66A00B8820D /* InformationPageViewController.swift */; };
+		F1AF66642052F67300B8820D /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66632052F67300B8820D /* SettingsViewController.swift */; };
+		F1AF66662052F86400B8820D /* SettingsTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66652052F86400B8820D /* SettingsTableViewCell.swift */; };
+		F1AF66682052FA2B00B8820D /* InformationPageTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66672052FA2B00B8820D /* InformationPageTableViewCell.swift */; };
+		F1AF666A2052FB7600B8820D /* HousingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF66692052FB7600B8820D /* HousingViewController.swift */; };
+		F1AF666C2052FBA600B8820D /* HousingTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF666B2052FBA600B8820D /* HousingTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -69,6 +78,15 @@
 		F149D6F8204DE923000DA81A /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
 		F15E98DF20521C4B00C088D3 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
 		F15E98E120521D2700C088D3 /* ScheduleDayTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleDayTableViewController.swift; sourceTree = "<group>"; };
+		F1AF665B20524CB500B8820D /* ScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewCell.swift; sourceTree = "<group>"; };
+		F1AF665D205251E700B8820D /* ScheduleContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleContainerViewController.swift; sourceTree = "<group>"; };
+		F1AF665F2052F65400B8820D /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
+		F1AF66612052F66A00B8820D /* InformationPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationPageViewController.swift; sourceTree = "<group>"; };
+		F1AF66632052F67300B8820D /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		F1AF66652052F86400B8820D /* SettingsTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsTableViewCell.swift; sourceTree = "<group>"; };
+		F1AF66672052FA2B00B8820D /* InformationPageTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = InformationPageTableViewCell.swift; sourceTree = "<group>"; };
+		F1AF66692052FB7600B8820D /* HousingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousingViewController.swift; sourceTree = "<group>"; };
+		F1AF666B2052FBA600B8820D /* HousingTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HousingTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -124,13 +142,22 @@
 				F149D6F8204DE923000DA81A /* QRScannerViewController.swift */,
 				F15E98DF20521C4B00C088D3 /* ScheduleViewController.swift */,
 				F15E98E120521D2700C088D3 /* ScheduleDayTableViewController.swift */,
+				F1AF665B20524CB500B8820D /* ScheduleTableViewCell.swift */,
 				F149D6CB204DCE2F000DA81A /* Main.storyboard */,
 				4DD00E142051A6590000B10B /* MainContainerViewController.swift */,
+				F1AF665F2052F65400B8820D /* ContactsViewController.swift */,
+				F1AF66612052F66A00B8820D /* InformationPageViewController.swift */,
+				F1AF66672052FA2B00B8820D /* InformationPageTableViewCell.swift */,
+				F1AF66692052FB7600B8820D /* HousingViewController.swift */,
+				F1AF666B2052FBA600B8820D /* HousingTableViewCell.swift */,
+				F1AF66632052F67300B8820D /* SettingsViewController.swift */,
+				F1AF66652052F86400B8820D /* SettingsTableViewCell.swift */,
 				4DD00E0C204F5B6D0000B10B /* DataLoader.swift */,
 				4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */,
 				4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */,
 				4DD00E0E204F5B6D0000B10B /* PrayerPartnersTableViewController.swift */,
 				4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */,
+				F1AF665D205251E700B8820D /* ScheduleContainerViewController.swift */,
 				4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */,
 				F149D6D1204DCE2F000DA81A /* Assets.xcassets */,
 				F149D6D3204DCE2F000DA81A /* LaunchScreen.storyboard */,
@@ -292,19 +319,28 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				F1AF666A2052FB7600B8820D /* HousingViewController.swift in Sources */,
 				4DD00E12204F5B6D0000B10B /* NotificationsViewController.swift in Sources */,
 				4DD00E09204E1A6D0000B10B /* SidebarTableViewCell.swift in Sources */,
+				F1AF666C2052FBA600B8820D /* HousingTableViewCell.swift in Sources */,
 				F149D6F9204DE923000DA81A /* QRScannerViewController.swift in Sources */,
+				F1AF66682052FA2B00B8820D /* InformationPageTableViewCell.swift in Sources */,
 				F15E98E020521C4B00C088D3 /* ScheduleViewController.swift in Sources */,
 				4DD00E0F204F5B6D0000B10B /* SidebarTableViewController.swift in Sources */,
+				F1AF66662052F86400B8820D /* SettingsTableViewCell.swift in Sources */,
+				F1AF66602052F65400B8820D /* ContactsViewController.swift in Sources */,
 				4DD00E10204F5B6D0000B10B /* PrayerPartnersTableViewCell.swift in Sources */,
 				4DD00E13204F5B6D0000B10B /* PrayerPartnersTableViewController.swift in Sources */,
+				F1AF66622052F66A00B8820D /* InformationPageViewController.swift in Sources */,
 				4DD00E11204F5B6D0000B10B /* DataLoader.swift in Sources */,
+				F1AF665C20524CB500B8820D /* ScheduleTableViewCell.swift in Sources */,
 				F149D6CA204DCE2F000DA81A /* ViewController.swift in Sources */,
 				F15E98E220521D2700C088D3 /* ScheduleDayTableViewController.swift in Sources */,
 				4DD00E152051A65F0000B10B /* MainContainerViewController.swift in Sources */,
 				F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */,
+				F1AF665E205251E700B8820D /* ScheduleContainerViewController.swift in Sources */,
 				F149D6D0204DCE2F000DA81A /* iOSEventApp.xcdatamodeld in Sources */,
+				F1AF66642052F67300B8820D /* SettingsViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -471,10 +507,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-        DEVELOPMENT_TEAM = 9M753LXZ5L;
+				DEVELOPMENT_TEAM = 9M753LXZ5L;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-        PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
+				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -486,10 +522,10 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-        DEVELOPMENT_TEAM = 9M753LXZ5L;
+				DEVELOPMENT_TEAM = 9M753LXZ5L;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
-        PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
+				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

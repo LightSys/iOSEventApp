@@ -8,44 +8,52 @@
 
 import UIKit
 
-class ScheduleDayTableViewController: UITableViewController {
+class ScheduleDayTableViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
-  var dayLabel: UILabel!
+  @IBOutlet weak var dayLabel: UILabel!
+  var dayLabelText: String?
   var scheduleItems: [ScheduleItem]?
   
-    override func viewDidLoad() {
-        super.viewDidLoad()
-    }
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    dayLabel.text = dayLabelText
+  }
+  
+  override func didReceiveMemoryWarning() {
+    super.didReceiveMemoryWarning()
+    // Dispose of any resources that can be recreated.
+  }
+  
+  // MARK: - Table view data source
+  
+  func numberOfSections(in tableView: UITableView) -> Int {
+    return 1
+  }
+  
+  func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    return scheduleItems?.count ?? 0
+  }
+  
+  func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+    let cell = tableView.dequeueReusableCell(withIdentifier: "scheduleCell", for: indexPath) as! ScheduleTableViewCell
+    
+    let row = indexPath.row
+    let scheduleItem = scheduleItems![row]
+    cell.startLabel.text = scheduleItem.startTime!
+    cell.endLabel.text = scheduleItem.startTime! // PLUS duration minutes
+    cell.eventName.text = scheduleItem.itemDescription ?? ""
+    cell.eventLocation.text = scheduleItem.location ?? "" // GET contact info!!!
+//    cell.eventContact.text = scheduleItem.!
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    // MARK: - Table view data source
-
-    override func numberOfSections(in tableView: UITableView) -> Int {
-        // #warning Incomplete implementation, return the number of sections
-        return 0
-    }
-
-    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        // #warning Incomplete implementation, return the number of rows
-        return 0
-    }
-
-    /*
-    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCell(withIdentifier: "reuseIdentifier", for: indexPath)
-
-        // Configure the cell...
-
-        return cell
-    }
-    */
-
-    /*
-    // Override to support conditional editing of the table view.
+    return cell
+  }
+  
+  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
+    return 163
+  }
+  
+  /*
+   // Override to support conditional editing of the table view.
     override func tableView(_ tableView: UITableView, canEditRowAt indexPath: IndexPath) -> Bool {
         // Return false if you do not want the specified item to be editable.
         return true
