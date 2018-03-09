@@ -6,6 +6,12 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
+/*
+ Root view controler. Contains the sidebar, so that the sidebar can overlap the
+    navigation controler. Navigation controler can by this be toggled between
+    different parts of the app.
+ */
+
 import UIKit
 
 class ViewController: UIViewController {
@@ -17,9 +23,6 @@ class ViewController: UIViewController {
   var embeddedNavigationController: UINavigationController!
   var sidebarViewController: SidebarTableViewController!
 
-//  override func viewDidLoad() {
-//    navigationControllerContainer.
-//  }
 
   @IBAction func dimViewTapped(_ sender: Any) {
     menuButtonTapped()
@@ -27,8 +30,10 @@ class ViewController: UIViewController {
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "embedNavigationController" {
-      embeddedNavigationController = segue.destination as! UINavigationController
-      (embeddedNavigationController.viewControllers[0] as? QRScannerViewController)?.delegate = self
+      embeddedNavigationController =
+        segue.destination as! UINavigationController
+      (embeddedNavigationController.viewControllers[0]
+        as? QRScannerViewController)?.delegate = self
     }
     else if segue.identifier == "embedSidebarViewController" {
       sidebarViewController = segue.destination as! SidebarTableViewController
@@ -39,9 +44,11 @@ class ViewController: UIViewController {
 
 extension ViewController: MenuButton {
   func menuButtonTapped() {
-    let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+    let loader = DataController(newPersistentContainer:
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
 
-    let sidebarItems = (loader.fetchAllObjects(forName: "SidebarAppearance") as! [SidebarAppearance]).sorted(by: { (item1, item2) -> Bool in
+    let sidebarItems = (loader.fetchAllObjects(forName: "SidebarAppearance")
+        as! [SidebarAppearance]).sorted(by: { (item1, item2) -> Bool in
       return item1.order! < item2.order!
     })
     sidebarViewController.variableSidebarItems = sidebarItems
@@ -54,7 +61,8 @@ extension ViewController: MenuButton {
         self.dimView.isHidden = false
       }
       else {
-        self.sidebarContainer.frame.origin.x = -self.sidebarContainer.frame.size.width
+        self.sidebarContainer.frame.origin.x =
+            -self.sidebarContainer.frame.size.width
         self.dimView.isHidden = true
       }
     }
@@ -63,8 +71,10 @@ extension ViewController: MenuButton {
 
 extension ViewController: ViewControllerSwitching {
   func switchTo(vcName: String, entityNameForData: String) {
-    let mainContainerVC = embeddedNavigationController.viewControllers[1] as! MainContainerViewController
-    mainContainerVC.loadViewController(identifier: vcName, entityNameForData: entityNameForData)
+    let mainContainerVC = embeddedNavigationController.viewControllers[1]
+        as! MainContainerViewController
+    mainContainerVC.loadViewController(identifier: vcName,
+                                       entityNameForData: entityNameForData)
     menuButtonTapped()
   }
 }
