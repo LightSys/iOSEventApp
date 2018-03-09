@@ -82,7 +82,7 @@ class SidebarTableViewController: UITableViewController {
     case 1...(variableSidebarItems.count == 0 ? 1 : variableSidebarItems.count):
       if variableSidebarItems.count > 0 {
         if variableSidebarItems[indexPath.row-1].nav == "Contacts" {
-          //          vcSwitchingDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay", informationPageName: nil)
+          vcSwitchingDelegate?.switchTo(vcName: "contacts", entityNameForData: "Contact", informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row-1].nav == "Housing" {
           vcSwitchingDelegate?.switchTo(vcName: "housing", entityNameForData: "HousingUnit", informationPageName: nil)
@@ -101,7 +101,7 @@ class SidebarTableViewController: UITableViewController {
     case variableSidebarItems.count+1:
       print("About selected")
     default:
-      print("Settings selected")
+      vcSwitchingDelegate?.switchTo(vcName: "settings", entityNameForData: "", informationPageName: nil)
     }
   }
   

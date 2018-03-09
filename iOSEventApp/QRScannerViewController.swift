@@ -27,7 +27,13 @@ class QRScannerViewController: UIViewController,
   var captureSession: AVCaptureSession!
   var previewLayer: AVCaptureVideoPreviewLayer!
   
+  var hasLeftScanner: Bool?
   func shouldRunScan() -> Bool {
+    // If they have left the scanner, they have returned – and need to rescan.
+    if hasLeftScanner == true {
+      return true
+    }
+    
     let isDataLoaded = UserDefaults.standard.object(forKey: "dataLoaded") as? Int ?? 0
     return isDataLoaded == 0
   }
@@ -107,9 +113,11 @@ class QRScannerViewController: UIViewController,
   override func viewDidAppear(_ animated: Bool) {
     super.viewDidAppear(animated)
     
-    if let isDataLoaded = UserDefaults.standard.object(forKey: "dataLoaded") as? Int, isDataLoaded == 1 {
-      performSegue(withIdentifier: "PresentMainContainer", sender: nil)
+    guard shouldRunScan() == false else {
+      return
     }
+    
+    performSegue(withIdentifier: "PresentMainContainer", sender: nil)
   }
   
   override func viewWillDisappear(_ animated: Bool) {
@@ -118,6 +126,7 @@ class QRScannerViewController: UIViewController,
     if (captureSession?.isRunning == true) {
       captureSession.stopRunning()
     }
+    hasLeftScanner = true
   }
   
   func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
