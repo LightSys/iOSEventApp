@@ -1,5 +1,5 @@
 //
-//  DataLoader.swift
+//  DataController.swift
 //  iOSEventApp
 //
 //  Created by Nathaniel Brown on 3/5/18.
