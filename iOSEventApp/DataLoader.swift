@@ -6,6 +6,12 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
+/*
+ This document contains the process of loading data into the various pages
+    from the database. It is sortd by page loading into. I dont necessarily
+    know which section is which but Imma do my best.
+ */
+
 import Foundation
 import CoreData
 
@@ -44,7 +50,8 @@ class DataController: NSObject {
       }
       
       do {
-        let jsonDict = try JSONSerialization.jsonObject(with: unwrappedData) as! [String: Any]
+        let jsonDict = try JSONSerialization.jsonObject(with: unwrappedData)
+            as! [String: Any]
         let prayerPartners = jsonDict["prayer_partners"] as! [[String: Any]]
         self.generatePrayerPartnerModel(from: prayerPartners)
 //        print(prayerPartners)
@@ -138,7 +145,8 @@ extension DataController {
     var createdGroups = [NSManagedObject]()
     for obj in partnerGroups {
       if let partnerNames = obj["students"] {
-        if let createdGroup = createObject(prayerPartnerGroupEntityName, with: ["students": partnerNames]) {
+        if let createdGroup = createObject(prayerPartnerGroupEntityName,
+                                           with: ["students": partnerNames]) {
           createdGroups.append(createdGroup)
         }
       }
@@ -174,10 +182,12 @@ extension DataController {
     
     var housingKVPairs = [String: String]()
     var createdHouses = [NSManagedObject]()
-    for (key, value) in housingDict where key != sidebarNameKey && key != sidebarIconKey {
+    for (key, value) in housingDict where key != sidebarNameKey
+        && key != sidebarIconKey {
       var kvDict = value as! [String:Any]
       kvDict["hostName"] = key
-      if let createdHousingUnit = createObject(housingEntityName, with: kvDict) {
+      if let createdHousingUnit =
+        createObject(housingEntityName, with: kvDict) {
         createdHouses.append(createdHousingUnit)
       }
     }
@@ -256,7 +266,9 @@ extension DataController {
       let pageIdentifier = key
       let sidebarName = value[0][sidebarNameKey] as! String
       let sidebarIconName = value[0][sidebarIconKey] as! String
-      let kvDict = ["optionalIdentifier": pageIdentifier, sidebarNameKey: sidebarName, sidebarIconKey: sidebarIconName, orderKey: String(5+pageNum)]
+      let kvDict = ["optionalIdentifier": pageIdentifier, sidebarNameKey:
+        sidebarName, sidebarIconKey: sidebarIconName,
+                     orderKey: String(5+pageNum)]
       pageNum += 1
      _ = createObject(sidebarAppearanceEntityName, with: kvDict)
     }
@@ -264,7 +276,9 @@ extension DataController {
   
   func generateSchedulePageModel(from schedulePageDict: [String: Any]) {
 //    deleteAll(forEntityName: schedulePageEntityName)
-    let kvDict = [sidebarNameKey: schedulePageDict[sidebarNameKey]!, sidebarIconKey: schedulePageDict[sidebarIconKey]!, orderKey: "2"]
+    let kvDict = [sidebarNameKey: schedulePageDict[sidebarNameKey]!,
+                  sidebarIconKey: schedulePageDict[sidebarIconKey]!,
+                  orderKey: "2"]
     _ = createObject(sidebarAppearanceEntityName, with: kvDict)
   }
   
@@ -274,7 +288,8 @@ extension DataController {
   ///   - entityName: <#entityName description#>
   ///   - keyValuePairs: <#keyValuePairs description#>
   /// - Returns: The created object, or nil if the creation or save failed.
-  func createObject(_ entityName: String, with keyValuePairs: [String: Any]) -> NSManagedObject? {
+  func createObject(_ entityName: String, with keyValuePairs:
+    [String: Any]) -> NSManagedObject? {
     let managedContext = persistentContainer.viewContext
     
     let entity = NSEntityDescription.entity(forEntityName: entityName,
@@ -310,7 +325,8 @@ extension DataController {
   }
   
   func deleteAllObjects() {
-    let dataModelEntities = persistentContainer.managedObjectModel.entitiesByName.keys
+    let dataModelEntities =
+        persistentContainer.managedObjectModel.entitiesByName.keys
     for entityName in dataModelEntities {
       deleteAll(forEntityName: entityName)
     }

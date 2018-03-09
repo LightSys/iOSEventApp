@@ -24,7 +24,8 @@ protocol TakesArrayData: AnyObject {
 }
 
 class MainContainerViewController: UIViewController {
-  let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+  let loader = DataController(newPersistentContainer:
+    (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
 
   weak var delegate: MenuButton?
 
