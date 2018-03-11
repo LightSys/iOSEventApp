@@ -8,36 +8,30 @@
 
 import UIKit
 
-class ContactsViewController: UIViewController, TakesArrayData, UITableViewDataSource, UITableViewDelegate {
-  var dataArray: [Any]?
+class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+  
+  @IBOutlet weak var tableView: UITableView!
   var contactPageSections: [ContactPageSection]?
-
-    override func viewDidLoad() {
-        super.viewDidLoad()
-      let loader = DataController(newPersistentContainer:
-        (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
-
-      contactPageSections = loader.fetchAllObjects(forName: "ContactPageSection") as? [ContactPageSection]
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
+  var contactArray: [Contact]?
+  
+  override func viewDidLoad() {
+    super.viewDidLoad()
+    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.estimatedRowHeight = 225
+  }
     
-
   func numberOfSections(in tableView: UITableView) -> Int {
     return 1
   }
   
   func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    if dataArray?.count ?? 0 > 0 {
-      // We still need to display the contacts
-      return contactPageSections?.count ?? 1
+    if contactPageSections?.count ?? 0 > 0 {
+      // Contacts (in addition to the normal page) will be displayed in the last page section
+      return contactPageSections!.count
     }
     else {
-      // There is NO data to display
-      return contactPageSections?.count ?? 0
+      // All contacts will be displayed in one row if there are any contacts to be displayed.
+      return (contactArray?.count ?? 0 > 0) ? 1 : 0
     }
   }
   
@@ -52,13 +46,9 @@ class ContactsViewController: UIViewController, TakesArrayData, UITableViewDataS
       cell.cellHeader.text = "Contact List"
     }
     
-    if row < (contactPageSections?.count ?? 1)-1 {
-      // Only display the section info
-    }
-    else {
-      let contactArray = dataArray as! [Contact]
+    if (row == (contactPageSections?.count ?? 1)-1) && (contactArray?.count ?? 0 > 0) {
       var bodyText = cell.cellBody.text
-      for contact in contactArray {
+      for contact in contactArray! {
         bodyText?.append("\n")
         if let name = contact.name {
           bodyText?.append("\n\(name)")
@@ -75,9 +65,4 @@ class ContactsViewController: UIViewController, TakesArrayData, UITableViewDataS
     
     return cell
   }
-  
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 204 // TODO: Vary heights of table view cells
-  }
-
 }

@@ -12,9 +12,6 @@ class ScheduleContainerViewController: UIViewController, TakesArrayData {
   
   var dataArray: [Any]?
   
-  
-  
-  
   override func viewDidLoad() {
     super.viewDidLoad()
     

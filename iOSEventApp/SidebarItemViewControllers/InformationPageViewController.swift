@@ -9,18 +9,15 @@
 import UIKit
 
 class InformationPageViewController: UIViewController, TakesArrayData, UITableViewDelegate, UITableViewDataSource {
+
+  @IBOutlet weak var headerLabel: UILabel!
+  var headerText: String?
   
   var dataArray: [Any]?
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    // Do any additional setup after loading the view.
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+    headerLabel.text =  headerText
   }
   
   func numberOfSections(in tableView: UITableView) -> Int {

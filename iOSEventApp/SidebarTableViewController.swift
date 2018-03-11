@@ -9,7 +9,7 @@
 import UIKit
 
 protocol ViewControllerSwitching:AnyObject {
-  func switchTo(vcName: String, entityNameForData: String, informationPageName pageName: String?)
+  func switchTo(vcName: String, entityNameForData: String?, informationPageName pageName: String?)
 }
 
 class SidebarTableViewController: UITableViewController {
@@ -79,10 +79,10 @@ class SidebarTableViewController: UITableViewController {
     case 0...(variableSidebarItems.count == 0 ? 0 : variableSidebarItems.count-1):
       if variableSidebarItems.count > 0 {
         if variableSidebarItems[indexPath.row].nav == "Notifications" {
-          vcSwitchingDelegate?.switchTo(vcName: "notifications", entityNameForData: "Notification", informationPageName: nil)
+          vcSwitchingDelegate?.switchTo(vcName: "notifications", entityNameForData: nil, informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Contacts" {
-          vcSwitchingDelegate?.switchTo(vcName: "contacts", entityNameForData: "Contact", informationPageName: nil)
+          vcSwitchingDelegate?.switchTo(vcName: "contacts", entityNameForData: nil, informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Housing" {
           vcSwitchingDelegate?.switchTo(vcName: "housing", entityNameForData: "HousingUnit", informationPageName: nil)
@@ -101,7 +101,7 @@ class SidebarTableViewController: UITableViewController {
     case variableSidebarItems.count:
       print("About selected")
     default:
-      vcSwitchingDelegate?.switchTo(vcName: "settings", entityNameForData: "", informationPageName: nil)
+      vcSwitchingDelegate?.switchTo(vcName: "settings", entityNameForData: nil, informationPageName: nil)
     }
   }
   
@@ -123,6 +123,18 @@ class SidebarTableViewController: UITableViewController {
       cell.label.text = "Settings"
     }
     return cell
+  }
+  
+  override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
+    let loader = DataController(newPersistentContainer:
+      (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+    
+    if let imageData = (loader.fetchAllObjects(forName: "General")?.first as? General)?.logo {
+      let image = UIImage(data: imageData)
+      let imageView = UIImageView(image: image)
+      return imageView
+    }
+    return nil
   }
 }
 

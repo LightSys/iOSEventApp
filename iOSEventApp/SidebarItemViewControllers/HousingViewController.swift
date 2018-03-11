@@ -10,23 +10,7 @@ import UIKit
 
 class HousingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
   var dataArray: [Any]?
-  
-  override func viewDidLoad() {
-    super.viewDidLoad()
-    
-    // Do any additional setup after loading the view.
-  }
-  
-  override func viewDidAppear(_ animated: Bool) {
-    print("appeared!")
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
-  
-  
+
   func numberOfSections(in tableView: UITableView) -> Int {
     return 1
   }
@@ -50,5 +34,4 @@ class HousingViewController: UIViewController, UITableViewDataSource, UITableVie
   func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
     return 204
   }
-
 }

@@ -62,7 +62,7 @@ extension RootViewController: MenuButton {
 }
 
 extension RootViewController: ViewControllerSwitching {
-  func switchTo(vcName: String, entityNameForData: String, informationPageName pageName: String?) {
+  func switchTo(vcName: String, entityNameForData: String?, informationPageName pageName: String?) {
     let mainContainerVC = embeddedNavigationController.viewControllers[1]
         as! MainContainerViewController
     mainContainerVC.loadViewController(identifier: vcName,

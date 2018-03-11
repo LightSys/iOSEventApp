@@ -12,7 +12,7 @@
         <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
     </entity>
     <entity name="General" representedClassName="General" syncable="YES" codeGenerationType="class">
-        <attribute name="logo" optional="YES" attributeType="Binary" syncable="YES"/>
+        <attribute name="logo" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
         <attribute name="notifications_url" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="refresh" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="refresh_expire" optional="YES" attributeType="String" syncable="YES"/>
@@ -75,11 +75,11 @@
         <element name="HousingUnit" positionX="18" positionY="63" width="128" height="90"/>
         <element name="InformationPage" positionX="18" positionY="126" width="128" height="90"/>
         <element name="InformationPageSection" positionX="27" positionY="135" width="128" height="105"/>
+        <element name="Notification" positionX="9" positionY="126" width="128" height="105"/>
         <element name="PrayerPartnerGroup" positionX="0" positionY="45" width="128" height="60"/>
         <element name="ScheduleDay" positionX="-9" positionY="81" width="128" height="75"/>
         <element name="ScheduleItem" positionX="0" positionY="90" width="128" height="135"/>
         <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="120"/>
         <element name="Theme" positionX="36" positionY="135" width="128" height="75"/>
-        <element name="Notification" positionX="9" positionY="126" width="128" height="105"/>
     </elements>
 </model>

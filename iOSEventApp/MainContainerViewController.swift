@@ -40,10 +40,16 @@ class MainContainerViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    loadViewController(identifier: "notifications", entityNameForData: "", informationPageName: nil)
+    loadViewController(identifier: "notifications", entityNameForData: nil, informationPageName: nil)
   }
   
-  func loadViewController(identifier: String, entityNameForData: String, informationPageName pageName: String?) {
+  /// <#Description#>
+  ///
+  /// - Parameters:
+  ///   - identifier: <#identifier description#>
+  ///   - entityNameForData: Pass in nil for NotificationsViewController and ContactsViewController, so they get special treatment
+  ///   - pageName: <#pageName description#>
+  func loadViewController(identifier: String, entityNameForData: String?, informationPageName pageName: String?) {
     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
     if childViewControllers.count > 0 {
       let childVC = childViewControllers[0]
@@ -51,7 +57,20 @@ class MainContainerViewController: UIViewController {
       childVC.willMove(toParentViewController: nil)
       childVC.removeFromParentViewController()
     }
-    if entityNameForData != "", var data = loader.fetchAllObjects(forName: entityNameForData) {
+    if let contactsVC = vc as? ContactsViewController{
+      let contacts = loader.fetchAllObjects(forName: "Contact") as? [Contact]
+      let contactPageSections = loader.fetchAllObjects(forName: "ContactPageSection") as? [ContactPageSection]
+      contactsVC.contactArray = contacts
+      contactsVC.contactPageSections = contactPageSections
+    }
+    else if let notificationsVC = vc as? NotificationsViewController {
+      let notifications = loader.fetchAllObjects(forName: "Notification") as? [Notification]
+      let general = loader.fetchAllObjects(forName: "General") as? [General]
+      let welcomeMessage = general?.first?.welcome_message
+      notificationsVC.notificationArray = notifications
+      notificationsVC.welcomeMessage = welcomeMessage
+    }
+    else if let entityName = entityNameForData, var data = loader.fetchAllObjects(forName: entityName) {
       if pageName != nil {
         let infoPage = (data.first(where: { (object) -> Bool in
           if let infoPage = object as? InformationPage {
@@ -60,15 +79,17 @@ class MainContainerViewController: UIViewController {
           return false
         }) as! InformationPage)
         data = infoPage.infoSections?.sortedArray(using: [NSSortDescriptor(key: "order", ascending: true)]) as! [InformationPageSection]
+        (vc as! InformationPageViewController).headerText = pageName
       }
+
       if let takesArrayData = vc as? TakesArrayData {
-        // TODO: Handle infoPage name. Perhaps add a takesDictData?
         takesArrayData.dataArray = data as [Any]
       }
     }
     addChildViewController(vc)
     containerView.addSubview(vc.view)
     vc.didMove(toParentViewController: self)
+    view.setNeedsLayout()
   }
   
   override func viewWillLayoutSubviews() {
