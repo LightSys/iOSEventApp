@@ -28,6 +28,6 @@ The navigation controller is used for its navigation bar. The only two view cont
 
 The individual pages are children of the `MainContainerViewController`. There will only be one child at a time: when a new page is selected, it replaces the previous page as the sole child of `MainContainerViewController`.
 
-## Bugs
+## Attribution
 
-There are several known issues that have to do with data population. Some views are not sized correctly for the amount of text within them, and some of the headers are not populated with data. 
+The code in `QRScannerViewController` that scans qr codes came from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code 
