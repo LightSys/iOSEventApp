@@ -30,4 +30,4 @@ The individual pages are children of the `MainContainerViewController`. There wi
 
 ## Attribution
 
-The code in `QRScannerViewController` that scans qr codes came from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code 
+The code in `QRScannerViewController` that scans QR codes came from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code 
