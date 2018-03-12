@@ -20,7 +20,7 @@ class ScheduleViewController: UIPageViewController {
     }
   }
   
-  var viewControllerDict = [String: ScheduleDayTableViewController]()
+  var viewControllerDict = [String: ScheduleDayViewController]()
   
   override func viewDidLoad() {
     super.viewDidLoad()
@@ -50,8 +50,8 @@ extension ScheduleViewController: UIPageViewControllerDelegate {
 }
 
 extension ScheduleViewController: UIPageViewControllerDataSource {
-  func newPage(forDay day: ScheduleDay, dayName: String) -> ScheduleDayTableViewController {
-    let newVC = storyboard?.instantiateViewController(withIdentifier: "ScheduleDayPrototype") as! ScheduleDayTableViewController
+  func newPage(forDay day: ScheduleDay, dayName: String) -> ScheduleDayViewController {
+    let newVC = storyboard?.instantiateViewController(withIdentifier: "ScheduleDayPrototype") as! ScheduleDayViewController
     if day.items?.count ?? 0 > 0 {
       newVC.scheduleItems = Array(day.items!) as? [ScheduleItem]
       newVC.scheduleItems?.sort() // This is to handle the am/pm string sort mixup introduced by the above line
@@ -63,7 +63,7 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
   }
   
   func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
-    if let dayVC = viewController as? ScheduleDayTableViewController {
+    if let dayVC = viewController as? ScheduleDayViewController {
       let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabel.text!)!
       
       if 0 < vcIndex {
@@ -82,7 +82,7 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
   }
   
   func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
-    if let dayVC = viewController as? ScheduleDayTableViewController {
+    if let dayVC = viewController as? ScheduleDayViewController {
       let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabel.text!)!
       
       if vcIndex < scheduleDays!.count-1 {

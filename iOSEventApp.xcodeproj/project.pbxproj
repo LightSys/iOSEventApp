@@ -24,7 +24,7 @@
 		F149D6EB204DCE2F000DA81A /* iOSEventAppUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6EA204DCE2F000DA81A /* iOSEventAppUITests.swift */; };
 		F149D6F9204DE923000DA81A /* QRScannerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6F8204DE923000DA81A /* QRScannerViewController.swift */; };
 		F15E98E020521C4B00C088D3 /* ScheduleViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15E98DF20521C4B00C088D3 /* ScheduleViewController.swift */; };
-		F15E98E220521D2700C088D3 /* ScheduleDayTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15E98E120521D2700C088D3 /* ScheduleDayTableViewController.swift */; };
+		F15E98E220521D2700C088D3 /* ScheduleDayViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F15E98E120521D2700C088D3 /* ScheduleDayViewController.swift */; };
 		F1AF665C20524CB500B8820D /* ScheduleTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF665B20524CB500B8820D /* ScheduleTableViewCell.swift */; };
 		F1AF665E205251E700B8820D /* ScheduleContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF665D205251E700B8820D /* ScheduleContainerViewController.swift */; };
 		F1AF66602052F65400B8820D /* ContactsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1AF665F2052F65400B8820D /* ContactsViewController.swift */; };
@@ -79,7 +79,7 @@
 		F149D6EC204DCE2F000DA81A /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		F149D6F8204DE923000DA81A /* QRScannerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = QRScannerViewController.swift; sourceTree = "<group>"; };
 		F15E98DF20521C4B00C088D3 /* ScheduleViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleViewController.swift; sourceTree = "<group>"; };
-		F15E98E120521D2700C088D3 /* ScheduleDayTableViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleDayTableViewController.swift; sourceTree = "<group>"; };
+		F15E98E120521D2700C088D3 /* ScheduleDayViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleDayViewController.swift; sourceTree = "<group>"; };
 		F1AF665B20524CB500B8820D /* ScheduleTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleTableViewCell.swift; sourceTree = "<group>"; };
 		F1AF665D205251E700B8820D /* ScheduleContainerViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ScheduleContainerViewController.swift; sourceTree = "<group>"; };
 		F1AF665F2052F65400B8820D /* ContactsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactsViewController.swift; sourceTree = "<group>"; };
@@ -218,7 +218,7 @@
 			children = (
 				F1AF665D205251E700B8820D /* ScheduleContainerViewController.swift */,
 				F15E98DF20521C4B00C088D3 /* ScheduleViewController.swift */,
-				F15E98E120521D2700C088D3 /* ScheduleDayTableViewController.swift */,
+				F15E98E120521D2700C088D3 /* ScheduleDayViewController.swift */,
 			);
 			path = Schedule;
 			sourceTree = "<group>";
@@ -375,7 +375,7 @@
 				F1AF665C20524CB500B8820D /* ScheduleTableViewCell.swift in Sources */,
 				F1AF66722053292300B8820D /* ContactTableViewCell.swift in Sources */,
 				F149D6CA204DCE2F000DA81A /* RootViewController.swift in Sources */,
-				F15E98E220521D2700C088D3 /* ScheduleDayTableViewController.swift in Sources */,
+				F15E98E220521D2700C088D3 /* ScheduleDayViewController.swift in Sources */,
 				4DD00E152051A65F0000B10B /* MainContainerViewController.swift in Sources */,
 				F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */,
 				F1AF665E205251E700B8820D /* ScheduleContainerViewController.swift in Sources */,

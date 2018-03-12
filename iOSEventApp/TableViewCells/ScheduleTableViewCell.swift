@@ -29,8 +29,8 @@ class ScheduleTableViewCell: UITableViewCell {
   @IBOutlet weak var carImageView: UIImageView!
   @IBOutlet weak var eventName: UILabel!
   @IBOutlet weak var eventLocation: UILabel!
-  @IBOutlet weak var eventContact: UILabel!
-    
+  @IBOutlet weak var contactTextView: UITextView!
+  
     
     override func awakeFromNib() {
         super.awakeFromNib()

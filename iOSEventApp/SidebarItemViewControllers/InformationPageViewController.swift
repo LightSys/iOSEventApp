@@ -10,14 +10,16 @@ import UIKit
 
 class InformationPageViewController: UIViewController, TakesArrayData, UITableViewDelegate, UITableViewDataSource {
 
+  @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var headerLabel: UILabel!
   var headerText: String?
-  
   var dataArray: [Any]?
 
   override func viewDidLoad() {
     super.viewDidLoad()
     headerLabel.text =  headerText
+    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.estimatedRowHeight = 300
   }
   
   func numberOfSections(in tableView: UITableView) -> Int {
