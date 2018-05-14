@@ -10,12 +10,17 @@
  This document contains the process of loading data into the various pages
     from the database. It is sortd by page loading into. I dont necessarily
     know which section is which but Imma do my best.
+ 
+ DataController also starts the refresh timer in the refreshController, which it keeps a static reference to. The refresh timer triggers a reload of notifications.
  */
 
 import Foundation
 import CoreData
 
 class DataController: NSObject {
+  
+  static var refreshController: RefreshController?
+  
 //  var managedObjectContext: NSManagedObjectContext
   var persistentContainer: NSPersistentContainer
   let sidebarNameKey = "nav"
@@ -81,7 +86,11 @@ class DataController: NSObject {
         self.generateSchedulePageModel(from: schedule)
         
         UserDefaults.standard.set(1, forKey: "dataLoaded")
+        UserDefaults.standard.set(url, forKey: "loadedDataURL")
+        UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt")
         UserDefaults.standard.synchronize()
+        
+        // TODO: Save separate from notifications?
         
         if let notificationsURLString = general["notifications_url"] as? String {
           self.loadNotificationsFromURL(URL(string: notificationsURLString)!, completion: completion)
@@ -100,9 +109,16 @@ class DataController: NSObject {
   }
  
   
+  /// Loads the data for notifications. This method will be called periodically to refresh the notifications.
+  ///
+  /// If a notification contains the refresh key with a value of true, this method also triggers a reload of ALL data.
+  ///
+  /// - Parameters:
+  ///   - url: URL to load data from
+  ///   - completion: To be run after completion.
   func loadNotificationsFromURL(_ url: URL, completion: @escaping ((_ success: Bool) -> Void)) {
     // Because notifications may be refreshed more frequently...
-    deleteAll(forEntityName: "Notification")
+    deleteAll(forEntityName: "Notification") // TODO: Move deletes to AFTER data is loaded.
     
     let task = URLSession.shared.dataTask(with: url) { (data, response, error) in
       guard error == nil else {
@@ -121,6 +137,7 @@ class DataController: NSObject {
         self.generateNotificationsModel(from: notificationDict)
         
         UserDefaults.standard.set(1, forKey: "notificationsLoaded") // TODO: When reloading data, reset userdefaults
+        UserDefaults.standard.set(url, forKey: "loadedNotificationsURL")
         UserDefaults.standard.synchronize()
         
         try? self.persistentContainer.viewContext.save()
@@ -128,6 +145,22 @@ class DataController: NSObject {
 
         completion(true)
         
+        // If a (true) refresh key newer than the dataLastUpdatedAt date in defaults, load data.
+        let managedContext = self.persistentContainer.viewContext
+        let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: "Notification")
+        // TODO: TEST!!!
+        fetchRequest.predicate = NSPredicate(format: "refresh == true AND date >= %@", UserDefaults.standard.value(forKey: "dataLastUpdatedAt") as! CVarArg)
+        do {
+          let entities = try managedContext.fetch(fetchRequest)
+          if entities.count > 0 {
+            let dataURL = UserDefaults.standard.value(forKey: "loadedDataURL") as! URL
+            self.loadDataFromURL(dataURL, completion: { _ in }) // Do nothing
+          }
+        } catch let error as NSError {
+          print("Could not fetch. \(error), \(error.userInfo)")
+//          return nil
+        }
+
       }
       catch {
         print(error)
@@ -137,7 +170,6 @@ class DataController: NSObject {
     task.resume()
   }
 }
-
 
 // This is used to compartmentalize creating objects out of dictionaries...
 extension DataController {
@@ -178,7 +210,6 @@ extension DataController {
         createdContacts.append(createdContact)
       }
     }
-    print(createdContacts)
   }
   
   func generateHousingModel(from housingDict: [String: Any]) {
@@ -220,9 +251,7 @@ extension DataController {
     }
     let logoImage = (general["logo"] as! String).data(using: .utf8)!
     newGeneral["logo"] = logoImage
-    if let createdGeneral = createObject(generalEntityName, with: newGeneral) {
-      print(createdGeneral)
-    }
+    _ = createObject(generalEntityName, with: newGeneral)
     
   }
   
@@ -279,7 +308,6 @@ extension DataController {
   }
   
   func generateNotificationsModel(from notificationsDict: [String: Any]) {
-    //    deleteAll(forEntityName: schedulePageEntityName)
     // TODO: What is the refresh key?
     
     let kvDict = [sidebarNameKey: notificationsDict[sidebarNameKey]!, sidebarIconKey: notificationsDict[sidebarIconKey]!, orderKey: "0"]
@@ -288,7 +316,7 @@ extension DataController {
     
     for (key, value) in notificationsDict where key != sidebarNameKey && key != sidebarIconKey {
       let valueDict = value as! [String: Any]
-      let notificationDict = ["notificationNumber": Int(key)!, "title": valueDict["title"]!, "body": valueDict["body"]!] as [String: Any]
+      let notificationDict = ["notificationNumber": Int(key)!, "title": valueDict["title"]!, "body": valueDict["body"]!, "date": valueDict["date"]!, "refresh": valueDict["refresh"]!] as [String: Any]
       _ = createObject("Notification", with: notificationDict)
     }
   }
@@ -347,7 +375,6 @@ extension DataController {
     let fetchRequest = NSFetchRequest<NSManagedObject>(entityName: entityName)
     do {
       let entities = try managedContext.fetch(fetchRequest)
-      print(entities)
       return entities
     } catch let error as NSError {
       print("Could not fetch. \(error), \(error.userInfo)")

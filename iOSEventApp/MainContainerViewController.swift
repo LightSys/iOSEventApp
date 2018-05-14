@@ -26,6 +26,7 @@ protocol TakesArrayData: AnyObject {
 class MainContainerViewController: UIViewController {
   let loader = DataController(newPersistentContainer:
     (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+  var currentPageInformation: (identifier: String, entityName: String?, informationPageName: String?)?
 
   @IBOutlet weak var containerView: UIView!
   weak var delegate: MenuButton?
@@ -67,7 +68,7 @@ class MainContainerViewController: UIViewController {
       let notifications = loader.fetchAllObjects(forName: "Notification") as? [Notification]
       let general = loader.fetchAllObjects(forName: "General") as? [General]
       let welcomeMessage = general?.first?.welcome_message
-      notificationsVC.notificationArray = notifications
+      notificationsVC.notificationArray = notifications?.sorted().reversed() // Newest at top
       notificationsVC.welcomeMessage = welcomeMessage
     }
     else if let entityName = entityNameForData, var data = loader.fetchAllObjects(forName: entityName) {
@@ -90,6 +91,8 @@ class MainContainerViewController: UIViewController {
     containerView.addSubview(vc.view)
     vc.didMove(toParentViewController: self)
     view.setNeedsLayout()
+    
+    currentPageInformation = (identifier, entityNameForData, pageName)
   }
   
   override func viewWillLayoutSubviews() {
@@ -99,5 +102,17 @@ class MainContainerViewController: UIViewController {
       view.frame.size = containerView.frame.size
       view.frame.origin = CGPoint.zero
     }
+  }
+  
+  func refreshCurrentPage() {
+    guard let pageInfo = currentPageInformation else {
+      return
+    }
+    loadViewController(identifier: pageInfo.identifier, entityNameForData: pageInfo.entityName, informationPageName: pageInfo.informationPageName)
+  }
+  
+  func reloadNotifications() {
+    
+    loader.loadNotificationsFromURL(<#T##url: URL##URL#>, completion: <#T##((Bool) -> Void)##((Bool) -> Void)##(Bool) -> Void#>)
   }
 }

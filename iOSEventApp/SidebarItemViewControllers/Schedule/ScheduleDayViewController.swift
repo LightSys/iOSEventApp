@@ -54,7 +54,7 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
       return ""
     }
     
-    // Modify values depending on offsete
+    // Modify values depending on offset
     numericMinutes += offset
     numericHours += numericMinutes / 60 // integer division, which has no decimal
     numericMinutes = numericMinutes % 60 // mod 60, returns remainder
@@ -77,3 +77,4 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
     return "\(numericHours):\(startTime.suffix(2))".appending(amPMSuffix)
   }
 }
+

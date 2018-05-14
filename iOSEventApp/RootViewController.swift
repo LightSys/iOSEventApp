@@ -47,16 +47,21 @@ extension RootViewController: MenuButton {
 
     sidebarViewController.loadSidebarItemsIfNeeded()
     
-    UIView.animate(withDuration: 0.2) {
-      if self.sidebarContainer.frame.origin.x != 0 {
+    if self.sidebarContainer.frame.origin.x != 0 {
+      self.dimView.isHidden = false
+      UIView.animate(withDuration: 0.2) {
         self.sidebarContainer.frame.origin.x = 0
-        self.dimView.isHidden = false
+        self.dimView.alpha = 0.25
       }
-      else {
+    }
+    else {
+      UIView.animate(withDuration: 0.2, animations: {
         self.sidebarContainer.frame.origin.x =
-            -self.sidebarContainer.frame.size.width
+          -self.sidebarContainer.frame.size.width
+        self.dimView.alpha = 0
+      }, completion: { (_) in
         self.dimView.isHidden = true
-      }
+      })
     }
   }
 }

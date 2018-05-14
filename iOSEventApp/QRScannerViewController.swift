@@ -6,6 +6,8 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
+// The majority of this file (whatever enables it to scan QR codes) was downloaded from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code
+
 /*
  So the idea is that you go in to the QR scanner when you open the app. Once the
     QR code has been scanned, the app will stay on that event, sourcing data

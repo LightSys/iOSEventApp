@@ -8,6 +8,15 @@
 
 import UIKit
 
+extension Notification: Comparable {
+  public static func < (lhs: Notification, rhs: Notification) -> Bool {
+    guard let date1 = lhs.date, let date2 = rhs.date else {
+      return false
+    }
+    return date1 < date2
+  }
+}
+
 class NotificationsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   var notificationArray: [Notification]?
   
