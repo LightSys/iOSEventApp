@@ -15,7 +15,7 @@
         <!--Root View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="RootViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="BYZ-38-t0r" customClass="RootViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -74,7 +74,7 @@
         <!--Schedule-->
         <scene sceneID="KhJ-tL-K1Z">
             <objects>
-                <viewController storyboardIdentifier="ScheduleDayPrototype" title="Schedule" id="csQ-PE-8ui" customClass="ScheduleDayViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="ScheduleDayPrototype" title="Schedule" id="csQ-PE-8ui" customClass="ScheduleDayViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="ZAZ-UP-Kbz">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask"/>
@@ -102,7 +102,7 @@
                                 <color key="separatorColor" red="0.2474228144" green="0.32983464000000001" blue="0.4958202243" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <inset key="separatorInset" minX="0.0" minY="0.0" maxX="0.0" maxY="0.0"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="scheduleCell" rowHeight="175" id="b2e-yf-PTC" customClass="ScheduleTableViewCell" customModule="iOSEventApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="scheduleCell" rowHeight="175" id="b2e-yf-PTC" customClass="ScheduleTableViewCell" customModule="Event_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="175"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" userInteractionEnabled="NO" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="b2e-yf-PTC" id="THi-wZ-69O">
@@ -110,12 +110,12 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_call_phone" translatesAutoresizingMaskIntoConstraints="NO" id="Hb8-7M-ZW1">
-                                                    <rect key="frame" x="337" y="138" width="16" height="16"/>
+                                                    <rect key="frame" x="337" y="137" width="16" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_car" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UpS-cK-tcT">
-                                                    <rect key="frame" x="337" y="102" width="16" height="16"/>
+                                                    <rect key="frame" x="337" y="101" width="16" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </imageView>
@@ -226,13 +226,13 @@
         <!--Contacts-->
         <scene sceneID="rmk-RL-M9e">
             <objects>
-                <viewController storyboardIdentifier="contacts" title="Contacts" id="1CG-u6-b7g" customClass="ContactsViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="contacts" title="Contacts" id="1CG-u6-b7g" customClass="ContactsViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="vwi-RW-klN">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view userInteractionEnabled="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="6yY-7J-PWY">
-                                <rect key="frame" x="0.0" y="20" width="375" height="76"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Contacts" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="fTS-9g-l89">
                                         <rect key="frame" x="70" y="16" width="235" height="45"/>
@@ -248,10 +248,10 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" bouncesZoom="NO" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="236" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="YCp-5y-U4I">
-                                <rect key="frame" x="0.0" y="96" width="375" height="571"/>
+                                <rect key="frame" x="0.0" y="76" width="375" height="591"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="contactCell" rowHeight="236" id="nMe-Tj-FG8" customClass="ContactTableViewCell" customModule="iOSEventApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="contactCell" rowHeight="236" id="nMe-Tj-FG8" customClass="ContactTableViewCell" customModule="Event_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="236"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="nMe-Tj-FG8" id="uyV-7Q-BOp">
@@ -301,7 +301,7 @@
                             <constraint firstItem="6yY-7J-PWY" firstAttribute="trailing" secondItem="7Lh-ZG-MAv" secondAttribute="trailing" id="53I-IS-nvY"/>
                             <constraint firstItem="7Lh-ZG-MAv" firstAttribute="trailing" secondItem="YCp-5y-U4I" secondAttribute="trailing" id="6Bd-F9-nfn"/>
                             <constraint firstItem="7Lh-ZG-MAv" firstAttribute="bottom" secondItem="YCp-5y-U4I" secondAttribute="bottom" id="81i-li-qpb"/>
-                            <constraint firstItem="6yY-7J-PWY" firstAttribute="top" secondItem="7Lh-ZG-MAv" secondAttribute="top" id="H4I-2l-Wbf"/>
+                            <constraint firstItem="6yY-7J-PWY" firstAttribute="top" secondItem="vwi-RW-klN" secondAttribute="top" id="H4I-2l-Wbf"/>
                             <constraint firstItem="YCp-5y-U4I" firstAttribute="leading" secondItem="7Lh-ZG-MAv" secondAttribute="leading" id="jcl-la-RKf"/>
                             <constraint firstItem="6yY-7J-PWY" firstAttribute="leading" secondItem="7Lh-ZG-MAv" secondAttribute="leading" id="lEh-0a-hAs"/>
                         </constraints>
@@ -318,13 +318,13 @@
         <!--CodeAThonInfo-->
         <scene sceneID="6lq-S8-QxO">
             <objects>
-                <viewController storyboardIdentifier="informationPage" title="CodeAThonInfo" id="o6C-Xp-oMz" customClass="InformationPageViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="informationPage" title="CodeAThonInfo" id="o6C-Xp-oMz" customClass="InformationPageViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="97b-25-hZM">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="bF6-hJ-j8n">
-                                <rect key="frame" x="0.0" y="20" width="375" height="76"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Code-A-Thon Info" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="3U9-Ja-dGc">
                                         <rect key="frame" x="34" y="17" width="306" height="43"/>
@@ -340,10 +340,10 @@
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="251" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="NRB-em-B9d">
-                                <rect key="frame" x="0.0" y="96" width="375" height="571"/>
+                                <rect key="frame" x="0.0" y="76" width="375" height="591"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="infoPageCell" rowHeight="251" id="K55-pN-o5f" customClass="InformationPageTableViewCell" customModule="iOSEventApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="infoPageCell" rowHeight="251" id="K55-pN-o5f" customClass="InformationPageTableViewCell" customModule="Event_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="251"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="K55-pN-o5f" id="nBN-VY-cCq">
@@ -390,7 +390,7 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="bF6-hJ-j8n" firstAttribute="leading" secondItem="03s-9g-0jp" secondAttribute="leading" id="3x0-zw-3CF"/>
-                            <constraint firstItem="bF6-hJ-j8n" firstAttribute="top" secondItem="03s-9g-0jp" secondAttribute="top" id="D0t-xl-82f"/>
+                            <constraint firstItem="bF6-hJ-j8n" firstAttribute="top" secondItem="97b-25-hZM" secondAttribute="top" id="D0t-xl-82f"/>
                             <constraint firstItem="03s-9g-0jp" firstAttribute="bottom" secondItem="NRB-em-B9d" secondAttribute="bottom" id="ZCS-7F-MqK"/>
                             <constraint firstItem="NRB-em-B9d" firstAttribute="top" secondItem="bF6-hJ-j8n" secondAttribute="bottom" id="eOi-8T-Rzz"/>
                             <constraint firstItem="bF6-hJ-j8n" firstAttribute="trailing" secondItem="03s-9g-0jp" secondAttribute="trailing" id="fUC-aL-pIP"/>
@@ -514,7 +514,7 @@
         <!--Settings View Controller-->
         <scene sceneID="lla-nY-ww6">
             <objects>
-                <viewController storyboardIdentifier="settings" id="vvw-jK-Rhz" customClass="SettingsViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="settings" id="vvw-jK-Rhz" customClass="SettingsViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="cp0-mK-Lxf">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -543,7 +543,7 @@
                                 <rect key="frame" x="0.0" y="76" width="375" height="591"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="settingsCell" id="Lil-Gs-izp" customClass="SettingsTableViewCell" customModule="iOSEventApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="settingsCell" id="Lil-Gs-izp" customClass="SettingsTableViewCell" customModule="Event_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Lil-Gs-izp" id="KT9-Um-lgN">
@@ -591,22 +591,16 @@
         <!--Schedule Container View Controller-->
         <scene sceneID="9wz-By-eQY">
             <objects>
-                <viewController storyboardIdentifier="schedule" id="zl9-OA-6ZM" customClass="ScheduleContainerViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="schedule" id="zl9-OA-6ZM" customClass="ScheduleContainerViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="Bxz-Sv-g7b">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d63-Nl-pkm">
-                                <rect key="frame" x="0.0" y="100" width="375" height="570"/>
-                                <connections>
-                                    <segue destination="9VC-ef-gMB" kind="embed" id="JKb-Tg-Mvn"/>
-                                </connections>
-                            </containerView>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="vNU-Q9-gM5">
-                                <rect key="frame" x="0.0" y="20" width="375" height="80"/>
+                                <rect key="frame" x="0.0" y="20" width="375" height="76"/>
                                 <subviews>
                                     <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Schedule" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="ZIm-Iv-cgW">
-                                        <rect key="frame" x="8" y="8" width="359" height="64"/>
+                                        <rect key="frame" x="8" y="8" width="359" height="60"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
                                         <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -615,9 +609,15 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.2474228144" green="0.32983464000000001" blue="0.4958202243" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="80" id="9y1-Ml-PLg"/>
+                                    <constraint firstAttribute="height" constant="76" id="9y1-Ml-PLg"/>
                                 </constraints>
                             </view>
+                            <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="d63-Nl-pkm">
+                                <rect key="frame" x="0.0" y="96" width="375" height="571"/>
+                                <connections>
+                                    <segue destination="9VC-ef-gMB" kind="embed" id="JKb-Tg-Mvn"/>
+                                </connections>
+                            </containerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
@@ -627,7 +627,7 @@
                             <constraint firstItem="vNU-Q9-gM5" firstAttribute="centerX" secondItem="mir-5G-owC" secondAttribute="centerX" id="RTe-AU-GPy"/>
                             <constraint firstItem="vNU-Q9-gM5" firstAttribute="centerX" secondItem="d63-Nl-pkm" secondAttribute="centerX" id="ZZf-fs-92Y"/>
                             <constraint firstItem="d63-Nl-pkm" firstAttribute="top" secondItem="vNU-Q9-gM5" secondAttribute="bottom" id="cne-vC-Hde"/>
-                            <constraint firstItem="d63-Nl-pkm" firstAttribute="bottom" secondItem="mir-5G-owC" secondAttribute="bottom" constant="3" id="i3A-eb-Tla"/>
+                            <constraint firstItem="d63-Nl-pkm" firstAttribute="bottom" secondItem="mir-5G-owC" secondAttribute="bottom" id="i3A-eb-Tla"/>
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="mir-5G-owC"/>
                     </view>
@@ -639,7 +639,7 @@
         <!--Schedule View Controller-->
         <scene sceneID="j08-yu-Q9M">
             <objects>
-                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="9VC-ef-gMB" customClass="ScheduleViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController"/>
+                <pageViewController autoresizesArchivedViewToFullSize="NO" transitionStyle="scroll" navigationOrientation="horizontal" spineLocation="none" id="9VC-ef-gMB" customClass="ScheduleViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController"/>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="bEU-K4-oqq" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4353" y="1707"/>
@@ -664,7 +664,7 @@
         <!--Scanner View Controller-->
         <scene sceneID="3G3-Jl-Uus">
             <objects>
-                <viewController id="ozD-MV-NIX" customClass="QRScannerViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ozD-MV-NIX" customClass="QRScannerViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="aPz-s8-JLZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -683,7 +683,7 @@
         <!--Main Container View Controller-->
         <scene sceneID="twc-0b-qzb">
             <objects>
-                <viewController id="ED7-5z-P1d" customClass="MainContainerViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController id="ED7-5z-P1d" customClass="MainContainerViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="90x-Ll-ouj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -715,7 +715,7 @@
         <!--Notifications View Controller-->
         <scene sceneID="Rir-z4-7OY">
             <objects>
-                <viewController storyboardIdentifier="notifications" id="vcm-fm-kXs" customClass="NotificationsViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="notifications" id="vcm-fm-kXs" customClass="NotificationsViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="NpJ-qN-ALx">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -724,7 +724,7 @@
                                 <rect key="frame" x="0.0" y="96" width="375" height="571"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="notificationCell" rowHeight="220" id="R7s-6W-AMf" customClass="NotificationTableViewCell" customModule="iOSEventApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="notificationCell" rowHeight="220" id="R7s-6W-AMf" customClass="NotificationTableViewCell" customModule="Event_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="220"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMaxY="YES"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="R7s-6W-AMf" id="xFg-Kf-Ty8">
@@ -833,17 +833,16 @@
         <!--Housing-->
         <scene sceneID="Wrk-NR-ggI">
             <objects>
-                <viewController storyboardIdentifier="housing" title="Housing" id="MrU-PT-e54" customClass="HousingViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="housing" title="Housing" id="MrU-PT-e54" customClass="HousingViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="dgv-1G-zdD">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <view contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="IiW-LN-bsb">
-                                <rect key="frame" x="0.0" y="20" width="375" height="80"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="IiW-LN-bsb">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Housing" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="4mg-Hf-wwB">
-                                        <rect key="frame" x="107" y="23" width="158" height="35"/>
+                                        <rect key="frame" x="107" y="21" width="158" height="33"/>
                                         <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
@@ -851,21 +850,23 @@
                                     </textField>
                                 </subviews>
                                 <color key="backgroundColor" red="0.2474228144" green="0.32983464000000001" blue="0.4958202243" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="76" id="xWl-wH-Ab9"/>
+                                </constraints>
                             </view>
-                            <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="singleLineEtched" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Eex-yX-Xtw">
-                                <rect key="frame" x="0.0" y="97" width="375" height="570"/>
-                                <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="singleLineEtched" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="Eex-yX-Xtw">
+                                <rect key="frame" x="0.0" y="73" width="375" height="594"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <color key="separatorColor" red="0.2474228144" green="0.32983464000000001" blue="0.4958202243" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="housingCell" rowHeight="231" id="D68-ss-8yW" customClass="HousingTableViewCell" customModule="iOSEventApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="none" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="housingCell" rowHeight="231" id="D68-ss-8yW" customClass="HousingTableViewCell" customModule="Event_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="231"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="D68-ss-8yW" id="agY-9g-e6T">
                                             <rect key="frame" x="0.0" y="0.0" width="375" height="230.5"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dbO-8G-uaK">
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="dbO-8G-uaK">
                                                     <rect key="frame" x="15" y="67" width="167" height="169"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -879,7 +880,7 @@
                                                     <rect key="frame" x="0.0" y="0.0" width="375" height="59"/>
                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                     <subviews>
-                                                        <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Driver - Useful Car Person" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="X2L-bf-zOp">
+                                                        <textField opaque="NO" userInteractionEnabled="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Driver - Useful Car Person" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="X2L-bf-zOp">
                                                             <rect key="frame" x="0.0" y="18" width="375" height="23"/>
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
                                                             <color key="backgroundColor" red="0.43678349259999999" green="0.58213657139999997" blue="0.86846202610000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
@@ -890,7 +891,7 @@
                                                     </subviews>
                                                     <color key="backgroundColor" red="0.43678349259999999" green="0.58213657139999997" blue="0.86846202610000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </view>
-                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="fwh-CV-joa">
+                                                <textView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" fixedFrame="YES" editable="NO" textAlignment="natural" translatesAutoresizingMaskIntoConstraints="NO" id="fwh-CV-joa">
                                                     <rect key="frame" x="190" y="67" width="170" height="169"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" heightSizable="YES"/>
                                                     <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
@@ -914,6 +915,15 @@
                             </tableView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="IiW-LN-bsb" firstAttribute="leading" secondItem="TT0-vP-cMA" secondAttribute="leading" id="K7Z-EY-88z"/>
+                            <constraint firstItem="Eex-yX-Xtw" firstAttribute="top" secondItem="IiW-LN-bsb" secondAttribute="bottom" constant="-3" id="MXL-m7-yPP"/>
+                            <constraint firstItem="Eex-yX-Xtw" firstAttribute="trailing" secondItem="TT0-vP-cMA" secondAttribute="trailing" id="RxN-Wm-2kB"/>
+                            <constraint firstItem="Eex-yX-Xtw" firstAttribute="leading" secondItem="TT0-vP-cMA" secondAttribute="leading" id="emU-gq-lWN"/>
+                            <constraint firstItem="IiW-LN-bsb" firstAttribute="trailing" secondItem="TT0-vP-cMA" secondAttribute="trailing" id="ii6-0C-7BB"/>
+                            <constraint firstItem="IiW-LN-bsb" firstAttribute="top" secondItem="dgv-1G-zdD" secondAttribute="top" id="mqg-Un-ZBU"/>
+                            <constraint firstItem="Eex-yX-Xtw" firstAttribute="bottom" secondItem="TT0-vP-cMA" secondAttribute="bottom" id="o4G-GH-Q6v"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="TT0-vP-cMA"/>
                     </view>
                 </viewController>
@@ -924,7 +934,7 @@
         <!--Sidebar Table View Controller-->
         <scene sceneID="x3k-y8-aZW">
             <objects>
-                <tableViewController id="J0r-X9-R8x" customClass="SidebarTableViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <tableViewController id="J0r-X9-R8x" customClass="SidebarTableViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="singleLineEtched" rowHeight="80" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="4p4-YE-suw">
                         <rect key="frame" x="0.0" y="0.0" width="319" height="647"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -932,7 +942,7 @@
                         <color key="separatorColor" red="0.2474228144" green="0.32983464000000001" blue="0.4958202243" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <color key="sectionIndexBackgroundColor" red="0.43678349259999999" green="0.58213657139999997" blue="0.86846202610000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="sidebarCell" rowHeight="80" id="QWg-uo-kqN" customClass="SidebarTableViewCell" customModule="iOSEventApp" customModuleProvider="target">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="sidebarCell" rowHeight="80" id="QWg-uo-kqN" customClass="SidebarTableViewCell" customModule="Event_App" customModuleProvider="target">
                                 <rect key="frame" x="0.0" y="28" width="319" height="80"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="QWg-uo-kqN" id="W9c-yo-ShH">
@@ -977,16 +987,16 @@
         <!--Prayer Partners View Controller-->
         <scene sceneID="wdC-O6-yuB">
             <objects>
-                <viewController storyboardIdentifier="prayerPartners" id="CFQ-9r-t9G" customClass="PrayerPartnersViewController" customModule="iOSEventApp" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="prayerPartners" id="CFQ-9r-t9G" customClass="PrayerPartnersViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="TlY-hI-lwF">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="xcg-V2-7AE">
-                                <rect key="frame" x="0.0" y="0.0" width="375" height="100"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
                                 <subviews>
                                     <textField autoresizesSubviews="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Prayer Partners" textAlignment="center" adjustsFontSizeToFit="NO" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="oau-MQ-mBD">
-                                        <rect key="frame" x="11" y="29" width="349" height="43"/>
+                                        <rect key="frame" x="11" y="22" width="349" height="33"/>
                                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
                                         <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                         <fontDescription key="fontDescription" type="system" pointSize="32"/>
@@ -995,14 +1005,14 @@
                                 </subviews>
                                 <color key="backgroundColor" red="0.2474228144" green="0.32983464000000001" blue="0.4958202243" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                 <constraints>
-                                    <constraint firstAttribute="height" constant="100" id="0XD-fI-PFQ"/>
+                                    <constraint firstAttribute="height" constant="76" id="0XD-fI-PFQ"/>
                                 </constraints>
                             </view>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="96T-Hl-QnP">
-                                <rect key="frame" x="0.0" y="100" width="375" height="567"/>
+                                <rect key="frame" x="0.0" y="76" width="375" height="591"/>
                                 <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <prototypes>
-                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="prayerPartnersReuseIdentifier" rowHeight="137" id="JfM-cr-axh" customClass="PrayerPartnersTableViewCell" customModule="iOSEventApp" customModuleProvider="target">
+                                    <tableViewCell clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="prayerPartnersReuseIdentifier" rowHeight="137" id="JfM-cr-axh" customClass="PrayerPartnersTableViewCell" customModule="Event_App" customModuleProvider="target">
                                         <rect key="frame" x="0.0" y="28" width="375" height="137"/>
                                         <autoresizingMask key="autoresizingMask"/>
                                         <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="JfM-cr-axh" id="NKC-Pu-kLp">

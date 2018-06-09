@@ -64,7 +64,7 @@
 		4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
 		4DD00E0E204F5B6D0000B10B /* PrayerPartnersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrayerPartnersViewController.swift; sourceTree = "<group>"; };
 		4DD00E142051A6590000B10B /* MainContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContainerViewController.swift; sourceTree = "<group>"; };
-		F149D6C4204DCE2F000DA81A /* iOSEventApp.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = iOSEventApp.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		F149D6C4204DCE2F000DA81A /* Event App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Event App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F149D6C7204DCE2F000DA81A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F149D6C9204DCE2F000DA81A /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
 		F149D6CC204DCE2F000DA81A /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
@@ -134,7 +134,7 @@
 		F149D6C5204DCE2F000DA81A /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				F149D6C4204DCE2F000DA81A /* iOSEventApp.app */,
+				F149D6C4204DCE2F000DA81A /* Event App.app */,
 				F149D6DB204DCE2F000DA81A /* iOSEventAppTests.xctest */,
 				F149D6E6204DCE2F000DA81A /* iOSEventAppUITests.xctest */,
 			);
@@ -244,7 +244,7 @@
 			);
 			name = iOSEventApp;
 			productName = iOSEventApp;
-			productReference = F149D6C4204DCE2F000DA81A /* iOSEventApp.app */;
+			productReference = F149D6C4204DCE2F000DA81A /* Event App.app */;
 			productType = "com.apple.product-type.application";
 		};
 		F149D6DA204DCE2F000DA81A /* iOSEventAppTests */ = {
@@ -557,7 +557,7 @@
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Event App";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -574,7 +574,7 @@
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventApp;
-				PRODUCT_NAME = "$(TARGET_NAME)";
+				PRODUCT_NAME = "Event App";
 				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";

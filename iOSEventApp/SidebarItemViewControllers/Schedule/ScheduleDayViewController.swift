@@ -74,7 +74,8 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
     else {
       // Nothing needs to change
     }
-    return "\(numericHours):\(startTime.suffix(2))".appending(amPMSuffix)
+    let zeroPaddedMinutes = String(format: "%02d", numericMinutes)
+    return "\(numericHours):\(zeroPaddedMinutes)\(amPMSuffix)"
   }
 }
 

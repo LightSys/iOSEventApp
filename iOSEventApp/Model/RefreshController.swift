@@ -14,7 +14,7 @@ class RefreshController {
   
   weak var containerVC: MainContainerViewController?
   
-  private var refreshTimer: Timer?
+  private static var refreshTimer: Timer?
   
   init(refreshRateMinutes rate: UInt, refreshUntil endDate: Date, containerVC container: MainContainerViewController) {
     refreshRateMinutes = rate
@@ -22,16 +22,21 @@ class RefreshController {
     containerVC = container
     
     let refreshInterval = TimeInterval(refreshRateMinutes * 60)
-    refreshTimer = Timer(fire: Date(timeIntervalSinceNow: refreshInterval), interval: refreshInterval, repeats: true, block: { (timer) in
-      self.triggerRefresh()
-      if Date(timeIntervalSinceNow: refreshInterval) < self.refreshUntil {
+    
+    guard shouldStartTimer() else {
+      return
+    }
+    RefreshController.refreshTimer?.invalidate()
+    RefreshController.refreshTimer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true, block: { (timer) in
+      self.containerVC?.reloadNotifications()
+      if !self.shouldStartTimer() {
         timer.invalidate()
       }
     })
   }
   
-  func triggerRefresh() {
-    containerVC?.reloadNotifications()
+  func shouldStartTimer() -> Bool {
+    return Date(timeIntervalSinceNow: TimeInterval(refreshRateMinutes * 60)) < self.refreshUntil
   }
 }
 

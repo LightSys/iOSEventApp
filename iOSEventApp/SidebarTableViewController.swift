@@ -35,10 +35,11 @@ class SidebarTableViewController: UITableViewController {
   }
   
   func reloadSidebarItems() {
-    let loader = DataController(newPersistentContainer:
-      (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
-    
-    let sidebarItems = (loader.fetchAllObjects(forName: "SidebarAppearance")
+    let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+    let loader = DataController(newPersistentContainer: container)
+    let context = container.viewContext
+
+    let sidebarItems = (loader.fetchAllObjects(onContext: context, forName: "SidebarAppearance")
       as! [SidebarAppearance]).sorted(by: { (item1, item2) -> Bool in
         return item1.order! < item2.order!
       })
@@ -71,7 +72,7 @@ class SidebarTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return variableSidebarItems.count + 2 // About, and Settings
+    return variableSidebarItems.count + 2 // About and Settings are constant
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -97,7 +98,6 @@ class SidebarTableViewController: UITableViewController {
           vcSwitchingDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row].nav)
         }
       }
-      print("case \(indexPath.row)")
     case variableSidebarItems.count:
       print("About selected")
     default:
@@ -126,10 +126,11 @@ class SidebarTableViewController: UITableViewController {
   }
   
   override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    let loader = DataController(newPersistentContainer:
-      (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+    let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+    let loader = DataController(newPersistentContainer: container)
+    let context = container.viewContext
     
-    if let imageData = (loader.fetchAllObjects(forName: "General")?.first as? General)?.logo {
+    if let imageData = (loader.fetchAllObjects(onContext: context, forName: "General")?.first as? General)?.logo {
       let image = UIImage(data: imageData)
       let imageView = UIImageView(image: image)
       return imageView

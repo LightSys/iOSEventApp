@@ -42,6 +42,7 @@ class MainContainerViewController: UIViewController {
     super.viewDidLoad()
     
     loadViewController(identifier: "notifications", entityNameForData: nil, informationPageName: nil)
+    loader.startRefreshTimer(mainContainer: self)
   }
   
   /// <#Description#>
@@ -52,6 +53,7 @@ class MainContainerViewController: UIViewController {
   ///   - pageName: <#pageName description#>
   func loadViewController(identifier: String, entityNameForData: String?, informationPageName pageName: String?) {
     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
     if childViewControllers.count > 0 {
       let childVC = childViewControllers[0]
       childVC.view.removeFromSuperview()
@@ -59,19 +61,19 @@ class MainContainerViewController: UIViewController {
       childVC.removeFromParentViewController()
     }
     if let contactsVC = vc as? ContactsViewController{
-      let contacts = loader.fetchAllObjects(forName: "Contact") as? [Contact]
-      let contactPageSections = loader.fetchAllObjects(forName: "ContactPageSection") as? [ContactPageSection]
+      let contacts = loader.fetchAllObjects(onContext: context, forName: "Contact") as? [Contact]
+      let contactPageSections = loader.fetchAllObjects(onContext: context, forName: "ContactPageSection") as? [ContactPageSection]
       contactsVC.contactArray = contacts
       contactsVC.contactPageSections = contactPageSections
     }
     else if let notificationsVC = vc as? NotificationsViewController {
-      let notifications = loader.fetchAllObjects(forName: "Notification") as? [Notification]
-      let general = loader.fetchAllObjects(forName: "General") as? [General]
+      let notifications = loader.fetchAllObjects(onContext: context, forName: "Notification") as? [Notification]
+      let general = loader.fetchAllObjects(onContext: context, forName: "General") as? [General]
       let welcomeMessage = general?.first?.welcome_message
       notificationsVC.notificationArray = notifications?.sorted().reversed() // Newest at top
       notificationsVC.welcomeMessage = welcomeMessage
     }
-    else if let entityName = entityNameForData, var data = loader.fetchAllObjects(forName: entityName) {
+    else if let entityName = entityNameForData, var data = loader.fetchAllObjects(onContext: context, forName: entityName) {
       if pageName != nil {
         let infoPage = (data.first(where: { (object) -> Bool in
           if let infoPage = object as? InformationPage {
@@ -111,8 +113,16 @@ class MainContainerViewController: UIViewController {
     loadViewController(identifier: pageInfo.identifier, entityNameForData: pageInfo.entityName, informationPageName: pageInfo.informationPageName)
   }
   
+  /// The container needs to get this, so that it can pass in a completion handler to the reload function.
   func reloadNotifications() {
-    
-    loader.loadNotificationsFromURL(<#T##url: URL##URL#>, completion: <#T##((Bool) -> Void)##((Bool) -> Void)##(Bool) -> Void#>)
+    loader.reloadNotifications { (success, errors) in
+      guard success == true else {
+        return
+      }
+      DispatchQueue.main.async {
+        // TODO: Loading indicator + disable screen // guard success
+        self.refreshCurrentPage() // only if notifications
+      }
+    }
   }
 }

@@ -36,8 +36,8 @@ class QRScannerViewController: UIViewController,
       return true
     }
     
-    let isDataLoaded = UserDefaults.standard.object(forKey: "dataLoaded") as? Int ?? 0
-    return isDataLoaded == 0
+    let isDataLoaded = UserDefaults.standard.bool(forKey: "dataLoaded")
+    return isDataLoaded == false
   }
   
   override func viewDidLoad() {
@@ -158,21 +158,49 @@ class QRScannerViewController: UIViewController,
   ///   - code: <#code description#>
   ///   - completion: Performed on the main thread
   func found(code: String, completion: @escaping ((_ success: Bool) -> Void)) {
-    if let url = URL(string: code) {
+     if let url = URL(string: code) {
+//    if let url = URL(string: "http://172.31.98.84:8080") {
+//    if let url = URL(string: "http://192.168.0.181:8080") {
       activityIndicator.startAnimating()
-      loader.loadDataFromURL(url, completion: { (success) in
-        DispatchQueue.main.async {
-          self.activityIndicator.stopAnimating()
-          completion(success)
-        }
-        // TODO: what to do in case of failure?
-      })
+      (UIApplication.shared.delegate as! AppDelegate).persistentContainer.performBackgroundTask { (context) in
+        self.loader.deleteAllObjects(onContext: context)
+        self.loader.loadDataFromURL(url, completion: { (success, errors) in
+          DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+            
+            if success == false {
+              let alertController = UIAlertController(title: "Failed to load data", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+              let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+                completion(success)
+              })
+              alertController.addAction(okAction)
+              self.present(alertController, animated: true, completion: nil)
+            }
+            else if errors?.count ?? 0 > 0 {
+              let alertController = UIAlertController(title: "Data loaded with some errors", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+              let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+                completion(success)
+              })
+              alertController.addAction(okAction)
+              self.present(alertController, animated: true, completion: nil)
+            }
+            else {
+              completion(success)
+            }
+          }
+        })
+      }
     }
     else {
-      completion(false)
+      let alertController = UIAlertController(title: "No url found", message: "\(code) is not a valid url", preferredStyle: .alert)
+      let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+        completion(false)
+      })
+      alertController.addAction(okAction)
+      self.present(alertController, animated: true, completion: nil)
     }
   }
-  
+    
   override var prefersStatusBarHidden: Bool {
     return true
   }
