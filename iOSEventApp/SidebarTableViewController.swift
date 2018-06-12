@@ -46,23 +46,41 @@ class SidebarTableViewController: UITableViewController {
     variableSidebarItems = sidebarItems
   }
   
-  override func viewWillAppear(_ animated: Bool) {
+  override func viewDidLoad() {
+    let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+    let loader = DataController(newPersistentContainer: container)
+    let context = container.viewContext
 
-    super.viewWillAppear(animated)
-    
-    
-    
-    
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = false
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+    if let data = (loader.fetchAllObjects(onContext: context, forName: "General")?.first as? General)?.logo, let imageData = Data(base64Encoded: data) {
+      let image = UIImage(data: imageData)
+      let imageView = UIImageView(image: image)
+      // Shrink image view's width (and keep aspect ratio)
+      let maxWidth = view.frame.size.width
+      if imageView.frame.size.width > maxWidth {
+        imageView.frame.size.height *= maxWidth / imageView.frame.size.width
+        imageView.frame.size.width = maxWidth
+      }
+      // Shrink image view's height (and keep aspect ratio)
+      let maxHeight: CGFloat = 160
+      if imageView.frame.size.height > maxHeight {
+        imageView.frame.size.width *= maxHeight / imageView.frame.size.height
+        imageView.frame.size.height = maxHeight
+      }
+      // To prevent the image view from stretching and provide a background.
+      let containingView = UIView(frame: CGRect(x: 0, y: 0, width: maxWidth, height: imageView.frame.size.height))
+      
+      // Background
+      let background = CAGradientLayer()
+      background.colors = [UIColor(red: 111/256.0, green: 148/256.0, blue: 221/256.0, alpha: 1).cgColor, UIColor.blue.cgColor]
+      // Make the gradient horizontal instead of vertical
+      background.transform = CATransform3DMakeRotation(CGFloat.pi / 2, 0, 0, 1)
+      background.frame = containingView.frame // Must come after the transform
+
+      // Add views and layers
+      containingView.layer.addSublayer(background)
+      containingView.addSubview(imageView)
+      tableView.tableHeaderView = containingView
+    }
   }
   
   // MARK: - Table view data source
@@ -123,19 +141,6 @@ class SidebarTableViewController: UITableViewController {
       cell.label.text = "Settings"
     }
     return cell
-  }
-  
-  override func tableView(_ tableView: UITableView, viewForHeaderInSection section: Int) -> UIView? {
-    let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-    let loader = DataController(newPersistentContainer: container)
-    let context = container.viewContext
-    
-    if let imageData = (loader.fetchAllObjects(onContext: context, forName: "General")?.first as? General)?.logo {
-      let image = UIImage(data: imageData)
-      let imageView = UIImageView(image: image)
-      return imageView
-    }
-    return nil
   }
 }
 
