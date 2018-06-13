@@ -90,6 +90,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
       print("default case")
       // change data refresh rate
     }
+    tableView.deselectRow(at: indexPath, animated: true)
   }
 
 }

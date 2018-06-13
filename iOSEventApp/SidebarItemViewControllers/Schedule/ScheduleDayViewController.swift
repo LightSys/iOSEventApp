@@ -14,12 +14,23 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
   @IBOutlet weak var dayLabel: UILabel!
   var dayLabelText: String?
   var scheduleItems: [ScheduleItem]?
+  var contactsByName = [String: Contact]()
   
   override func viewDidLoad() {
     super.viewDidLoad()
     dayLabel.text = dayLabelText
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 175
+
+    if let schedule = scheduleItems {
+      let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+      let loader = DataController(newPersistentContainer: container)
+      let predicate = NSPredicate(format: "name in %@", schedule.compactMap({ $0.location }))
+      let contacts = loader.fetchAllObjects(onContext: container.viewContext, forName: "Contact", withPredicate: predicate, includePropertyValues: true) as? [Contact]
+      for contact in contacts ?? [] {
+        contactsByName[contact.name ?? ""] = contact
+      }
+    }
   }
   
   // MARK: - Table view data source
@@ -40,8 +51,22 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
     cell.startLabel.text = amPMTime(twentyFourHour: scheduleItem.startTime!, minutesOffset: "0")
     cell.endLabel.text = amPMTime(twentyFourHour: scheduleItem.startTime!, minutesOffset: scheduleItem.length!)
     cell.eventName.text = scheduleItem.itemDescription ?? ""
-    cell.eventLocation.text = scheduleItem.location ?? "" // GET contact info!!!
-    cell.contactTextView.text = ""
+    if let location = scheduleItem.location {
+      let contact = contactsByName[location]
+      var contactInfo = ""
+      if let address = contact?.address, let phone = contact?.phone {
+        contactInfo = "\(address)\n\(phone)"
+      }
+      else {
+        contactInfo = contact?.address ?? contact?.phone ?? ""
+      }
+      cell.eventLocation.text = location
+      cell.contactTextView.text = contactInfo
+    }
+    else {
+      cell.eventLocation.text = ""
+      cell.contactTextView.text = ""
+    }
 
     return cell
   }
