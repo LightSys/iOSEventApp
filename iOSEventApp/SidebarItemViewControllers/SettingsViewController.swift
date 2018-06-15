@@ -56,7 +56,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
   func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
     switch indexPath.row {
     case 0:
-      navigationController?.popViewController(animated: true) // TODO: Distinguish between manual refresh and scan a new barcode?
+      navigationController?.popViewController(animated: true)
     case 1:
       activityIndicator.startAnimating()
       let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)

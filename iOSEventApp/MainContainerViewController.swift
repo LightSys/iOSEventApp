@@ -34,15 +34,17 @@ class MainContainerViewController: UIViewController {
   @IBAction func menuButtonTapped(_ sender: Any) {
     delegate?.menuButtonTapped()
   }
-
-  override func viewDidAppear(_ animated: Bool) {
-  }
   
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    loadViewController(identifier: "notifications", entityNameForData: nil, informationPageName: nil)
-    loader.startRefreshTimer(mainContainer: self)
+    if loader.objectsInDataModel(onContext: loader.persistentContainer.viewContext) {
+      loadViewController(identifier: "notifications", entityNameForData: nil, informationPageName: nil)
+      loader.startRefreshTimer(mainContainer: self)
+    }
+    else {
+      loadViewController(identifier: "welcome", entityNameForData: nil, informationPageName: nil)
+    }
   }
   
   /// <#Description#>
@@ -53,7 +55,7 @@ class MainContainerViewController: UIViewController {
   ///   - pageName: <#pageName description#>
   func loadViewController(identifier: String, entityNameForData: String?, informationPageName pageName: String?) {
     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
-    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    let context = loader.persistentContainer.viewContext
     if childViewControllers.count > 0 {
       let childVC = childViewControllers[0]
       childVC.view.removeFromSuperview()

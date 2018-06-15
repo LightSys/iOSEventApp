@@ -110,12 +110,12 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_call_phone" translatesAutoresizingMaskIntoConstraints="NO" id="Hb8-7M-ZW1">
-                                                    <rect key="frame" x="337" y="136" width="16" height="16"/>
+                                                    <rect key="frame" x="337" y="135" width="16" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" red="0.1215686275" green="0.12941176469999999" blue="0.14117647059999999" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                 </imageView>
                                                 <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" image="ic_car" adjustsImageSizeForAccessibilityContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="UpS-cK-tcT">
-                                                    <rect key="frame" x="337" y="100" width="16" height="16"/>
+                                                    <rect key="frame" x="337" y="99" width="16" height="16"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <color key="backgroundColor" white="0.0" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                                 </imageView>
@@ -683,7 +683,7 @@
         <!--Main Container View Controller-->
         <scene sceneID="twc-0b-qzb">
             <objects>
-                <viewController id="ED7-5z-P1d" customClass="MainContainerViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="mainContainer" id="ED7-5z-P1d" customClass="MainContainerViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="90x-Ll-ouj">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="603"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -1074,6 +1074,69 @@ Person 3</string>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Vau-Nd-T9h" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
             <point key="canvasLocation" x="4424.8000000000002" y="115.59220389805098"/>
+        </scene>
+        <!--Welcome View Controller-->
+        <scene sceneID="i3u-WU-R4y">
+            <objects>
+                <viewController storyboardIdentifier="welcome" id="QfS-0R-GXT" customClass="WelcomeViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="huM-n3-x1E">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="q29-ym-2oP">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="96"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Welcome!" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JJ6-fA-q2t">
+                                        <rect key="frame" x="39" y="25" width="295" height="48"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="27"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.2474228144" green="0.32983464000000001" blue="0.4958202243" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="96" id="ty0-B7-tmK"/>
+                                </constraints>
+                            </view>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="Wv8-vh-aaM">
+                                <rect key="frame" x="54" y="293" width="266" height="88"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <state key="normal" title="Scan QR Code"/>
+                                <connections>
+                                    <action selector="tappedScan:" destination="QfS-0R-GXT" eventType="touchUpInside" id="WSi-EW-Wy6"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Scan a qr code for a participating event to get started" lineBreakMode="tailTruncation" numberOfLines="3" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="GYk-0A-DdH">
+                                <rect key="frame" x="27" y="144" width="320" height="107"/>
+                                <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="21"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
+                        <constraints>
+                            <constraint firstItem="q29-ym-2oP" firstAttribute="trailing" secondItem="l5j-Y5-y6D" secondAttribute="trailing" id="Jku-tR-Ng4"/>
+                            <constraint firstItem="q29-ym-2oP" firstAttribute="top" secondItem="huM-n3-x1E" secondAttribute="top" id="nXs-vS-4o1"/>
+                            <constraint firstItem="q29-ym-2oP" firstAttribute="leading" secondItem="l5j-Y5-y6D" secondAttribute="leading" id="uV4-1X-aW7"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="l5j-Y5-y6D"/>
+                    </view>
+                    <navigationItem key="navigationItem" id="ZUz-tP-0J3">
+                        <barButtonItem key="leftBarButtonItem" style="plain" id="PFH-DO-HJL">
+                            <button key="customView" opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" id="el4-Lr-mQX">
+                                <rect key="frame" x="16" y="7" width="39" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Menu"/>
+                            </button>
+                        </barButtonItem>
+                    </navigationItem>
+                    <modalPageSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="gaj-nD-Xjq" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="2701.5999999999999" y="-635.53223388305855"/>
         </scene>
     </scenes>
     <resources>

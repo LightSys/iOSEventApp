@@ -14,6 +14,7 @@
 		4DD00E12204F5B6D0000B10B /* NotificationsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */; };
 		4DD00E13204F5B6D0000B10B /* PrayerPartnersViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0E204F5B6D0000B10B /* PrayerPartnersViewController.swift */; };
 		4DD00E152051A65F0000B10B /* MainContainerViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E142051A6590000B10B /* MainContainerViewController.swift */; };
+		F1274FD020D3ECAE00FFE1E4 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F1274FCF20D3ECAE00FFE1E4 /* WelcomeViewController.swift */; };
 		F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6C7204DCE2F000DA81A /* AppDelegate.swift */; };
 		F149D6CA204DCE2F000DA81A /* RootViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = F149D6C9204DCE2F000DA81A /* RootViewController.swift */; };
 		F149D6CD204DCE2F000DA81A /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = F149D6CB204DCE2F000DA81A /* Main.storyboard */; };
@@ -64,6 +65,7 @@
 		4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NotificationsViewController.swift; sourceTree = "<group>"; };
 		4DD00E0E204F5B6D0000B10B /* PrayerPartnersViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrayerPartnersViewController.swift; sourceTree = "<group>"; };
 		4DD00E142051A6590000B10B /* MainContainerViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MainContainerViewController.swift; sourceTree = "<group>"; };
+		F1274FCF20D3ECAE00FFE1E4 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		F149D6C4204DCE2F000DA81A /* Event App.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = "Event App.app"; sourceTree = BUILT_PRODUCTS_DIR; };
 		F149D6C7204DCE2F000DA81A /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		F149D6C9204DCE2F000DA81A /* RootViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RootViewController.swift; sourceTree = "<group>"; };
@@ -203,6 +205,7 @@
 				F1AF66632052F67300B8820D /* SettingsViewController.swift */,
 				4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */,
 				4DD00E0E204F5B6D0000B10B /* PrayerPartnersViewController.swift */,
+				F1274FCF20D3ECAE00FFE1E4 /* WelcomeViewController.swift */,
 			);
 			path = SidebarItemViewControllers;
 			sourceTree = "<group>";
@@ -380,6 +383,7 @@
 				F1AF665C20524CB500B8820D /* ScheduleTableViewCell.swift in Sources */,
 				F1AF66722053292300B8820D /* ContactTableViewCell.swift in Sources */,
 				F149D6CA204DCE2F000DA81A /* RootViewController.swift in Sources */,
+				F1274FD020D3ECAE00FFE1E4 /* WelcomeViewController.swift in Sources */,
 				F15E98E220521D2700C088D3 /* ScheduleDayViewController.swift in Sources */,
 				4DD00E152051A65F0000B10B /* MainContainerViewController.swift in Sources */,
 				F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */,

@@ -90,6 +90,10 @@ class SidebarTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    guard variableSidebarItems.count > 0 else {
+      return 3 // Welcome, About, Settings
+    }
+    // Welcome not shown
     return variableSidebarItems.count + 2 // About and Settings are constant
   }
   
@@ -115,10 +119,13 @@ class SidebarTableViewController: UITableViewController {
         else {
           vcSwitchingDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row].nav)
         }
+      } else {
+        vcSwitchingDelegate?.switchTo(vcName: "welcome", entityNameForData: nil, informationPageName: nil)
       }
-    case variableSidebarItems.count:
+    case variableSidebarItems.count, 1:
       print("About selected")
     default:
+      // Settings is always at index 2 or greater
       vcSwitchingDelegate?.switchTo(vcName: "settings", entityNameForData: nil, informationPageName: nil)
     }
     tableView.deselectRow(at: indexPath, animated: true)
@@ -133,7 +140,10 @@ class SidebarTableViewController: UITableViewController {
       cell.sideImageView.image = UIImage(named: variableSidebarItems[row].icon!)
       cell.label.text = variableSidebarItems[row].nav!
     }
-    else if row == variableSidebarItems.count {
+    else if row == 0 {
+      cell.label.text = "Welcome"
+    }
+    else if row == variableSidebarItems.count || row == 1 {
       cell.sideImageView.image = UIImage(named: "ic_info")
       cell.label.text = "About"
     }

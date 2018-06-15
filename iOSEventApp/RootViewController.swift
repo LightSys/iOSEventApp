@@ -34,6 +34,9 @@ class RootViewController: UIViewController {
         segue.destination as! UINavigationController
       (embeddedNavigationController.viewControllers[0]
         as? QRScannerViewController)?.delegate = self
+      let mainContainerVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainContainer") as! MainContainerViewController
+      mainContainerVC.delegate = self
+      embeddedNavigationController.viewControllers.append(mainContainerVC)
     }
     else if segue.identifier == "embedSidebarViewController" {
       sidebarViewController = segue.destination as! SidebarTableViewController
