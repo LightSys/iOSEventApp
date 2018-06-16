@@ -62,16 +62,23 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
       }
       cell.eventLocation.text = location
       cell.contactTextView.text = contactInfo
+      if contactInfo == "" {
+        cell.contactBottomSpaceConstraint.constant = 0
+        cell.contactHeightConstraint.constant = 0
+     }
     }
     else {
       cell.eventLocation.text = ""
       cell.contactTextView.text = ""
+      cell.contactBottomSpaceConstraint.constant = 0
+      cell.contactHeightConstraint.constant = 0
+      cell.locationHeightConstraint.constant = 0
     }
 
     return cell
   }
   
-  // TEST 0000
+  // TODO: TEST 0000
   func amPMTime(twentyFourHour startTime: String, minutesOffset: String) -> String {
     let stringLength = startTime.count
     

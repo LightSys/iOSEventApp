@@ -16,7 +16,8 @@
     option in the attributes inspector to increase that size, but
     I don't like how the interface moves with that. Can't think of a better way though.
  
- 
+ The event title now has four lines and the location is set to autoshrink. For a combination of long text and a small phone screen it is better
+    to display all the text rather than truncate it.
  */
 
 import UIKit
@@ -30,17 +31,7 @@ class ScheduleTableViewCell: UITableViewCell {
   @IBOutlet weak var eventName: UILabel!
   @IBOutlet weak var eventLocation: UILabel!
   @IBOutlet weak var contactTextView: UITextView!
-  
-    
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
+  @IBOutlet weak var contactBottomSpaceConstraint: NSLayoutConstraint!
+  @IBOutlet weak var locationHeightConstraint: NSLayoutConstraint!
+  @IBOutlet weak var contactHeightConstraint: NSLayoutConstraint!
 }

@@ -9,12 +9,15 @@
 import UIKit
 
 class HousingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
+  @IBOutlet weak var tableView: UITableView!
   var dataArray: [Any]?
   var contactsByName = [String: Contact]()
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    
+    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.estimatedRowHeight = 231
+
     if let housing = dataArray as? [HousingUnit] {
       let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
       let loader = DataController(newPersistentContainer: container)
@@ -58,9 +61,5 @@ class HousingViewController: UIViewController, UITableViewDataSource, UITableVie
     cell.rightTextView.text = housingUnitArray[indexPath.row].students
     
     return cell
-  }
-  
-  func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
-    return 216
   }
 }
