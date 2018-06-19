@@ -123,7 +123,7 @@ class SidebarTableViewController: UITableViewController {
         vcSwitchingDelegate?.switchTo(vcName: "welcome", entityNameForData: nil, informationPageName: nil)
       }
     case variableSidebarItems.count, 1:
-      print("About selected")
+      vcSwitchingDelegate?.switchTo(vcName: "about", entityNameForData: nil, informationPageName: nil)
     default:
       // Settings is always at index 2 or greater
       vcSwitchingDelegate?.switchTo(vcName: "settings", entityNameForData: nil, informationPageName: nil)
