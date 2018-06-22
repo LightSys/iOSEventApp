@@ -129,10 +129,14 @@ class DataController: NSObject {
         dataLoadingErrors.append(self.generateInformationPageModel(onContext: context, from: jsonDict["information_page"]))
         dataLoadingErrors.append(self.generateSchedulePageModel(onContext: context, from: jsonDict["schedule"]))
         
+        if let general = self.fetchAllObjects(onContext: self.persistentContainer.viewContext, forName: "General")?.first as? General, general.refresh != 0 {
+          UserDefaults.standard.set(general.refresh, forKey: "defaultRefreshRateMinutes")
+        }
+
         var errors = dataLoadingErrors.compactMap({ $0 }).joined().map({ $0 }) as [DataLoadingError]
 
         // These should be set regardless of success or failure
-        UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt")
+        UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt") // separate from dataLoaded
         UserDefaults.standard.set(url, forKey: "loadedDataURL")
         
         guard let generalDict = general as? [String: Any], let notificationsURLString = generalDict["notifications_url"] as? String else {
@@ -263,19 +267,30 @@ class DataController: NSObject {
   ///
   /// - Parameter mainContainer: The main container is tasked with updating whatever view controller is on top.
   func startRefreshTimer(mainContainer: MainContainerViewController) {
-    guard let general = fetchAllObjects(onContext: persistentContainer.viewContext, forName: "General")?.first as? General else {
-      return
-    }
-    let refreshRateMinutes = general.refresh
+    let refreshRateMinutes = UserDefaults.standard.integer(forKey: "defaultRefreshRateMinutes")
     guard refreshRateMinutes != 0 else {
       return
     }
+    guard let general = self.fetchAllObjects(onContext: self.persistentContainer.viewContext, forName: "General")?.first as? General else {
+      return
+    }
     // If there is a refresh key, there must also be an expire key.
-    let endDateString = general.refresh_expire!
+    let endDateString = general.refresh_expire! // TODO: Is this sound logic?
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "mm/dd/yyyy"
     let endDate = dateFormatter.date(from: endDateString)!
     DataController.refreshController = RefreshController(refreshRateMinutes: UInt(refreshRateMinutes), refreshUntil: endDate, containerVC: mainContainer)
+  }
+  
+  static func restartRefreshTimer() {
+    var rateMinutes = UserDefaults.standard.integer(forKey: "chosenRefreshRateMinutes")
+    if rateMinutes == 0 {
+      rateMinutes = UserDefaults.standard.integer(forKey: "defaultRefreshRateMinutes")
+    }
+    guard rateMinutes != 0 else {
+      return
+    }
+    DataController.refreshController?.restartTimer(refreshRateMinutes: UInt(rateMinutes))
   }
   
   /// Gives error messages in one string for at most 5 errors. Each message will be on a new line. If there are more than 5, the number of errors will come be provided before the error messages.

@@ -8,13 +8,14 @@
 
 import UIKit
 
-protocol ViewControllerSwitching:AnyObject {
+protocol MenuDelegate:AnyObject {
   func switchTo(vcName: String, entityNameForData: String?, informationPageName pageName: String?)
+  func swipedToClose()
 }
 
 class SidebarTableViewController: UITableViewController {
   
-  weak var vcSwitchingDelegate: ViewControllerSwitching?
+  weak var menuDelegate: MenuDelegate?
   
   var _variableSidebarItems = [SidebarAppearance]()
   var variableSidebarItems: [SidebarAppearance] {
@@ -83,6 +84,10 @@ class SidebarTableViewController: UITableViewController {
     }
   }
   
+  @IBAction func swipedLeft(_ sender: Any) {
+    menuDelegate?.swipedToClose()
+  }
+  
   // MARK: - Table view data source
   
   override func numberOfSections(in tableView: UITableView) -> Int {
@@ -102,31 +107,31 @@ class SidebarTableViewController: UITableViewController {
     case 0...(variableSidebarItems.count == 0 ? 0 : variableSidebarItems.count-1):
       if variableSidebarItems.count > 0 {
         if variableSidebarItems[indexPath.row].nav == "Notifications" {
-          vcSwitchingDelegate?.switchTo(vcName: "notifications", entityNameForData: nil, informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "notifications", entityNameForData: nil, informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Contacts" {
-          vcSwitchingDelegate?.switchTo(vcName: "contacts", entityNameForData: nil, informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "contacts", entityNameForData: nil, informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Housing" {
-          vcSwitchingDelegate?.switchTo(vcName: "housing", entityNameForData: "HousingUnit", informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "housing", entityNameForData: "HousingUnit", informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Schedule" {
-          vcSwitchingDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay", informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay", informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Prayer Partners" {
-          vcSwitchingDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup", informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup", informationPageName: nil)
         }
         else {
-          vcSwitchingDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row].nav)
+          menuDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row].nav)
         }
       } else {
-        vcSwitchingDelegate?.switchTo(vcName: "welcome", entityNameForData: nil, informationPageName: nil)
+        menuDelegate?.switchTo(vcName: "welcome", entityNameForData: nil, informationPageName: nil)
       }
     case variableSidebarItems.count, 1:
-      vcSwitchingDelegate?.switchTo(vcName: "about", entityNameForData: nil, informationPageName: nil)
+      menuDelegate?.switchTo(vcName: "about", entityNameForData: nil, informationPageName: nil)
     default:
       // Settings is always at index 2 or greater
-      vcSwitchingDelegate?.switchTo(vcName: "settings", entityNameForData: nil, informationPageName: nil)
+      menuDelegate?.switchTo(vcName: "settings", entityNameForData: nil, informationPageName: nil)
     }
     tableView.deselectRow(at: indexPath, animated: true)
   }

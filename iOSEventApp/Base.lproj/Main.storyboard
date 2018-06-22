@@ -34,6 +34,7 @@
                                 <gestureRecognizers/>
                                 <connections>
                                     <outletCollection property="gestureRecognizers" destination="huG-8S-Tku" appends="YES" id="9RK-QP-bnD"/>
+                                    <outletCollection property="gestureRecognizers" destination="gZf-Aq-p6I" appends="YES" id="8tE-un-aqb"/>
                                 </connections>
                             </view>
                             <containerView opaque="NO" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="k6r-t1-cLt">
@@ -69,6 +70,11 @@
                         <action selector="dimViewTapped:" destination="BYZ-38-t0r" id="kfx-rS-GJL"/>
                     </connections>
                 </tapGestureRecognizer>
+                <swipeGestureRecognizer direction="left" id="gZf-Aq-p6I">
+                    <connections>
+                        <action selector="swipedLeft:" destination="BYZ-38-t0r" id="cNL-77-1WQ"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="136.80000000000001" y="133.5832083958021"/>
         </scene>
@@ -434,7 +440,7 @@
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
                                                 <textField opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="left" contentVerticalAlignment="center" text="Settings (not used)" textAlignment="center" minimumFontSize="17" translatesAutoresizingMaskIntoConstraints="NO" id="zcv-L9-DHd">
-                                                    <rect key="frame" x="16" y="19" width="343" height="39"/>
+                                                    <rect key="frame" x="16" y="17" width="343" height="39"/>
                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
                                                     <color key="textColor" red="0.99999600649999998" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                     <fontDescription key="fontDescription" type="system" pointSize="32"/>
@@ -573,7 +579,7 @@
                                     <outlet property="delegate" destination="vvw-jK-Rhz" id="JXR-AA-Jxn"/>
                                 </connections>
                             </tableView>
-                            <view hidden="YES" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CdZ-qP-9O4">
+                            <view hidden="YES" alpha="0.0" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="CdZ-qP-9O4">
                                 <rect key="frame" x="0.0" y="-0.5" width="375" height="667"/>
                                 <subviews>
                                     <view alpha="0.40000000000000002" contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Y08-RK-XAW">
@@ -1080,14 +1086,16 @@
                         <sections/>
                         <connections>
                             <outlet property="delegate" destination="J0r-X9-R8x" id="Wb8-9G-5OV"/>
+                            <outletCollection property="gestureRecognizers" destination="tSc-sw-guI" appends="YES" id="7pE-D8-2jW"/>
                         </connections>
                     </tableView>
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="FhP-K2-5Hq" userLabel="First Responder" sceneMemberID="firstResponder"/>
-                <tapGestureRecognizer id="VEo-5y-Yme"/>
-                <tapGestureRecognizer id="h7b-UP-5WL"/>
-                <pinchGestureRecognizer id="XPF-V4-VbY"/>
-                <pinchGestureRecognizer id="WEm-cv-lnI"/>
+                <swipeGestureRecognizer direction="left" id="tSc-sw-guI">
+                    <connections>
+                        <action selector="swipedLeft:" destination="J0r-X9-R8x" id="bfw-Eo-791"/>
+                    </connections>
+                </swipeGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="2424.8000000000002" y="1046.6266866566718"/>
         </scene>
@@ -1245,10 +1253,10 @@ Person 3</string>
             </objects>
             <point key="canvasLocation" x="2701.5999999999999" y="-635.53223388305855"/>
         </scene>
-        <!--Settings View Controller-->
+        <!--View Controller-->
         <scene sceneID="2TT-fq-rga">
             <objects>
-                <viewController storyboardIdentifier="about" id="Us5-fc-qHi" customClass="SettingsViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="about" id="Us5-fc-qHi" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="byn-Ch-6iY">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>

@@ -14,6 +14,7 @@ class RefreshController {
   
   weak var containerVC: MainContainerViewController?
   
+  // Static timer, so the init method can be called multiple times
   private static var refreshTimer: Timer?
   
   init(refreshRateMinutes rate: UInt, refreshUntil endDate: Date, containerVC container: MainContainerViewController) {
@@ -21,11 +22,17 @@ class RefreshController {
     refreshUntil = endDate
     containerVC = container
     
-    let refreshInterval = TimeInterval(refreshRateMinutes * 60)
+    restartTimer(refreshRateMinutes: rate)
+  }
+  
+  func restartTimer(refreshRateMinutes rate: UInt) {
+    refreshRateMinutes = rate
     
     guard shouldStartTimer() else {
       return
     }
+    
+    let refreshInterval = TimeInterval(refreshRateMinutes * 60)
     RefreshController.refreshTimer?.invalidate()
     RefreshController.refreshTimer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true, block: { (timer) in
       self.containerVC?.reloadNotifications()

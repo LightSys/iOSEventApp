@@ -27,6 +27,7 @@ class MainContainerViewController: UIViewController {
   let loader = DataController(newPersistentContainer:
     (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
   var currentPageInformation: (identifier: String, entityName: String?, informationPageName: String?)?
+  var activityIndicator: UIActivityIndicatorView!
 
   @IBOutlet weak var containerView: UIView!
   weak var delegate: MenuButton?
@@ -45,6 +46,11 @@ class MainContainerViewController: UIViewController {
     else {
       loadViewController(identifier: "welcome", entityNameForData: nil, informationPageName: nil)
     }
+    
+    activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    activityIndicator.center = view.center
+    activityIndicator.hidesWhenStopped = true
+    view.addSubview(activityIndicator)
   }
   
   /// <#Description#>
@@ -118,12 +124,21 @@ class MainContainerViewController: UIViewController {
   /// The container needs to get this, so that it can pass in a completion handler to the reload function.
   func reloadNotifications() {
     loader.reloadNotifications { (success, errors) in
-      guard success == true else {
-        return
-      }
       DispatchQueue.main.async {
-        // TODO: Loading indicator + disable screen // guard success
-        self.refreshCurrentPage() // only if notifications
+        guard success == true else {
+          let alertController = UIAlertController(title: "Data refresh failed", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+          let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+          alertController.addAction(okAction)
+          self.present(alertController, animated: true, completion: nil)
+          return
+        }
+        // TODO: verify that this does something
+        self.activityIndicator.startAnimating()
+        UIView.animate(withDuration: 0.3, animations: {
+          self.refreshCurrentPage()
+        }, completion: { (_) in
+          self.activityIndicator.stopAnimating()
+        })
       }
     }
   }

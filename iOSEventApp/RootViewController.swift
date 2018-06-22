@@ -28,6 +28,10 @@ class RootViewController: UIViewController {
     menuButtonTapped()
   }
   
+  @IBAction func swipedLeft(_ sender: Any) {
+    menuButtonTapped()
+  }
+  
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "embedNavigationController" {
       embeddedNavigationController =
@@ -40,7 +44,7 @@ class RootViewController: UIViewController {
     }
     else if segue.identifier == "embedSidebarViewController" {
       sidebarViewController = segue.destination as! SidebarTableViewController
-      sidebarViewController.vcSwitchingDelegate = self
+      sidebarViewController.menuDelegate = self
     }
   }
 }
@@ -69,13 +73,17 @@ extension RootViewController: MenuButton {
   }
 }
 
-extension RootViewController: ViewControllerSwitching {
+extension RootViewController: MenuDelegate {
   func switchTo(vcName: String, entityNameForData: String?, informationPageName pageName: String?) {
     let mainContainerVC = embeddedNavigationController.viewControllers[1]
         as! MainContainerViewController
     mainContainerVC.loadViewController(identifier: vcName,
                                        entityNameForData: entityNameForData,
                                        informationPageName: pageName)
+    menuButtonTapped()
+  }
+  
+  func swipedToClose() {
     menuButtonTapped()
   }
 }

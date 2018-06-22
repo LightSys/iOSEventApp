@@ -299,6 +299,11 @@
 					F149D6C3204DCE2F000DA81A = {
 						CreatedOnToolsVersion = 9.2;
 						ProvisioningStyle = Automatic;
+						SystemCapabilities = {
+							com.apple.BackgroundModes = {
+								enabled = 1;
+							};
+						};
 					};
 					F149D6DA204DCE2F000DA81A = {
 						CreatedOnToolsVersion = 9.2;

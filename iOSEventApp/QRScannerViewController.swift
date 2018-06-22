@@ -36,7 +36,7 @@ class QRScannerViewController: UIViewController,
       return true
     }
     
-    let isDataLoaded = UserDefaults.standard.bool(forKey: "dataLoaded")
+    let isDataLoaded = UserDefaults.standard.bool(forKey: "dataLoaded") // Once the user actually scans data, this will be reset, to either true or false depending on success
     return isDataLoaded == false
   }
   
