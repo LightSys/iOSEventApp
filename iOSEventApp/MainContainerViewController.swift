@@ -23,6 +23,10 @@ protocol TakesArrayData: AnyObject {
   var dataArray: [Any]? { get set }
 }
 
+protocol IsComparable {
+  var compareString: String? { get }
+}
+
 class MainContainerViewController: UIViewController {
   let loader = DataController(newPersistentContainer:
     (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
@@ -41,7 +45,7 @@ class MainContainerViewController: UIViewController {
     
     if loader.objectsInDataModel(onContext: loader.persistentContainer.viewContext) {
       loadViewController(identifier: "notifications", entityNameForData: nil, informationPageName: nil)
-      loader.startRefreshTimer(mainContainer: self)
+      DataController.startRefreshTimer(mainContainer: self)
     }
     else {
       loadViewController(identifier: "welcome", entityNameForData: nil, informationPageName: nil)
@@ -51,6 +55,42 @@ class MainContainerViewController: UIViewController {
     activityIndicator.center = view.center
     activityIndicator.hidesWhenStopped = true
     view.addSubview(activityIndicator)
+  }
+  
+  override func viewWillAppear(_ animated: Bool) {
+    
+    // Guard that there is a notificationsLastUpdatedAt date.
+    // If sufficient time (refresh rate or 30 minutes) has elapsed, reload notifications.
+    // Override a never rate with 30 minutes
+
+    guard let notificationsLastUpdatedAt = UserDefaults.standard.object(forKey: "notificationsLastUpdatedAt") as? Date else {
+      return
+    }
+    
+    var refreshRateMinutes = 30
+    let chosenRate = UserDefaults.standard.integer(forKey: "chosenRefreshRateMinutes")
+    if chosenRate == 0 {
+      let defaultRate = UserDefaults.standard.integer(forKey: "defaultRefreshRateMinutes")
+      if defaultRate > 0 {
+        refreshRateMinutes = defaultRate
+      }
+    }
+    else if chosenRate > 0 {
+      refreshRateMinutes = chosenRate
+    }
+    
+    if Date().timeIntervalSince(notificationsLastUpdatedAt) >= TimeInterval(refreshRateMinutes * 60) {
+      loader.reloadNotifications { (_, _) in
+        // Don't act on success or errors from the reload and start the refresh timer.
+        DataController.startRefreshTimer(mainContainer: self)
+      }
+    }
+  }
+  
+  override func viewWillDisappear(_ animated: Bool) {
+    if isBeingDismissed {
+      DataController.refreshController?.removeContainerVC()
+    }
   }
   
   /// <#Description#>
@@ -71,14 +111,14 @@ class MainContainerViewController: UIViewController {
     if let contactsVC = vc as? ContactsViewController{
       let contacts = loader.fetchAllObjects(onContext: context, forName: "Contact") as? [Contact]
       let contactPageSections = loader.fetchAllObjects(onContext: context, forName: "ContactPageSection") as? [ContactPageSection]
-      contactsVC.contactArray = contacts
-      contactsVC.contactPageSections = contactPageSections
+      contactsVC.contactArray = contacts?.sorted()
+      contactsVC.contactPageSections = contactPageSections?.sorted()
     }
     else if let notificationsVC = vc as? NotificationsViewController {
       let notifications = loader.fetchAllObjects(onContext: context, forName: "Notification") as? [Notification]
       let general = loader.fetchAllObjects(onContext: context, forName: "General") as? [General]
       let welcomeMessage = general?.first?.welcome_message
-      notificationsVC.notificationArray = notifications?.sorted().reversed() // Newest at top
+      notificationsVC.notificationArray = notifications?.sorted(by: >) // Syntax for newest at top
       notificationsVC.welcomeMessage = welcomeMessage
     }
     else if let entityName = entityNameForData, var data = loader.fetchAllObjects(onContext: context, forName: entityName) {
@@ -94,7 +134,18 @@ class MainContainerViewController: UIViewController {
       }
 
       if let takesArrayData = vc as? TakesArrayData {
-        takesArrayData.dataArray = data as [Any]
+      
+        if let sortable = data as? [IsComparable] { // All objects in the array are the same type
+          takesArrayData.dataArray = sortable.sorted(by: { (obj1, obj2) -> Bool in
+            guard let str1 = obj1.compareString, let str2 = obj2.compareString else {
+              return false
+            }
+            return str1 < str2
+          })
+        }
+        else {
+          takesArrayData.dataArray = data as [Any]
+        }
       }
     }
     addChildViewController(vc)
@@ -132,6 +183,7 @@ class MainContainerViewController: UIViewController {
           self.present(alertController, animated: true, completion: nil)
           return
         }
+        DataController.startRefreshTimer(mainContainer: self)
         // TODO: verify that this does something
         self.activityIndicator.startAnimating()
         UIView.animate(withDuration: 0.3, animations: {

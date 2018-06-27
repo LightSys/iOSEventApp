@@ -8,6 +8,25 @@
 
 import UIKit
 
+extension Contact: Comparable {
+  public static func < (lhs: Contact, rhs: Contact) -> Bool {
+    guard let name1 = lhs.name, let name2 = rhs.name else {
+      return false
+    }
+    return name1 < name2
+  }
+}
+
+extension ContactPageSection: Comparable {
+  public static func < (lhs: ContactPageSection, rhs: ContactPageSection) -> Bool {
+    guard let id1 = lhs.id, let id2 = rhs.id else {
+      return false
+    }
+    return id1 < id2
+  }
+}
+
+
 class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
   @IBOutlet weak var tableView: UITableView!

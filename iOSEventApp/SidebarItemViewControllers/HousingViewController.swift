@@ -8,6 +8,12 @@
 
 import UIKit
 
+extension HousingUnit: IsComparable {
+  var compareString: String? {
+    return driver
+  }
+}
+
 class HousingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
   @IBOutlet weak var tableView: UITableView!
   var dataArray: [Any]?

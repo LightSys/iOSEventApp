@@ -17,21 +17,36 @@ class RefreshController {
   // Static timer, so the init method can be called multiple times
   private static var refreshTimer: Timer?
   
+  static func cancelRefresh() {
+    refreshTimer?.invalidate()
+  }
+  
   init(refreshRateMinutes rate: UInt, refreshUntil endDate: Date, containerVC container: MainContainerViewController) {
     refreshRateMinutes = rate
     refreshUntil = endDate
     containerVC = container
     
-    restartTimer(refreshRateMinutes: rate)
+    restartTimer(refreshRateMinutes: rate, endDate: endDate)
   }
   
-  func restartTimer(refreshRateMinutes rate: UInt) {
-    refreshRateMinutes = rate
-    
+  /// Call when there is no longer a container vc to send messages to. This also cancels the timer.
+  func removeContainerVC() {
+    containerVC = nil
+    RefreshController.cancelRefresh()
+  }
+  
+  /// Starts the timer, if it either isn't going or the rate changes.
+  func restartTimer(refreshRateMinutes rate: UInt, endDate: Date) {
+    guard RefreshController.refreshTimer?.isValid == false || refreshRateMinutes != rate else {
+      return
+    }
     guard shouldStartTimer() else {
       return
     }
     
+    refreshRateMinutes = rate
+    refreshUntil = endDate
+
     let refreshInterval = TimeInterval(refreshRateMinutes * 60)
     RefreshController.refreshTimer?.invalidate()
     RefreshController.refreshTimer = Timer.scheduledTimer(withTimeInterval: refreshInterval, repeats: true, block: { (timer) in
@@ -42,8 +57,13 @@ class RefreshController {
     })
   }
   
+  /// Checks that there is a containerVC, a valid refresh rate, and that refreshUntil is in the future.
   func shouldStartTimer() -> Bool {
-    return Date(timeIntervalSinceNow: TimeInterval(refreshRateMinutes * 60)) < self.refreshUntil
+    guard containerVC != nil && refreshRateMinutes > 0 else {
+      return false
+    }
+    return true
+//    return Date(timeIntervalSinceNow: TimeInterval(refreshRateMinutes * 60)) < self.refreshUntil
   }
 }
 

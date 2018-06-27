@@ -16,7 +16,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var ratePickerView: UIPickerView!
   @IBOutlet weak var pickerContainerView: UIView!
-  private var refreshRateOptionsMinutes = [15, 30, 45, 60, 120, -1] // If the event refresh rate is one of these values, the duplicate will be removed. -1 is never
+  private var refreshRateOptionsMinutes = [5, 10, 15, 30, 45, 60, 120, -1] // If the event refresh rate is one of these values, the duplicate will be removed. -1 is never
   private var defaultRefreshRateMinutes: Int = 0 // Guarantee a value
   private var chosenRefreshRateMinutes: Int?
   private var defaultOptionText: String?
@@ -135,7 +135,6 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
       // Do not schedule notifications if not authorized.
       guard settings.authorizationStatus == .authorized else {return}
       
-      
       let content = UNMutableNotificationContent()
       content.title = "Weekly Staff Meeting"
       content.body = "Every Tuesday at 2pm"
@@ -163,6 +162,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
   }
   
   @IBAction func saveRefreshRateTapped(_ sender: Any) {
+
     let selectedRow = ratePickerView.selectedRow(inComponent: 0)
     
     UIView.animate(withDuration: animationTime, animations: {
@@ -173,6 +173,12 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     }
     
     let selectedMinutes = minutesForPickerRow(selectedRow)
+    if selectedMinutes > 0 {
+      UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(selectedMinutes * 60))
+    }
+    else {
+      UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(UIApplicationBackgroundFetchIntervalNever))
+    }
     if selectedMinutes != chosenRefreshRateMinutes {
       if selectedMinutes == defaultRefreshRateMinutes {
         UserDefaults.standard.removeObject(forKey: "chosenRefreshRateMinutes")
@@ -181,7 +187,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         UserDefaults.standard.set(selectedMinutes, forKey: "chosenRefreshRateMinutes")
       }
       chosenRefreshRateMinutes = selectedMinutes
-      DataController.restartRefreshTimer()
+      DataController.startRefreshTimer()
     }
   }
   

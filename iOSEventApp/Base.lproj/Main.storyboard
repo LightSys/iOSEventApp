@@ -1015,6 +1015,7 @@
                                         <connections>
                                             <outlet property="leftTextView" destination="dbO-8G-uaK" id="YKO-e8-vxq"/>
                                             <outlet property="rightTextView" destination="fwh-CV-joa" id="VBB-Ug-4Rg"/>
+                                            <outlet property="titleLabel" destination="oFY-HD-4iN" id="s39-Hx-okT"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>

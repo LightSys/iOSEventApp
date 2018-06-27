@@ -8,6 +8,12 @@
 
 import UIKit
 
+extension InformationPageSection: IsComparable {
+  var compareString: String? {
+    return String(order)
+  }
+}
+
 class InformationPageViewController: UIViewController, TakesArrayData, UITableViewDelegate, UITableViewDataSource {
 
   @IBOutlet weak var tableView: UITableView!

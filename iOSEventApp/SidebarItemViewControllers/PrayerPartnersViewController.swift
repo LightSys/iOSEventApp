@@ -8,6 +8,12 @@
 
 import UIKit
 
+extension PrayerPartnerGroup: IsComparable {
+  var compareString: String? {
+    return students
+  }
+}
+
 class PrayerPartnersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
 
   @IBOutlet weak var tableView: UITableView!

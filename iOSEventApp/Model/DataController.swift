@@ -131,24 +131,29 @@ class DataController: NSObject {
         
         if let general = self.fetchAllObjects(onContext: self.persistentContainer.viewContext, forName: "General")?.first as? General, general.refresh != 0 {
           UserDefaults.standard.set(general.refresh, forKey: "defaultRefreshRateMinutes")
+          UserDefaults.standard.set(general.refresh_expire, forKey: "refreshExpireString")
         }
 
         var errors = dataLoadingErrors.compactMap({ $0 }).joined().map({ $0 }) as [DataLoadingError]
 
-        // These should be set regardless of success or failure
-        UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt") // separate from dataLoaded
+        // This should be set regardless of success or failure
         UserDefaults.standard.set(url, forKey: "loadedDataURL")
         
         guard let generalDict = general as? [String: Any], let notificationsURLString = generalDict["notifications_url"] as? String else {
           self.trySave(onContext: context, currentErrors: errors) { (success, errorArray) in
-            UserDefaults.standard.set(success, forKey: "dataLoaded")
+            if success {
+              UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt")
+            }
             completion(success, errorArray)
           }
           return
         }
         
-        self.loadNotificationsFromURL(context: context, url: URL(string: notificationsURLString)!) { (success, nErrors) in
-          //        self.loadNotificationsFromURL(URL(string: "http://192.168.0.181:8081")!) { (success, nErrors) in
+//        self.loadNotificationsFromURL(context: context, url: URL(string: notificationsURLString)!) { (success, nErrors) in
+        self.loadNotificationsFromURL(context: context, url: URL(string: "http://192.168.1.126:8081")!) { (success, nErrors) in
+          if success {
+            UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt")
+          }
           if let additionalErrors = nErrors {
             if case .unableToSave(_)? = additionalErrors.first {
               // The save error is the only error (the others were removed)
@@ -159,7 +164,6 @@ class DataController: NSObject {
             }
           }
           // Notifications' success is the same as success for the data load, because they share a save.
-          UserDefaults.standard.set(success, forKey: "dataLoaded")
           completion(success, errors)
         }
       })
@@ -194,7 +198,7 @@ class DataController: NSObject {
   /// - Parameters:
   ///   - url: URL to load data from
   ///   - completion: To be run after save.
-  func loadNotificationsFromURL(context: NSManagedObjectContext, url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?) -> Void)) {
+  func loadNotificationsFromURL(context: NSManagedObjectContext, url: URL, allowReload: Bool = false, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?) -> Void)) {
     
     let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
       guard err == nil else {
@@ -226,13 +230,24 @@ class DataController: NSObject {
       
       // If data is reloaded, it will be on a new context, so it is necessary to save here.
       self.trySave(onContext: context, currentErrors: errors) { (success, errors) in
-        UserDefaults.standard.set(success, forKey: "notificationsLoaded")
         // TODO: TEST!!!
-        // If a (true) refresh key newer than the dataLastUpdatedAt date in defaults, load data.
-        let fetchRequestPredicate = NSPredicate(format: "refresh == true AND date >= %@", UserDefaults.standard.object(forKey: "dataLastUpdatedAt") as! CVarArg)
-        let refreshNotifications = self.fetchAllObjects(onContext: context, forName: "Notification", withPredicate: fetchRequestPredicate)
-        if refreshNotifications?.count ?? 0 > 0 {
-          self.reloadAllData(completion: completion)
+        if success {
+          UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
+        }
+        if allowReload {
+          // If a (true) refresh key newer than the dataLastUpdatedAt date in defaults, load data.
+          let fetchRequestPredicate = NSPredicate(format: "refresh == true")// AND date > %@", UserDefaults.standard.object(forKey: "dataLastUpdatedAt") as! NSDate)
+          let refreshNotifications = self.fetchAllObjects(onContext: context, forName: "Notification", withPredicate: fetchRequestPredicate) as? [Notification]
+          let dateFormatter = DateFormatter()
+          dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
+          let lastRefreshDate = UserDefaults.standard.object(forKey: "dataLastUpdatedAt") as! Date
+          // There should be no refresh notifications without dates.
+          if refreshNotifications?.contains(where: { dateFormatter.date(from: $0.date!)! > lastRefreshDate }) ?? false {
+            self.reloadAllData(completion: completion)
+          }
+          else {
+            completion(success, errors)
+          }
         }
         else {
           completion(success, errors)
@@ -252,45 +267,44 @@ class DataController: NSObject {
   }
   
   func reloadNotifications(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?) -> Void)) {
-    //    guard let url = URL(string: "http://192.168.0.181:8081") else {
-    guard let url = UserDefaults.standard.url(forKey: "loadedNotificationsURL") else {
+        guard let url = URL(string: "http://192.168.1.126:8081") else {
+//    guard let url = UserDefaults.standard.url(forKey: "loadedNotificationsURL") else {
       // Fallback to attempting to reload all data
       reloadAllData(completion: completion)
       return
     }
     self.persistentContainer.performBackgroundTask({ (context) in
-      self.loadNotificationsFromURL(context: context, url: url, completion: completion)
+      self.loadNotificationsFromURL(context: context, url: url, allowReload: true, completion: completion)
     })
   }
   
-  /// If the timer is already going, it will be invalidated and restarted. Note that the refresh controller does not refresh any data until the first time interval has passed.
+  /// Sends the refresh rate and end date to the timer. If the timer is not going or receives a new refresh rate, it will restart.
   ///
-  /// - Parameter mainContainer: The main container is tasked with updating whatever view controller is on top.
-  func startRefreshTimer(mainContainer: MainContainerViewController) {
-    let refreshRateMinutes = UserDefaults.standard.integer(forKey: "defaultRefreshRateMinutes")
-    guard refreshRateMinutes != 0 else {
-      return
-    }
-    guard let general = self.fetchAllObjects(onContext: self.persistentContainer.viewContext, forName: "General")?.first as? General else {
-      return
-    }
-    // If there is a refresh key, there must also be an expire key.
-    let endDateString = general.refresh_expire! // TODO: Is this sound logic?
-    let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "mm/dd/yyyy"
-    let endDate = dateFormatter.date(from: endDateString)!
-    DataController.refreshController = RefreshController(refreshRateMinutes: UInt(refreshRateMinutes), refreshUntil: endDate, containerVC: mainContainer)
-  }
-  
-  static func restartRefreshTimer() {
+  /// - Parameter mainContainer: Only include for a new main container. The main container is tasked with updating whatever view controller is on top.
+  static func startRefreshTimer(mainContainer: MainContainerViewController? = nil) {
     var rateMinutes = UserDefaults.standard.integer(forKey: "chosenRefreshRateMinutes")
     if rateMinutes == 0 {
       rateMinutes = UserDefaults.standard.integer(forKey: "defaultRefreshRateMinutes")
     }
-    guard rateMinutes != 0 else {
-      return
+    var endDate: Date
+    if let endDateString = UserDefaults.standard.object(forKey: "refreshExpireString") as? String {
+      endDate = DataController.dateForExpireString(endDateString)
     }
-    DataController.refreshController?.restartTimer(refreshRateMinutes: UInt(rateMinutes))
+    else {
+      endDate = Date(timeIntervalSince1970: 0) // Needed to create the timer
+    }
+    if let container = mainContainer {
+      DataController.refreshController = RefreshController(refreshRateMinutes: UInt(rateMinutes), refreshUntil: endDate, containerVC: container)
+    }
+    else {
+      DataController.refreshController?.restartTimer(refreshRateMinutes: UInt(rateMinutes), endDate: endDate)
+    }
+  }
+  
+  static func dateForExpireString(_ dateString: String) -> Date {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "mm/dd/yyyy"
+    return dateFormatter.date(from: dateString)!
   }
   
   /// Gives error messages in one string for at most 5 errors. Each message will be on a new line. If there are more than 5, the number of errors will come be provided before the error messages.
@@ -633,8 +647,8 @@ extension DataController {
   func deleteAllInfoPageData(onContext context: NSManagedObjectContext, withSidebarPredictate sbPredicate: NSPredicate) {
     let infoPageEntityName = "InformationPage"
     let infoSectionEntityName = "InformationPageSection"
-    if let oldSidebar = fetchAllObjects(onContext: context, forName: sidebarAppearanceEntityName, withPredicate: sbPredicate)?.first {
-      for oldInfoPage in fetchAllObjects(onContext: context, forName: infoPageEntityName, withPredicate: NSPredicate(format: "infoNav == %@", oldSidebar)) ?? [NSManagedObject]() {
+    for oldSidebar in fetchAllObjects(onContext: context, forName: sidebarAppearanceEntityName, withPredicate: sbPredicate) ?? [] {
+      for oldInfoPage in fetchAllObjects(onContext: context, forName: infoPageEntityName, withPredicate: NSPredicate(format: "infoNav == %@", oldSidebar)) ?? [] {
         deleteAll(onContext: context, forEntityName: infoSectionEntityName, withPredicate: NSPredicate(format: "infoPage == %@", oldInfoPage))
         context.delete(oldInfoPage)
         context.delete(oldSidebar)

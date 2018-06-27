@@ -10,7 +10,9 @@ import UIKit
 
 extension Notification: Comparable {
   public static func < (lhs: Notification, rhs: Notification) -> Bool {
-    guard let date1 = lhs.date, let date2 = rhs.date else {
+    let dateFormatter = DateFormatter()
+    dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
+    guard let dateString1 = lhs.date, let date1 = dateFormatter.date(from: dateString1), let dateString2 = rhs.date, let date2 = dateFormatter.date(from: dateString2) else {
       return false
     }
     return date1 < date2

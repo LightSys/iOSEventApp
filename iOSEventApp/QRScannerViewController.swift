@@ -29,17 +29,6 @@ class QRScannerViewController: UIViewController,
   var captureSession: AVCaptureSession!
   var previewLayer: AVCaptureVideoPreviewLayer!
   
-  var hasLeftScanner: Bool?
-  func shouldRunScan() -> Bool {
-    // If they have left the scanner, they have returned – and need to rescan.
-    if hasLeftScanner == true {
-      return true
-    }
-    
-    let isDataLoaded = UserDefaults.standard.bool(forKey: "dataLoaded") // Once the user actually scans data, this will be reset, to either true or false depending on success
-    return isDataLoaded == false
-  }
-  
   override func viewDidLoad() {
     super.viewDidLoad()
     
@@ -83,13 +72,6 @@ class QRScannerViewController: UIViewController,
     activityIndicator.center = view.center
     activityIndicator.hidesWhenStopped = true
     view.addSubview(activityIndicator)
-    
-    // Don't actually run the camera if the data is already loaded
-    guard shouldRunScan() else {
-      return
-    }
-    
-    captureSession.startRunning()
   }
   
   func failed() {
@@ -102,33 +84,19 @@ class QRScannerViewController: UIViewController,
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    // Don't scan unless data is not loaded (or needs to be reloaded).
-    guard shouldRunScan() else {
-      return
-    }
-    
-    if (captureSession?.isRunning == false) {
+    // If they arrive on the scanner, they have come back from the main container – and need to (re)scan.
+    if (captureSession.isRunning == false) {
       captureSession.startRunning()
     }
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    
-    guard shouldRunScan() == false else {
-      return
-    }
-    
-    performSegue(withIdentifier: "PresentMainContainer", sender: nil)
-  }
-  
+  // When the app is backgrounded, the capture session is automatically paused, then resumed when foregrounded. Because of this, this is only called when leaving for the main container.
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
-    if (captureSession?.isRunning == true) {
+    if (captureSession.isRunning == true) {
       captureSession.stopRunning()
     }
-    hasLeftScanner = true
   }
   
   func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
@@ -158,12 +126,20 @@ class QRScannerViewController: UIViewController,
   ///   - code: <#code description#>
   ///   - completion: Performed on the main thread
   func found(code: String, completion: @escaping ((_ success: Bool) -> Void)) {
-     if let url = URL(string: code) {
+//     if let url = URL(string: code) {
 //    if let url = URL(string: "http://172.31.98.84:8080") {
-//    if let url = URL(string: "http://192.168.0.181:8080") {
+    if let url = URL(string: "http://192.168.1.126:8080") {
       activityIndicator.startAnimating()
       (UIApplication.shared.delegate as! AppDelegate).persistentContainer.performBackgroundTask { (context) in
+        
+        // The user won't want notifications from a different event... clear everything except chosen refresh rate
+        UserDefaults.standard.removeObject(forKey: "defaultRefreshRateMinutes")
+        UserDefaults.standard.removeObject(forKey: "dataLastUpdatedAt")
+        UserDefaults.standard.removeObject(forKey: "loadedDataURL")
+        UserDefaults.standard.removeObject(forKey: "loadedNotificationsURL")
+        UserDefaults.standard.removeObject(forKey: "notificationsLastUpdatedAt")
         self.loader.deleteAllObjects(onContext: context)
+        
         self.loader.loadDataFromURL(url, completion: { (success, errors) in
           DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
@@ -200,14 +176,11 @@ class QRScannerViewController: UIViewController,
       self.present(alertController, animated: true, completion: nil)
     }
   }
-    
-  override var prefersStatusBarHidden: Bool {
-    return true
-  }
   
-  override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    return .portrait
-  }
+  // TODO: What is this good for?
+//  override var prefersStatusBarHidden: Bool {
+//    return true
+//  }
 
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let mainContainer = segue.destination as? MainContainerViewController {
