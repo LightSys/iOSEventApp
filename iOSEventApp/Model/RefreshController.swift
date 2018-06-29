@@ -9,7 +9,7 @@
 import Foundation
 
 class RefreshController {
-  var refreshRateMinutes: UInt
+  var refreshRateMinutes: Int
   var refreshUntil: Date
   
   weak var containerVC: MainContainerViewController?
@@ -21,7 +21,7 @@ class RefreshController {
     refreshTimer?.invalidate()
   }
   
-  init(refreshRateMinutes rate: UInt, refreshUntil endDate: Date, containerVC container: MainContainerViewController) {
+  init(refreshRateMinutes rate: Int, refreshUntil endDate: Date, containerVC container: MainContainerViewController) {
     refreshRateMinutes = rate
     refreshUntil = endDate
     containerVC = container
@@ -36,16 +36,23 @@ class RefreshController {
   }
   
   /// Starts the timer, if it either isn't going or the rate changes.
-  func restartTimer(refreshRateMinutes rate: UInt, endDate: Date) {
-    guard RefreshController.refreshTimer?.isValid == false || refreshRateMinutes != rate else {
-      return
-    }
-    guard shouldStartTimer() else {
+  func restartTimer(refreshRateMinutes rate: Int, endDate: Date) {
+
+    // Do whether or not the timer starts
+    let rateChanged = refreshRateMinutes != rate
+    refreshUntil = endDate
+    refreshRateMinutes = rate
+
+    // Testing against true because it may be nil
+    guard rateChanged || RefreshController.refreshTimer?.isValid != true else {
       return
     }
     
-    refreshRateMinutes = rate
-    refreshUntil = endDate
+    guard shouldStartTimer() else {
+      // It needs to be restarted but shouldn't be started... invalidate the timer
+      RefreshController.refreshTimer?.invalidate()
+      return
+    }
 
     let refreshInterval = TimeInterval(refreshRateMinutes * 60)
     RefreshController.refreshTimer?.invalidate()

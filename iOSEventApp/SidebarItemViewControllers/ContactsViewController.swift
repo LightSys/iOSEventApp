@@ -26,7 +26,9 @@ extension ContactPageSection: Comparable {
   }
 }
 
-
+/**
+ Displays the contact pages and the contacts in the same cell as the last page.
+ */
 class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
   @IBOutlet weak var tableView: UITableView!
@@ -57,7 +59,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
   func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
     let cell = tableView.dequeueReusableCell(withIdentifier: "contactCell", for: indexPath) as! ContactTableViewCell
     let row = indexPath.row
-    if let contactPageSection = contactPageSections?[row] {
+    if (contactPageSections?.count ?? 0) > 0, let contactPageSection = contactPageSections?[row] {
       cell.cellHeader.text = contactPageSection.header
       cell.cellBody.text = contactPageSection.content
     }

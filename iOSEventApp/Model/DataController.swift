@@ -291,13 +291,13 @@ class DataController: NSObject {
       endDate = DataController.dateForExpireString(endDateString)
     }
     else {
-      endDate = Date(timeIntervalSince1970: 0) // Needed to create the timer
+      endDate = Date(timeIntervalSince1970: 0) // Needed to create the timer; if this happens it will not be started until the end date is updated.
     }
     if let container = mainContainer {
-      DataController.refreshController = RefreshController(refreshRateMinutes: UInt(rateMinutes), refreshUntil: endDate, containerVC: container)
+      DataController.refreshController = RefreshController(refreshRateMinutes: rateMinutes, refreshUntil: endDate, containerVC: container)
     }
     else {
-      DataController.refreshController?.restartTimer(refreshRateMinutes: UInt(rateMinutes), endDate: endDate)
+      DataController.refreshController?.restartTimer(refreshRateMinutes: rateMinutes, endDate: endDate)
     }
   }
   

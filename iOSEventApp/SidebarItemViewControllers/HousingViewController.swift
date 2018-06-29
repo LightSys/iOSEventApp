@@ -14,6 +14,11 @@ extension HousingUnit: IsComparable {
   }
 }
 
+/**
+ The housing cells have the driver's name as a header, the host's name and
+  contact info on the left, and the name of the people assigned on the right.
+  The HousingViewController only loads contacts whose name is a host name.
+ */
 class HousingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
   @IBOutlet weak var tableView: UITableView!
   var dataArray: [Any]?

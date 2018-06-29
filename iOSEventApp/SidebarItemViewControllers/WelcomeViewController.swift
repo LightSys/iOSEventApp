@@ -8,6 +8,9 @@
 
 import UIKit
 
+/**
+ A landing page for a user with no event, to avoid dumping a user on a camera screen with no explanation.
+ */
 class WelcomeViewController: UIViewController {
 
   @IBAction func tappedScan(_ sender: Any) {

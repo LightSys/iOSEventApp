@@ -6,13 +6,6 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
-/*
- The menu button reveals the sidebar, and tapping beside the sidebar removes
-    the menu. 
- 
- */
-
-
 import UIKit
 
 protocol MenuButton: AnyObject {
@@ -23,10 +16,24 @@ protocol TakesArrayData: AnyObject {
   var dataArray: [Any]? { get set }
 }
 
+/// A workaround to allow sorting of data without having to do a separate if else for every data type.
 protocol IsComparable {
   var compareString: String? { get }
 }
 
+/**
+ The MainContainerViewController is in charge of presenting all data view
+  controllers, one at a time. By default it loads welcome if no data and
+  notifications if there is data loaded. It is prompted to change view
+  controllers by the sidebarTableViewController.
+ 
+ As it is the immediate parent of the current view controller, it is in
+  charge of updating the current views in response to the periodic refresh.
+ 
+ The menu button reveals the sidebar, and tapping beside the sidebar removes
+  the menu. The MainContainerViewController does not handle the menu logic,
+  but it does own the menu button.
+ */
 class MainContainerViewController: UIViewController {
   let loader = DataController(newPersistentContainer:
     (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
@@ -43,6 +50,7 @@ class MainContainerViewController: UIViewController {
   override func viewDidLoad() {
     super.viewDidLoad()
     
+    // By default, one of these is loaded.
     if loader.objectsInDataModel(onContext: loader.persistentContainer.viewContext) {
       loadViewController(identifier: "notifications", entityNameForData: nil, informationPageName: nil)
       DataController.startRefreshTimer(mainContainer: self)
@@ -57,17 +65,19 @@ class MainContainerViewController: UIViewController {
     view.addSubview(activityIndicator)
   }
   
-  override func viewWillAppear(_ animated: Bool) {
+  /// If the user is entering the app, but it hasn't very recently been updated, then notifications are queried for updates.
+  func appBecameActive() {
     
     // Guard that there is a notificationsLastUpdatedAt date.
-    // If sufficient time (refresh rate or 30 minutes) has elapsed, reload notifications.
-    // Override a never rate with 30 minutes
+    // If sufficient time (refresh rate or 5 minutes) has elapsed, reload notifications immediately.
+    // Override a never rate with 5 minutes
 
     guard let notificationsLastUpdatedAt = UserDefaults.standard.object(forKey: "notificationsLastUpdatedAt") as? Date else {
       return
     }
     
-    var refreshRateMinutes = 30
+    let maxInterval = 5
+    var refreshRateMinutes = maxInterval
     let chosenRate = UserDefaults.standard.integer(forKey: "chosenRefreshRateMinutes")
     if chosenRate == 0 {
       let defaultRate = UserDefaults.standard.integer(forKey: "defaultRefreshRateMinutes")
@@ -79,26 +89,29 @@ class MainContainerViewController: UIViewController {
       refreshRateMinutes = chosenRate
     }
     
-    if Date().timeIntervalSince(notificationsLastUpdatedAt) >= TimeInterval(refreshRateMinutes * 60) {
+    if Date().timeIntervalSince(notificationsLastUpdatedAt) >= min(TimeInterval(refreshRateMinutes * 60), TimeInterval(maxInterval)) {
       loader.reloadNotifications { (_, _) in
-        // Don't act on success or errors from the reload and start the refresh timer.
+        // TODO: Also update the view...
+        // Start the refresh timer whether or not there was success.
         DataController.startRefreshTimer(mainContainer: self)
       }
     }
   }
   
   override func viewWillDisappear(_ animated: Bool) {
-    if isBeingDismissed {
+    // isBeingDismissed doesn't work here
+    if navigationController?.viewControllers.contains(self) == false {
+      // Important to prevent refreshing when not in the main container.
       DataController.refreshController?.removeContainerVC()
     }
   }
   
-  /// <#Description#>
+  /// Instantiates a view controller, gives it the needed data, and adds it as a child view controller.
   ///
   /// - Parameters:
-  ///   - identifier: <#identifier description#>
-  ///   - entityNameForData: Pass in nil for NotificationsViewController and ContactsViewController, so they get special treatment
-  ///   - pageName: <#pageName description#>
+  ///   - identifier: The storyboard identifier for the view controller to instantiate
+  ///   - entityNameForData: Pass in nil for NotificationsViewController and ContactsViewController, as they get special treatment regardless.
+  ///   - pageName: What the information page's header text is. (for info pages) Used to distinguish the different information pages.
   func loadViewController(identifier: String, entityNameForData: String?, informationPageName pageName: String?) {
     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
     let context = loader.persistentContainer.viewContext
@@ -108,6 +121,7 @@ class MainContainerViewController: UIViewController {
       childVC.willMove(toParentViewController: nil)
       childVC.removeFromParentViewController()
     }
+    // The view controllers that get special treatment need information from multiple entities in core data.
     if let contactsVC = vc as? ContactsViewController{
       let contacts = loader.fetchAllObjects(onContext: context, forName: "Contact") as? [Contact]
       let contactPageSections = loader.fetchAllObjects(onContext: context, forName: "ContactPageSection") as? [ContactPageSection]
@@ -123,18 +137,19 @@ class MainContainerViewController: UIViewController {
     }
     else if let entityName = entityNameForData, var data = loader.fetchAllObjects(onContext: context, forName: entityName) {
       if pageName != nil {
+        // Special information page logic, because `fetchAllObjects` fetches all information pages, but only one specific one is needed.
         let infoPage = (data.first(where: { (object) -> Bool in
           if let infoPage = object as? InformationPage {
+            // Take it if the info page nav matches the provided page name
             return infoPage.infoNav?.nav == pageName
           }
           return false
         }) as! InformationPage)
-        data = infoPage.infoSections?.sortedArray(using: [NSSortDescriptor(key: "order", ascending: true)]) as! [InformationPageSection]
+        data = Array(infoPage.infoSections ?? []) as! [InformationPageSection]
         (vc as! InformationPageViewController).headerText = pageName
       }
 
       if let takesArrayData = vc as? TakesArrayData {
-      
         if let sortable = data as? [IsComparable] { // All objects in the array are the same type
           takesArrayData.dataArray = sortable.sorted(by: { (obj1, obj2) -> Bool in
             guard let str1 = obj1.compareString, let str2 = obj2.compareString else {
@@ -156,6 +171,7 @@ class MainContainerViewController: UIViewController {
     currentPageInformation = (identifier, entityNameForData, pageName)
   }
   
+  /// The views' frames are set here, as this can't be done in viewDidLoad.
   override func viewWillLayoutSubviews() {
     super.viewWillLayoutSubviews()
     
@@ -165,6 +181,7 @@ class MainContainerViewController: UIViewController {
     }
   }
   
+  /// Refreshes by replacing the current page with a new one.
   func refreshCurrentPage() {
     guard let pageInfo = currentPageInformation else {
       return

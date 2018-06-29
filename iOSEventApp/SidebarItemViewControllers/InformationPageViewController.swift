@@ -14,6 +14,11 @@ extension InformationPageSection: IsComparable {
   }
 }
 
+/**
+ Displays each section in the data array as one cell. There may need to be multiple
+  instances of InformationPageViewController in the sidebar, as it is the generic
+  "information page" for the event app.
+ */
 class InformationPageViewController: UIViewController, TakesArrayData, UITableViewDelegate, UITableViewDataSource {
 
   @IBOutlet weak var tableView: UITableView!
@@ -23,7 +28,7 @@ class InformationPageViewController: UIViewController, TakesArrayData, UITableVi
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    headerLabel.text =  headerText
+    headerLabel.text = headerText
     tableView.rowHeight = UITableViewAutomaticDimension
     tableView.estimatedRowHeight = 300
   }

@@ -8,16 +8,15 @@
 
 // The majority of this file (whatever enables it to scan QR codes) was downloaded from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code
 
-/*
- So the idea is that you go in to the QR scanner when you open the app. Once the
-    QR code has been scanned, the app will stay on that event, sourcing data
-    through that hyperlink, until otherwise notified. The ability to change the
-    QR code being used is in settings. We downloaded the QR code reader.
- */
-
 import UIKit
 import AVFoundation
 
+/**
+ So the idea is that you go in to the QR scanner when you open the app. Once the
+  QR code has been scanned, the app will stay on that event, sourcing data
+  through that hyperlink, until otherwise notified. The ability to change the
+  QR code being used is in settings. We downloaded the QR code reader.
+ */
 class QRScannerViewController: UIViewController,
         AVCaptureMetadataOutputObjectsDelegate {
 
@@ -90,7 +89,8 @@ class QRScannerViewController: UIViewController,
     }
   }
   
-  // When the app is backgrounded, the capture session is automatically paused, then resumed when foregrounded. Because of this, this is only called when leaving for the main container.
+  // When the app is backgrounded, the capture session is automatically paused, then resumed when foregrounded.
+  // Not called when backgrounded. So this is only called when leaving for the main container.
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
@@ -120,10 +120,10 @@ class QRScannerViewController: UIViewController,
     }
   }
   
-  /// <#Description#>
+  /// If there is a url, load data from it. Notify the user of any errors.
   ///
   /// - Parameters:
-  ///   - code: <#code description#>
+  ///   - code: The string form of the QR code scanned
   ///   - completion: Performed on the main thread
   func found(code: String, completion: @escaping ((_ success: Bool) -> Void)) {
 //     if let url = URL(string: code) {
@@ -168,7 +168,7 @@ class QRScannerViewController: UIViewController,
       }
     }
     else {
-      let alertController = UIAlertController(title: "No url found", message: "\(code) is not a valid url", preferredStyle: .alert)
+      let alertController = UIAlertController(title: "Invalid url", message: "\(code) is not a valid url", preferredStyle: .alert)
       let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
         completion(false)
       })

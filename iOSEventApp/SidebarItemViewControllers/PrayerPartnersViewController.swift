@@ -14,16 +14,19 @@ extension PrayerPartnerGroup: IsComparable {
   }
 }
 
+/**
+ Displays prayer partners in the order provided. When it loads cells, it does
+  a one-time extraction of the partner names (the part displayed in the cells)
+ */
 class PrayerPartnersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
 
   @IBOutlet weak var tableView: UITableView!
 
   var dataArray: [Any]?
-  var stringArray: [String]? {
-    get {
+  lazy var stringArray: [String]? = {
       return (dataArray as? [PrayerPartnerGroup])?.map({ $0.students! })
-    }
-  }
+  }()
+  
   let cellReuseIdentifier = "prayerPartnersReuseIdentifier"
   
   override func viewDidLoad() {

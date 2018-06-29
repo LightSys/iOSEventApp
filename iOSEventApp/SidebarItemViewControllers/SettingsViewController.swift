@@ -9,7 +9,12 @@
 import UIKit
 import UserNotifications
 
-class SettingsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
+/**
+ Has a few setting cells that the user can tap whether or not data is loaded.
+  Most of the logic in this controller is needed to support the refresh rate
+  picker.
+ */
+class SettingsViewController: UIViewController {
 
   private var activityIndicator: UIActivityIndicatorView!
 
@@ -29,6 +34,8 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
     activityIndicator.hidesWhenStopped = true
     view.addSubview(activityIndicator)
     
+    pickerContainerView.alpha = 0 // If set in the storyboard, it is impossible to see the view
+    
     let defaultRate = UserDefaults.standard.integer(forKey: "defaultRefreshRateMinutes")
     if defaultRate != 0 {
       defaultRefreshRateMinutes = defaultRate
@@ -46,10 +53,46 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
       chosenRefreshRateMinutes = chosenRate
     }
     
-    if let selectedIndex = refreshRateOptionsMinutes.index(of: chosenRate) {
+    if var selectedIndex = refreshRateOptionsMinutes.index(of: chosenRate) {
+      if (defaultRefreshRateMinutes != 0) {
+        selectedIndex += 1
+      }
       ratePickerView.selectRow(selectedIndex, inComponent: 0, animated: false)
     }
+    else {
+      // default
+      ratePickerView.selectRow(0, inComponent: 0, animated: false)
+    }
   }
+  
+  func sendNotification() {
+    let notificationCenter = UNUserNotificationCenter.current()
+    
+    notificationCenter.getNotificationSettings { (settings) in
+      // Do not schedule notifications if not authorized.
+      guard settings.authorizationStatus == .authorized else {return}
+      
+      let content = UNMutableNotificationContent()
+      content.title = "Weekly Staff Meeting"
+      content.body = "Every Tuesday at 2pm"
+      
+      let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+      let request = UNNotificationRequest(identifier: "test notification", content: content, trigger: trigger)
+      notificationCenter.add(request, withCompletionHandler: nil)
+      //      if settings.alertSetting == .enabled {
+      //        // Schedule an alert-only notification.
+      //        self.myScheduleAlertNotification()
+      //      }
+      //      else {
+      //        // Schedule a notification with a badge and sound.
+      //        self.badgeAppAndPlaySound()
+      //      }
+    }
+  }
+}
+
+// MARK: - Table View DataSource, Delegate
+extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
   
   func numberOfSections(in tableView: UITableView) -> Int {
     return 1
@@ -123,36 +166,32 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
         self.pickerContainerView.alpha = 1
       }
     default:
-      print("default case")
+      print("default case") // Shouldn't happen if only 3 cells
     }
+    // Cells are selectable but shouldn't stay selected
     tableView.deselectRow(at: indexPath, animated: true)
   }
+}
 
-  func sendNotification() {
-    let notificationCenter = UNUserNotificationCenter.current()
-    
-    notificationCenter.getNotificationSettings { (settings) in
-      // Do not schedule notifications if not authorized.
-      guard settings.authorizationStatus == .authorized else {return}
-      
-      let content = UNMutableNotificationContent()
-      content.title = "Weekly Staff Meeting"
-      content.body = "Every Tuesday at 2pm"
-
-      let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-      let request = UNNotificationRequest(identifier: "test notification", content: content, trigger: trigger)
-      notificationCenter.add(request, withCompletionHandler: nil)
-//      if settings.alertSetting == .enabled {
-//        // Schedule an alert-only notification.
-//        self.myScheduleAlertNotification()
-//      }
-//      else {
-//        // Schedule a notification with a badge and sound.
-//        self.badgeAppAndPlaySound()
-//      }
-    }
+// MARK: - Picker View DataSource, Delegate
+extension SettingsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+  func numberOfComponents(in pickerView: UIPickerView) -> Int {
+    return 1
   }
   
+  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    // refresh rate options for minutes, plus (maybe) the default option
+    return refreshRateOptionsMinutes.count + (defaultRefreshRateMinutes != 0 ? 1 : 0)
+  }
+  
+  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    return textForPickerRow(row)
+  }
+  
+}
+
+// MARK: - Picker View Helper Methods
+extension SettingsViewController {
   @IBAction func dimViewTapped(_ sender: Any) {
     UIView.animate(withDuration: animationTime, animations: {
       self.pickerContainerView.alpha = 0
@@ -162,7 +201,7 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
   }
   
   @IBAction func saveRefreshRateTapped(_ sender: Any) {
-
+    
     let selectedRow = ratePickerView.selectedRow(inComponent: 0)
     
     UIView.animate(withDuration: animationTime, animations: {
@@ -247,20 +286,5 @@ class SettingsViewController: UIViewController, UITableViewDataSource, UITableVi
       pickerText = timeTextForMinutes(defaultRefreshRateMinutes)
     }
     return "Refresh every: \(pickerText)"
-  }
-}
-
-extension SettingsViewController: UIPickerViewDelegate, UIPickerViewDataSource {
-  func numberOfComponents(in pickerView: UIPickerView) -> Int {
-    return 1
-  }
-  
-  func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
-    // refresh rate options for minutes, plus (maybe) the default option
-    return refreshRateOptionsMinutes.count + (defaultRefreshRateMinutes != 0 ? 1 : 0)
-  }
-  
-  func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
-    return textForPickerRow(row)
   }
 }

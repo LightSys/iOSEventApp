@@ -19,6 +19,9 @@ extension Notification: Comparable {
   }
 }
 
+/**
+ Displays notifications in the order provided.
+ */
 class NotificationsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   var notificationArray: [Notification]?
   

@@ -8,6 +8,11 @@
 
 import UIKit
 
+/**
+ Displays schedule items in chronological order in a table view. This class loads
+  all contacts for its schedule items so that it can display that in the cells.
+  As time is provided in 24 hour time, this class also converts it to AM/PM for display.
+ */
 class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
 
   @IBOutlet weak var tableView: UITableView!

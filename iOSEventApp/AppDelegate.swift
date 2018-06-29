@@ -38,6 +38,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
       }
     }
 
+    // Background fetch is used to refresh the app data, and if possible display a notification to the user.
+    // The system decides how often the background fetch really happens, so the user still may not see a notification until the app is opened.
     if refreshRateMinutes == -1 {
       application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
     }
@@ -104,7 +106,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   }
   
   func applicationDidBecomeActive(_ application: UIApplication) {
-    DataController.startRefreshTimer()
+    if let navigationController = application.keyWindow?.rootViewController?.childViewControllers.first(where: { $0 is UINavigationController }) as? UINavigationController {
+      if let mainContainer = navigationController.viewControllers.first(where: { $0 is MainContainerViewController }) as? MainContainerViewController {
+        // The main container will decide if it is time to restart
+        mainContainer.appBecameActive()
+      }
+    }
   }
   
   // MARK: - Core Data stack

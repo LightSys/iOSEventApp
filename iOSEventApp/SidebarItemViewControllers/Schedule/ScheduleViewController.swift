@@ -8,6 +8,17 @@
 
 import UIKit
 
+extension ScheduleItem: Comparable {
+  public static func <(lhs: ScheduleItem, rhs: ScheduleItem) -> Bool {
+    return Int(lhs.startTime!)! < Int(rhs.startTime!)!
+  }
+}
+
+/**
+ A UIPageViewController! This is its own dataSource, so it instantiates schedule days with sorted schedule items.
+  Once a view controller has been created, while the user is on the schedule, that day is stored in memory for reuse.
+  The user is taken to the current day initially, or the first day if not during the event.
+ */
 class ScheduleViewController: UIPageViewController {
   
   var scheduleDays: [ScheduleDay]?
@@ -26,7 +37,6 @@ class ScheduleViewController: UIPageViewController {
     super.viewDidLoad()
     
     dataSource = self
-    // Do any additional setup after loading the view.
   }
   
   func loadViewControllers() {
@@ -38,11 +48,6 @@ class ScheduleViewController: UIPageViewController {
       setViewControllers([dayVC], direction: .forward, animated: false, completion: nil)
     }
   }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
-  }
 }
 
 extension ScheduleViewController: UIPageViewControllerDelegate {
@@ -53,8 +58,7 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
   func newPage(forDay day: ScheduleDay, dayName: String) -> ScheduleDayViewController {
     let newVC = storyboard?.instantiateViewController(withIdentifier: "ScheduleDayPrototype") as! ScheduleDayViewController
     if day.items?.count ?? 0 > 0 {
-      newVC.scheduleItems = Array(day.items!) as? [ScheduleItem]
-      newVC.scheduleItems?.sort() // This is to handle the am/pm string sort mixup introduced by the above line
+      newVC.scheduleItems = (Array(day.items!) as? [ScheduleItem])?.sorted()
     }
     newVC.dayLabelText = day.date
     viewControllerDict[dayName] = newVC
@@ -98,13 +102,5 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
       }
     }
     return nil
-  }
-  
-  
-}
-
-extension ScheduleItem: Comparable {
-  public static func <(lhs: ScheduleItem, rhs: ScheduleItem) -> Bool {
-    return Int(lhs.startTime!)! < Int(rhs.startTime!)!
   }
 }

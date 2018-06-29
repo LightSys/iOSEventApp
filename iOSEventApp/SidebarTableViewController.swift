@@ -12,7 +12,9 @@ protocol MenuDelegate:AnyObject {
   func switchTo(vcName: String, entityNameForData: String?, informationPageName pageName: String?)
   func swipedToClose()
 }
-
+/**
+ Loads the SidebarAppearances and tells the RootViewController what view controller to load with what data.
+ */
 class SidebarTableViewController: UITableViewController {
   
   weak var menuDelegate: MenuDelegate?
@@ -128,6 +130,7 @@ class SidebarTableViewController: UITableViewController {
         menuDelegate?.switchTo(vcName: "welcome", entityNameForData: nil, informationPageName: nil)
       }
     case variableSidebarItems.count, 1:
+      // Case one is covered earlier if data is loaded. By default switch statements don't fall through in swift.
       menuDelegate?.switchTo(vcName: "about", entityNameForData: nil, informationPageName: nil)
     default:
       // Settings is always at index 2 or greater
@@ -146,13 +149,16 @@ class SidebarTableViewController: UITableViewController {
       cell.label.text = variableSidebarItems[row].nav!
     }
     else if row == 0 {
+      // Only if data isn't loaded
       cell.label.text = "Welcome"
     }
     else if row == variableSidebarItems.count || row == 1 {
+      // After welcome or all variable items
       cell.sideImageView.image = UIImage(named: "ic_info")
       cell.label.text = "About"
     }
     else {
+      // Settings is last
       cell.sideImageView.image = nil
       cell.label.text = "Settings"
     }
