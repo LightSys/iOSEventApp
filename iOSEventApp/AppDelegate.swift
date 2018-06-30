@@ -55,49 +55,46 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
   }
 
   func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
-//    let loader = DataController(newPersistentContainer: persistentContainer)
-//    loader.reloadNotifications { (success, errors) in
-//      if success {
+    let loader = DataController(newPersistentContainer: persistentContainer)
+    loader.reloadNotifications { (success, errors, newNotifications) in
+      if success {
+        if newNotifications.count > 0 {
+          UserDefaults.standard.set(true, forKey: "notificationLoadedInBackground")
+
+          let notificationCenter = UNUserNotificationCenter.current()
+          notificationCenter.getNotificationSettings { (settings) in
+            // Do not schedule notifications if not authorized.
+            guard settings.authorizationStatus == .authorized else {return}
+            
+            let content = UNMutableNotificationContent()
+            content.title = newNotifications.last?.title ?? ""
+            content.body = newNotifications.last?.body ?? ""
+            content.sound = UNNotificationSound.default()
+            let request = UNNotificationRequest(identifier: "Event Notification", content: content, trigger: nil)
+            notificationCenter.add(request, withCompletionHandler: nil)
+            completionHandler(.newData)
+          }
+        }
+        else {
+          completionHandler(.noData)
+        }
+      }
+      else {
         let notificationCenter = UNUserNotificationCenter.current()
         notificationCenter.getNotificationSettings { (settings) in
           // Do not schedule notifications if not authorized.
           guard settings.authorizationStatus == .authorized else {return}
-          
+
           let content = UNMutableNotificationContent()
-          content.title = "New notification!" // TODO: Not necessarily... find a way to determine if there are actually new ones
-          content.body = "What is it? Open the app and find out"
-          
-          let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-          let request = UNNotificationRequest(identifier: "Event Notification", content: content, trigger: trigger)
+          content.title = "Notification fetch failed!"
+          content.body = DataController.messageForErrors(errors)
+
+          let request = UNNotificationRequest(identifier: "Event Notification", content: content, trigger: nil)
           notificationCenter.add(request, withCompletionHandler: nil)
-          //      if settings.alertSetting == .enabled {
-          //        // Schedule an alert-only notification.
-          //        self.myScheduleAlertNotification()
-          //      }
-          //      else {
-          //        // Schedule a notification with a badge and sound.
-          //        self.badgeAppAndPlaySound()
-          //      }
         }
-        completionHandler(.newData)
-//      }
-//      else {
-//        let notificationCenter = UNUserNotificationCenter.current()
-//        notificationCenter.getNotificationSettings { (settings) in
-//          // Do not schedule notifications if not authorized.
-//          guard settings.authorizationStatus == .authorized else {return}
-//
-//          let content = UNMutableNotificationContent()
-//          content.title = "Notification fetch failed!"
-//          content.body = DataController.messageForErrors(errors)
-//
-//          let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-//          let request = UNNotificationRequest(identifier: "Event Notification", content: content, trigger: trigger)
-//          notificationCenter.add(request, withCompletionHandler: nil)
-//        }
-//        completionHandler(.failed)
-//      }
-//    }
+        completionHandler(.failed)
+      }
+    }
   }
   
   func applicationWillResignActive(_ application: UIApplication) {

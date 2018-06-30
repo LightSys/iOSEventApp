@@ -24,12 +24,12 @@ class RootViewController: UIViewController {
 
   // Mechanism for closing the menu
   @IBAction func dimViewTapped(_ sender: Any) {
-    menuButtonTapped()
+    closeMenu()
   }
   
   // Mechanism for closing the menu
   @IBAction func swipedLeft(_ sender: Any) {
-    menuButtonTapped()
+    closeMenu()
   }
   
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
@@ -51,27 +51,32 @@ class RootViewController: UIViewController {
 
 extension RootViewController: MenuButton {
 
+  /// The menu button can be "tapped"
   func menuButtonTapped() {
-    
-    if self.sidebarContainer.frame.origin.x != 0 {
-      // Open the menu
-      sidebarViewController.loadSidebarItemsIfNeeded()
-      self.dimView.isHidden = false // Can't animate this, but it is necessary to control touches to the dim view.
-      UIView.animate(withDuration: 0.2) {
-        self.sidebarContainer.frame.origin.x = 0
-        self.dimView.alpha = 0.25
-      }
+    openMenu()
+  }
+  
+  func openMenu() {
+    sidebarViewController.loadSidebarItemsIfNeeded()
+    self.dimView.isHidden = false // Can't animate this, but it is necessary to control touches to the dim view.
+    UIView.animate(withDuration: 0.2) {
+      self.sidebarContainer.frame.origin.x = 0
+      self.dimView.alpha = 0.25
     }
-    else {
-      // Close the menu
-      UIView.animate(withDuration: 0.2, animations: {
-        self.sidebarContainer.frame.origin.x =
-          -self.sidebarContainer.frame.size.width
-        self.dimView.alpha = 0
-      }, completion: { (_) in
-        self.dimView.isHidden = true
-      })
-    }
+  }
+  
+  func closeMenu() {
+    UIView.animate(withDuration: 0.2, animations: {
+      self.sidebarContainer.frame.origin.x =
+        -self.sidebarContainer.frame.size.width
+      self.dimView.alpha = 0
+    }, completion: { (_) in
+      self.dimView.isHidden = true
+    })
+  }
+  
+  func refreshSidebar() {
+    sidebarViewController.reloadSidebarItems()
   }
 }
 
@@ -82,11 +87,11 @@ extension RootViewController: MenuDelegate {
     mainContainerVC.loadViewController(identifier: vcName,
                                        entityNameForData: entityNameForData,
                                        informationPageName: pageName)
-    menuButtonTapped()
+    closeMenu()
   }
   
   // Mechanism for closing the menu
   func swipedToClose() {
-    menuButtonTapped()
+    closeMenu()
   }
 }

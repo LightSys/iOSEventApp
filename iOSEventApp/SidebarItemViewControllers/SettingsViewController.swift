@@ -65,7 +65,7 @@ class SettingsViewController: UIViewController {
     }
   }
   
-  func sendNotification() {
+  func sendNotification(_ notification: Notification) {
     let notificationCenter = UNUserNotificationCenter.current()
     
     notificationCenter.getNotificationSettings { (settings) in
@@ -73,20 +73,11 @@ class SettingsViewController: UIViewController {
       guard settings.authorizationStatus == .authorized else {return}
       
       let content = UNMutableNotificationContent()
-      content.title = "Weekly Staff Meeting"
-      content.body = "Every Tuesday at 2pm"
+      content.title = notification.title ?? ""
+      content.body = notification.body ?? ""
       
-      let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
-      let request = UNNotificationRequest(identifier: "test notification", content: content, trigger: trigger)
+      let request = UNNotificationRequest(identifier: "Event Notification", content: content, trigger: nil)
       notificationCenter.add(request, withCompletionHandler: nil)
-      //      if settings.alertSetting == .enabled {
-      //        // Schedule an alert-only notification.
-      //        self.myScheduleAlertNotification()
-      //      }
-      //      else {
-      //        // Schedule a notification with a badge and sound.
-      //        self.badgeAppAndPlaySound()
-      //      }
     }
   }
 }
@@ -135,7 +126,8 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     case 1:
       activityIndicator.startAnimating()
       let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
-      loader.reloadAllData { (success, errors) in
+      loader.reloadAllData { (success, errors, newNotifications) in
+        DataController.startRefreshTimer() // The rate or end date may have changed. (if the rate hasn't changed, the timer will be left alone)
         DispatchQueue.main.async {
           self.activityIndicator.stopAnimating()
           if success == false {
@@ -154,10 +146,17 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             let alertController = UIAlertController(title: "Data refreshed", message: nil, preferredStyle: .alert)
             let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
             alertController.addAction(okAction)
-            self.present(alertController, animated: true) {
-              self.sendNotification()
+            self.present(alertController, animated: true, completion: nil)
+          }
+          if newNotifications.count > 0 {
+            self.sendNotification(newNotifications.last!)
+            if newNotifications.contains(where: { $0.refresh == true }) {
+              if let mainContainer = self.parent as? MainContainerViewController {
+                mainContainer.refreshViews()
+              }
             }
           }
+          
         }
       }
     case 2:

@@ -47,7 +47,7 @@ class PrayerPartnersViewController: UIViewController, UITableViewDataSource, UIT
     let cell: PrayerPartnersTableViewCell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath) as! PrayerPartnersTableViewCell
     
     cell.groupNumberLabel.text = "Group ".appending(String(indexPath.row + 1))
-    cell.partnersView.text = stringArray![indexPath.row]
+    cell.partnersLabel.text = stringArray![indexPath.row]
     
     return cell
   }

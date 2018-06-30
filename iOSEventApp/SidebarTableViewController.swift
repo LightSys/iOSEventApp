@@ -47,13 +47,7 @@ class SidebarTableViewController: UITableViewController {
         return item1.order! < item2.order!
       })
     variableSidebarItems = sidebarItems
-  }
-  
-  override func viewDidLoad() {
-    let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-    let loader = DataController(newPersistentContainer: container)
-    let context = container.viewContext
-
+    
     if let data = (loader.fetchAllObjects(onContext: context, forName: "General")?.first as? General)?.logo, let imageData = Data(base64Encoded: data) {
       let image = UIImage(data: imageData)
       let imageView = UIImageView(image: image)
@@ -78,12 +72,13 @@ class SidebarTableViewController: UITableViewController {
       // Make the gradient horizontal instead of vertical
       background.transform = CATransform3DMakeRotation(CGFloat.pi / 2, 0, 0, 1)
       background.frame = containingView.frame // Must come after the transform
-
+      
       // Add views and layers
       containingView.layer.addSublayer(background)
       containingView.addSubview(imageView)
       tableView.tableHeaderView = containingView
     }
+    tableView.reloadData()
   }
   
   @IBAction func swipedLeft(_ sender: Any) {

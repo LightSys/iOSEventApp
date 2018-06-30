@@ -10,6 +10,6 @@ import UIKit
 
 class PrayerPartnersTableViewCell: UITableViewCell {
   
-  @IBOutlet weak var partnersView: UITextView!
+  @IBOutlet weak var partnersLabel: UILabel!
   @IBOutlet weak var groupNumberLabel: UILabel!
 }

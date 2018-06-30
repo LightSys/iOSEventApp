@@ -91,34 +91,35 @@ class DataController: NSObject {
   /// - Parameters:
   ///   - url: url linking to a webpage of json
   ///   - completion: This will be on a background thread.
-  func loadDataFromURL(_ url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?) -> Void)) {
+  func loadDataFromURL(_ url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ newNotifications: [Notification]) -> Void)) {
     
     let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
       guard err == nil else {
-        completion(false, [.unableToRetrieveData(err!)])
+        completion(false, [.unableToRetrieveData(err!)], [])
         return
       }
       guard let unwrappedData = data else {
-        completion(false, [.noData])
+        completion(false, [.noData], [])
         return
       }
       
       var jsonDict: [String: Any]
       do {
         guard let json = try JSONSerialization.jsonObject(with: unwrappedData) as? [String: Any] else {
-          completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Data json", propertyName: nil, missingProperty: nil))])
+          completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Data json", propertyName: nil, missingProperty: nil))], [])
           return
         }
         jsonDict = json
       }
       catch {
-        completion(false, [.unableToSerializeJSON])
+        completion(false, [.unableToSerializeJSON], [])
         return
       }
       self.persistentContainer.performBackgroundTask({ (context) in
         
         var dataLoadingErrors = [[DataLoadingError]?]()
         
+        // The "generate" methods insert data on the given context without saving. 
         dataLoadingErrors.append(self.generatePrayerPartnerModel(onContext: context, from: jsonDict["prayer_partners"]))
         dataLoadingErrors.append(self.generateHousingModel(onContext: context, from: jsonDict["housing"]))
         let general = jsonDict["general"]
@@ -129,7 +130,7 @@ class DataController: NSObject {
         dataLoadingErrors.append(self.generateInformationPageModel(onContext: context, from: jsonDict["information_page"]))
         dataLoadingErrors.append(self.generateSchedulePageModel(onContext: context, from: jsonDict["schedule"]))
         
-        if let general = self.fetchAllObjects(onContext: self.persistentContainer.viewContext, forName: "General")?.first as? General, general.refresh != 0 {
+        if let general = self.fetchAllObjects(onContext: context, forName: "General")?.first as? General, general.refresh != 0 {
           UserDefaults.standard.set(general.refresh, forKey: "defaultRefreshRateMinutes")
           UserDefaults.standard.set(general.refresh_expire, forKey: "refreshExpireString")
         }
@@ -144,13 +145,13 @@ class DataController: NSObject {
             if success {
               UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt")
             }
-            completion(success, errorArray)
+            completion(success, errorArray, [])
           }
           return
         }
         
 //        self.loadNotificationsFromURL(context: context, url: URL(string: notificationsURLString)!) { (success, nErrors) in
-        self.loadNotificationsFromURL(context: context, url: URL(string: "http://192.168.1.126:8081")!) { (success, nErrors) in
+        self.loadNotificationsFromURL(context: context, url: URL(string: "http://192.168.1.126:8081")!) { (success, nErrors, newNotifications)  in
           if success {
             UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt")
           }
@@ -164,7 +165,7 @@ class DataController: NSObject {
             }
           }
           // Notifications' success is the same as success for the data load, because they share a save.
-          completion(success, errors)
+          completion(success, errors, newNotifications)
         }
       })
     }
@@ -198,32 +199,36 @@ class DataController: NSObject {
   /// - Parameters:
   ///   - url: URL to load data from
   ///   - completion: To be run after save.
-  func loadNotificationsFromURL(context: NSManagedObjectContext, url: URL, allowReload: Bool = false, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?) -> Void)) {
+  func loadNotificationsFromURL(context: NSManagedObjectContext, url: URL, allowReload: Bool = false, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ newNotifications: [Notification]) -> Void)) {
     
     let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
       guard err == nil else {
-        completion(false, [.unableToRetrieveNotifications(err!)])
+        completion(false, [.unableToRetrieveNotifications(err!)], [])
         return
       }
       guard let unwrappedData = data else {
-        completion(false, [.noNotifications])
+        completion(false, [.noNotifications], [])
         return
       }
       
       var jsonDict: [String: Any]
       do {
         guard let json = try JSONSerialization.jsonObject(with: unwrappedData) as? [String: Any] else {
-          completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications json", propertyName: nil, missingProperty: nil))])
+          completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications json", propertyName: nil, missingProperty: nil))], [])
           return
         }
         jsonDict = json
       }
       catch {
-        completion(false, [.unableToSerializeNotificationsJSON])
+        completion(false, [.unableToSerializeNotificationsJSON], [])
         return
       }
       
-      let notificationDict = jsonDict["notifications"] as! [String: Any]
+      guard let notificationDict = jsonDict["notifications"] as? [String: Any] else {
+        completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications json", propertyName: "notifications", missingProperty: nil))], [])
+        return
+      }
+      let existingNotifications = self.fetchAllObjects(onContext: context, forName: "Notification") as? [Notification]
       let errors = self.generateNotificationsModel(onContext: context, from: notificationDict)
       
       UserDefaults.standard.set(url, forKey: "loadedNotificationsURL")
@@ -235,22 +240,25 @@ class DataController: NSObject {
           UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
         }
         if allowReload {
-          // If a (true) refresh key newer than the dataLastUpdatedAt date in defaults, load data.
-          let fetchRequestPredicate = NSPredicate(format: "refresh == true")// AND date > %@", UserDefaults.standard.object(forKey: "dataLastUpdatedAt") as! NSDate)
-          let refreshNotifications = self.fetchAllObjects(onContext: context, forName: "Notification", withPredicate: fetchRequestPredicate) as? [Notification]
+          let notifications = self.fetchAllObjects(onContext: context, forName: "Notification") as? [Notification]
+          var newNotifications = notifications?.filter({ !(existingNotifications?.contains($0) ?? false) })
           let dateFormatter = DateFormatter()
           dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
           let lastRefreshDate = UserDefaults.standard.object(forKey: "dataLastUpdatedAt") as! Date
+          // If a (true) refresh key newer than the dataLastUpdatedAt date in defaults, load data.
           // There should be no refresh notifications without dates.
-          if refreshNotifications?.contains(where: { dateFormatter.date(from: $0.date!)! > lastRefreshDate }) ?? false {
-            self.reloadAllData(completion: completion)
+          if newNotifications?.contains(where: { $0.refresh == true && (dateFormatter.date(from: $0.date!)! > lastRefreshDate) }) ?? false {
+            self.reloadAllData(completion: { (success, errors, returnNotifications) in
+              newNotifications?.append(contentsOf: returnNotifications)
+              completion(success, errors, newNotifications!)
+            })
           }
           else {
-            completion(success, errors)
+            completion(success, errors, [])
           }
         }
         else {
-          completion(success, errors)
+          completion(success, errors, [])
         }
       }
     }
@@ -258,15 +266,15 @@ class DataController: NSObject {
     task.resume()
   }
   
-  func reloadAllData(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?) -> Void)) {
+  func reloadAllData(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ newNotifications: [Notification]) -> Void)) {
     guard let url = UserDefaults.standard.url(forKey: "loadedDataURL") else {
-      completion(false, [DataLoadingError.unableToRetrieveData(NSError(domain: "URL Not Saved", code: 0, userInfo: ["message": "Please scan the event's qr code to reload data"]))])
+      completion(false, [DataLoadingError.unableToRetrieveData(NSError(domain: "URL Not Saved", code: 0, userInfo: ["message": "Please scan the event's qr code to reload data"]))], [])
       return
     }
     loadDataFromURL(url, completion: completion)
   }
   
-  func reloadNotifications(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?) -> Void)) {
+  func reloadNotifications(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ newNotifications: [Notification]) -> Void)) {
         guard let url = URL(string: "http://192.168.1.126:8081") else {
 //    guard let url = UserDefaults.standard.url(forKey: "loadedNotificationsURL") else {
       // Fallback to attempting to reload all data
@@ -303,7 +311,7 @@ class DataController: NSObject {
   
   static func dateForExpireString(_ dateString: String) -> Date {
     let dateFormatter = DateFormatter()
-    dateFormatter.dateFormat = "mm/dd/yyyy"
+    dateFormatter.dateFormat = "MM/dd/yyyy"
     return dateFormatter.date(from: dateString)!
   }
   
@@ -340,6 +348,9 @@ class DataController: NSObject {
           errorMessage.append("\(malformedInfo.description)\n")
         }
       }
+    }
+    if errorMessage.count > 0 {
+      return String(errorMessage.dropLast()) // the last is a new line character
     }
     return errorMessage
   }
@@ -601,7 +612,7 @@ extension DataController {
     }
 
     var errors = [DataLoadingError]()
-    let informationPageDict = informationPages as! [String: [[String: Any]]]
+    let informationPageDict = (informationPages as! [String: [[String: Any]]]).sorted(by: { $0.key < $1.key})
     let infoPageEntityName = "InformationPage"
     let infoSectionEntityName = "InformationPageSection"
     var pageNum = -1 // To offset the pre-increment
@@ -611,6 +622,7 @@ extension DataController {
       sidebarNum += 1
       
       let pageIdentifier = key
+      // Ideally this wouldn't be hardcoded for an index of 0
       guard let sidebarName = value[0][sidebarNameKey] as? String else {
         errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Information Page \(pageNum)", propertyName: pageIdentifier, missingProperty: sidebarNameKey)))
         continue

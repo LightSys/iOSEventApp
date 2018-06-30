@@ -33,13 +33,40 @@ class QRScannerViewController: UIViewController,
     
     view.backgroundColor = UIColor.black
     captureSession = AVCaptureSession()
-    
-    guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
+  }
+  
+  func failed() {
+    let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
+    ac.addAction(UIAlertAction(title: "OK", style: .default))
+    present(ac, animated: true)
+    captureSession = nil
+  }
+  
+  func setupSession() {
+    var availableDevices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInTelephotoCamera], mediaType: .video, position: .back).devices
+    if availableDevices.count == 0 {
+      availableDevices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInTelephotoCamera], mediaType: .video, position: .front).devices
+    }
+    guard availableDevices.count > 0 else {
+      let alertController = UIAlertController(title: "No cameras available", message: "Please check camera permissions", preferredStyle: .alert)
+      let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+        self.performSegue(withIdentifier: "PresentMainContainer", sender: nil)
+      }
+      alertController.addAction(okAction)
+      present(alertController, animated: true, completion: nil)
+      return
+    }
+    let device = availableDevices.first(where: { $0.deviceType == .builtInWideAngleCamera }) ?? availableDevices.first!
     let videoInput: AVCaptureDeviceInput
-    
     do {
-      videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+      videoInput = try AVCaptureDeviceInput(device: device)
     } catch {
+      let alertController = UIAlertController(title: "Unable to start video session", message: "Please check camera permissions", preferredStyle: .alert)
+      let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+        self.performSegue(withIdentifier: "PresentMainContainer", sender: nil)
+      }
+      alertController.addAction(okAction)
+      present(alertController, animated: true, completion: nil)
       return
     }
     
@@ -73,15 +100,12 @@ class QRScannerViewController: UIViewController,
     view.addSubview(activityIndicator)
   }
   
-  func failed() {
-    let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
-    ac.addAction(UIAlertAction(title: "OK", style: .default))
-    present(ac, animated: true)
-    captureSession = nil
-  }
-  
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
+    
+    if captureSession.inputs.count == 0 {
+      setupSession()
+    }
     
     // If they arrive on the scanner, they have come back from the main container – and need to (re)scan.
     if (captureSession.isRunning == false) {
@@ -140,7 +164,7 @@ class QRScannerViewController: UIViewController,
         UserDefaults.standard.removeObject(forKey: "notificationsLastUpdatedAt")
         self.loader.deleteAllObjects(onContext: context)
         
-        self.loader.loadDataFromURL(url, completion: { (success, errors) in
+        self.loader.loadDataFromURL(url, completion: { (success, errors, _) in
           DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             

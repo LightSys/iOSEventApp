@@ -10,6 +10,7 @@ import UIKit
 
 protocol MenuButton: AnyObject {
   func menuButtonTapped()
+  func refreshSidebar()
 }
 
 protocol TakesArrayData: AnyObject {
@@ -89,11 +90,27 @@ class MainContainerViewController: UIViewController {
       refreshRateMinutes = chosenRate
     }
     
-    if Date().timeIntervalSince(notificationsLastUpdatedAt) >= min(TimeInterval(refreshRateMinutes * 60), TimeInterval(maxInterval)) {
-      loader.reloadNotifications { (_, _) in
-        // TODO: Also update the view...
-        // Start the refresh timer whether or not there was success.
+    if UserDefaults.standard.bool(forKey: "notificationLoadedInBackground") {
+      refreshViews()
+      UserDefaults.standard.set(false, forKey: "notificationLoadedInBackground")
+    }
+
+    if Date().timeIntervalSince(notificationsLastUpdatedAt) >= min(TimeInterval(refreshRateMinutes * 60), TimeInterval(maxInterval * 60)) {
+      loader.reloadNotifications { (success, errors, newNotifications) in
         DataController.startRefreshTimer(mainContainer: self)
+        DispatchQueue.main.async {
+          if success {
+            if newNotifications.contains(where: { $0.refresh == true }) {
+              self.refreshViews()
+           }
+          }
+          else if errors?.count ?? 0 > 0 {
+            let alert = UIAlertController(title: "Failed to load notifications", message: "A retry will occur after the refresh interval in settings. The errors are:\n\(DataController.messageForErrors(errors))", preferredStyle: .alert)
+            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+            alert.addAction(okAction)
+            self.present(alert, animated: true, completion: nil)
+          }
+        }
       }
     }
   }
@@ -182,7 +199,8 @@ class MainContainerViewController: UIViewController {
   }
   
   /// Refreshes by replacing the current page with a new one.
-  func refreshCurrentPage() {
+  func refreshViews() {
+    self.delegate?.refreshSidebar()
     guard let pageInfo = currentPageInformation else {
       return
     }
@@ -191,7 +209,7 @@ class MainContainerViewController: UIViewController {
   
   /// The container needs to get this, so that it can pass in a completion handler to the reload function.
   func reloadNotifications() {
-    loader.reloadNotifications { (success, errors) in
+    loader.reloadNotifications { (success, errors, newNotifications) in
       DispatchQueue.main.async {
         guard success == true else {
           let alertController = UIAlertController(title: "Data refresh failed", message: DataController.messageForErrors(errors), preferredStyle: .alert)
@@ -201,13 +219,15 @@ class MainContainerViewController: UIViewController {
           return
         }
         DataController.startRefreshTimer(mainContainer: self)
-        // TODO: verify that this does something
-        self.activityIndicator.startAnimating()
-        UIView.animate(withDuration: 0.3, animations: {
-          self.refreshCurrentPage()
-        }, completion: { (_) in
-          self.activityIndicator.stopAnimating()
-        })
+        if newNotifications.contains(where: { $0.refresh == true }) {
+          // TODO: verify that this does something
+          self.activityIndicator.startAnimating()
+          UIView.animate(withDuration: 0.3, animations: {
+            self.refreshViews()
+          }, completion: { (_) in
+            self.activityIndicator.stopAnimating()
+          })
+        }
       }
     }
   }
