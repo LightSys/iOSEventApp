@@ -198,6 +198,7 @@ class DataController: NSObject {
   ///
   /// - Parameters:
   ///   - url: URL to load data from
+  ///   - allowReload: If new notifications should displayed to the user and the interface refreshed (if a new refresh key is present)
   ///   - completion: To be run after save.
   func loadNotificationsFromURL(context: NSManagedObjectContext, url: URL, allowReload: Bool = false, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ newNotifications: [Notification]) -> Void)) {
     
@@ -228,20 +229,23 @@ class DataController: NSObject {
         completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications json", propertyName: "notifications", missingProperty: nil))], [])
         return
       }
-      let existingNotifications = self.fetchAllObjects(onContext: context, forName: "Notification") as? [Notification]
+      let existingNotifications = self.fetchAllObjects(onContext: context, forName: "Notification", includePropertyValues: true) as? [Notification]
+      // This is the best way to compare, and the existing notifications will be deleted by the time of comparison
+      let existingDateTitles = existingNotifications?.map({ ($0.date, $0.title) })
       let errors = self.generateNotificationsModel(onContext: context, from: notificationDict)
-      
+      let notifications = self.fetchAllObjects(onContext: context, forName: "Notification", includePropertyValues: true) as? [Notification]
+      var newNotifications = notifications?.filter({ notification in
+        !(existingDateTitles?.contains(where: { $0 == (notification.date, notification.title) }) ?? false)
+      })
+
       UserDefaults.standard.set(url, forKey: "loadedNotificationsURL")
       
       // If data is reloaded, it will be on a new context, so it is necessary to save here.
       self.trySave(onContext: context, currentErrors: errors) { (success, errors) in
-        // TODO: TEST!!!
         if success {
           UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
         }
         if allowReload {
-          let notifications = self.fetchAllObjects(onContext: context, forName: "Notification") as? [Notification]
-          var newNotifications = notifications?.filter({ !(existingNotifications?.contains($0) ?? false) })
           let dateFormatter = DateFormatter()
           dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
           let lastRefreshDate = UserDefaults.standard.object(forKey: "dataLastUpdatedAt") as! Date
@@ -254,11 +258,11 @@ class DataController: NSObject {
             })
           }
           else {
-            completion(success, errors, [])
+            completion(success, errors, newNotifications ?? [])
           }
         }
         else {
-          completion(success, errors, [])
+          completion(success, errors, newNotifications ?? [])
         }
       }
     }

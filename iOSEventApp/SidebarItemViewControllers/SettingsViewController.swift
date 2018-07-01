@@ -7,7 +7,6 @@
 //
 
 import UIKit
-import UserNotifications
 
 /**
  Has a few setting cells that the user can tap whether or not data is loaded.
@@ -62,22 +61,6 @@ class SettingsViewController: UIViewController {
     else {
       // default
       ratePickerView.selectRow(0, inComponent: 0, animated: false)
-    }
-  }
-  
-  func sendNotification(_ notification: Notification) {
-    let notificationCenter = UNUserNotificationCenter.current()
-    
-    notificationCenter.getNotificationSettings { (settings) in
-      // Do not schedule notifications if not authorized.
-      guard settings.authorizationStatus == .authorized else {return}
-      
-      let content = UNMutableNotificationContent()
-      content.title = notification.title ?? ""
-      content.body = notification.body ?? ""
-      
-      let request = UNNotificationRequest(identifier: "Event Notification", content: content, trigger: nil)
-      notificationCenter.add(request, withCompletionHandler: nil)
     }
   }
 }
@@ -148,15 +131,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             alertController.addAction(okAction)
             self.present(alertController, animated: true, completion: nil)
           }
-          if newNotifications.count > 0 {
-            self.sendNotification(newNotifications.last!)
-            if newNotifications.contains(where: { $0.refresh == true }) {
-              if let mainContainer = self.parent as? MainContainerViewController {
-                mainContainer.refreshViews()
-              }
-            }
-          }
-          
+          UserNotificationController.sendNotifications(newNotifications) // may be zero notifications
         }
       }
     case 2:

@@ -8,23 +8,16 @@
 
 import UIKit
 import CoreData
-import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
   func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
     
     // Can this be moved to after a qr code is scanned?
-    let center = UNUserNotificationCenter.current()
-    center.delegate = self
-    // Request permission to display alerts and play sounds.
-    center.requestAuthorization(options: [.alert, .sound])
-    { (granted, error) in
-      print("notifications authorization granted, error:", granted, error)
-    }
+    UserNotificationController.sharedInstance.requestPermissions()
 
     var refreshRateMinutes = -1
     let chosenRate = UserDefaults.standard.integer(forKey: "chosenRefreshRateMinutes")
@@ -50,28 +43,13 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
     return true
   }
 
-  func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-    completionHandler(.alert)
-  }
-
   func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
     let loader = DataController(newPersistentContainer: persistentContainer)
     loader.reloadNotifications { (success, errors, newNotifications) in
       if success {
         if newNotifications.count > 0 {
           UserDefaults.standard.set(true, forKey: "notificationLoadedInBackground")
-
-          let notificationCenter = UNUserNotificationCenter.current()
-          notificationCenter.getNotificationSettings { (settings) in
-            // Do not schedule notifications if not authorized.
-            guard settings.authorizationStatus == .authorized else {return}
-            
-            let content = UNMutableNotificationContent()
-            content.title = newNotifications.last?.title ?? ""
-            content.body = newNotifications.last?.body ?? ""
-            content.sound = UNNotificationSound.default()
-            let request = UNNotificationRequest(identifier: "Event Notification", content: content, trigger: nil)
-            notificationCenter.add(request, withCompletionHandler: nil)
+          UserNotificationController.sendNotifications(newNotifications) {
             completionHandler(.newData)
           }
         }
@@ -80,19 +58,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterD
         }
       }
       else {
-        let notificationCenter = UNUserNotificationCenter.current()
-        notificationCenter.getNotificationSettings { (settings) in
-          // Do not schedule notifications if not authorized.
-          guard settings.authorizationStatus == .authorized else {return}
-
-          let content = UNMutableNotificationContent()
-          content.title = "Notification fetch failed!"
-          content.body = DataController.messageForErrors(errors)
-
-          let request = UNNotificationRequest(identifier: "Event Notification", content: content, trigger: nil)
-          notificationCenter.add(request, withCompletionHandler: nil)
+        UserNotificationController.sendFailedFetchNotification(failureMessage: DataController.messageForErrors(errors)) {
+          completionHandler(.failed)
         }
-        completionHandler(.failed)
       }
     }
   }

@@ -17,10 +17,6 @@ extension Notification: Comparable {
     }
     return date1 < date2
   }
-  
-  public static func == (lhs: Notification, rhs: Notification) -> Bool {
-    return lhs.date == rhs.date && lhs.title == rhs.title
-  }
 }
 
 /**

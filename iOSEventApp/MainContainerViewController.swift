@@ -100,6 +100,7 @@ class MainContainerViewController: UIViewController {
         DataController.startRefreshTimer(mainContainer: self)
         DispatchQueue.main.async {
           if success {
+            UserNotificationController.sendNotifications(newNotifications)
             if newNotifications.contains(where: { $0.refresh == true }) {
               self.refreshViews()
            }
