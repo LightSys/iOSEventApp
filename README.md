@@ -31,3 +31,44 @@ The individual pages are children of the `MainContainerViewController`. There wi
 ## Attribution
 
 The code in `QRScannerViewController` that scans QR codes came from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code 
+
+
+## To-do list
+As the app is still in development and there are a lot of small items on this list, it makes sense to put these here for now, instead of using the issue tracker.
+
+### Important
+
+- [ ] Update as needed to ensure compatibility with the new web app
+- [ ] Fix the core data crash (results occasionally from the "Refresh event data now" button in settings)
+- [ ] Thoroughly test error display in different (re)load scenarios
+- [ ] Ask server if there are new notifications past a certain date / fetch new notifications after a certain date (would likely require server changes)
+- [ ] About screen. It is hooked up but has no meaningful content.
+
+### Needs designer attention
+- [ ] Background for logo
+- [ ] Logo height
+- [ ] Settings. All of it, particularly the refresh rate picker
+- [ ] Welcome text
+- [ ] Menu icon for settings
+
+### Optional / Low Priority (These may not all be desired)
+- [ ] Make sure there is always an activity indicator when refreshing data.
+- [ ] Preserve spot on screens after data refresh
+- [ ] Attempt to move notifications permissions to when the user first sees the notifications screen (Apple may not allow it)
+- [ ] Revisit having phone and car icons in schedule (they are currently hidden from the user because they are superfluous)
+- [ ] Cancel ongoing url session when going to QR scanner (to avoid trying to insert the wrong data into an event)
+- [ ] Display day of the week in schedule (i.e. let the user know it is Tuesday in addition to the fourth of March)
+- [ ] Convert times in schedule based off of time zones (the app has no concept of time zones right now)
+- [ ] Determine if data should be persisted after the event ends (if the phone can't connect to the server, it keeps the data locally. Note that it is reasonable to want access to the event data for at least a couple of weeks afterward)
+- [ ] Determine if the year in general should be used in the app
+- [ ] Expand schedule item title only if the text is truncated (to avoid multiline titles when possible)
+- [ ] Handle long notification title (consider this from a design perspective)
+- [ ] Detail view for schedule items
+- [ ] Detail view for notification items
+- [ ] Use time zone when calculating event end
+- [ ] Allow sort/filter of prayer partner groups by name
+- [ ] Clearly display to the user in Settings if the user denied notification permissions
+- [ ] Possibly include some disclaimer about how the app won't actually poll the server at regular intervals in the background
+- [ ] Create an app widget (to give directions without being in the app; be cognizant of different map apps)
+- [ ] Alternate event app text (in place of logo when it is missing, like in the android app)
+- [ ] Swipe from edge of screen to open menu
