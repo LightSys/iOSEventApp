@@ -73,3 +73,5 @@ As the app is still in development and there are a lot of small items on this li
 - [ ] Alternate event app text (in place of logo when it is missing, like in the android app)
 - [ ] Swipe from edge of screen to open menu
 - [ ] Improve managed object context usage (the data controller appears to violate Apple documentation's concurrency section by passing contexts between threads)
+- [ ] Make sure prayer partner groups have the same numbers as in the android app
+- [ ] Add some kind of order key to objects received in an array (not a dictionary) and update sorting to use that.
