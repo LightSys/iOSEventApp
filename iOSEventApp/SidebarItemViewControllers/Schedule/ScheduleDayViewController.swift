@@ -83,7 +83,6 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
     return cell
   }
   
-  // TODO: TEST 0000
   func amPMTime(twentyFourHour startTime: String, minutesOffset: String) -> String {
     let stringLength = startTime.count
     
@@ -95,6 +94,7 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
     numericMinutes += offset
     numericHours += numericMinutes / 60 // integer division, which has no decimal
     numericMinutes = numericMinutes % 60 // mod 60, returns remainder
+    numericHours %= 24 // In case it loops around to the next day... it will still sort correctly
     
     // Convert to AM/PM
     var amPMSuffix = " AM"
@@ -105,8 +105,9 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
     else if numericHours == 12 {
       amPMSuffix = " PM"
     }
-    else if numericHours == 24 {
+    else if numericHours == 24 || numericHours == 0 {
       numericHours = 12
+      // Suffix is am by default
     }
     else {
       // Nothing needs to change

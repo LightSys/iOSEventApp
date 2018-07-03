@@ -8,20 +8,9 @@
 
 import UIKit
 
+/// One header and a large text view. The cell should expand as needed (see `InformationPageViewController`). Each cell corresponds to an information page section.
 class InformationPageTableViewCell: UITableViewCell {
 
   @IBOutlet weak var headerLabel: UILabel!
   @IBOutlet weak var textView: UITextView!
-  
-  override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

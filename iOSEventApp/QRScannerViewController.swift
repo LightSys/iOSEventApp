@@ -150,18 +150,18 @@ class QRScannerViewController: UIViewController,
   ///   - code: The string form of the QR code scanned
   ///   - completion: Performed on the main thread
   func found(code: String, completion: @escaping ((_ success: Bool) -> Void)) {
-//     if let url = URL(string: code) {
-//    if let url = URL(string: "http://172.31.98.84:8080") {
-    if let url = URL(string: "http://192.168.1.126:8080") {
+     if let url = URL(string: code) {
       activityIndicator.startAnimating()
       (UIApplication.shared.delegate as! AppDelegate).persistentContainer.performBackgroundTask { (context) in
         
         // The user won't want notifications from a different event... clear everything except chosen refresh rate
         UserDefaults.standard.removeObject(forKey: "defaultRefreshRateMinutes")
-        UserDefaults.standard.removeObject(forKey: "dataLastUpdatedAt")
         UserDefaults.standard.removeObject(forKey: "loadedDataURL")
         UserDefaults.standard.removeObject(forKey: "loadedNotificationsURL")
         UserDefaults.standard.removeObject(forKey: "notificationsLastUpdatedAt")
+        UserDefaults.standard.removeObject(forKey: "notificationLoadedInBackground")
+        UserDefaults.standard.removeObject(forKey: "refreshedDataInBackground")
+
         self.loader.deleteAllObjects(onContext: context)
         
         self.loader.loadDataFromURL(url, completion: { (success, errors, _) in
@@ -201,13 +201,9 @@ class QRScannerViewController: UIViewController,
     }
   }
   
-  // TODO: What is this good for?
-//  override var prefersStatusBarHidden: Bool {
-//    return true
-//  }
-
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let mainContainer = segue.destination as? MainContainerViewController {
+      delegate?.refreshSidebar()
       mainContainer.delegate = delegate
     }
   }

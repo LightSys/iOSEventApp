@@ -26,7 +26,6 @@ class SettingsViewController: UIViewController {
   private var defaultOptionText: String?
   private let animationTime: TimeInterval = 0.2
 
-  // TODO: clear refresh rate on new event?
   override func viewDidLoad() {
     activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
     activityIndicator.center = view.center

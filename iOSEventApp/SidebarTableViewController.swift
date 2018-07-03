@@ -78,6 +78,10 @@ class SidebarTableViewController: UITableViewController {
       containingView.addSubview(imageView)
       tableView.tableHeaderView = containingView
     }
+    else {
+      tableView.tableHeaderView = nil
+    }
+    
     tableView.reloadData()
   }
   

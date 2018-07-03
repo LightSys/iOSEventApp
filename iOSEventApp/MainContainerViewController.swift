@@ -90,20 +90,20 @@ class MainContainerViewController: UIViewController {
       refreshRateMinutes = chosenRate
     }
     
-    if UserDefaults.standard.bool(forKey: "notificationLoadedInBackground") {
+    if UserDefaults.standard.bool(forKey: "notificationLoadedInBackground") || (UserDefaults.standard.bool(forKey: "refreshedDataInBackground") && childViewControllers.first is NotificationsViewController) {
       refreshViews()
-      UserDefaults.standard.set(false, forKey: "notificationLoadedInBackground")
     }
+    UserDefaults.standard.set(false, forKey: "notificationLoadedInBackground")
+    UserDefaults.standard.set(false, forKey: "refreshedDataInBackground")
 
     if Date().timeIntervalSince(notificationsLastUpdatedAt) >= min(TimeInterval(refreshRateMinutes * 60), TimeInterval(maxInterval * 60)) {
-      loader.reloadNotifications { (success, errors, newNotifications) in
+      loader.reloadNotifications { (success, errors, refresh, newNotification) in
         DataController.startRefreshTimer(mainContainer: self)
         DispatchQueue.main.async {
           if success {
-            UserNotificationController.sendNotifications(newNotifications)
-            if newNotifications.contains(where: { $0.refresh == true }) {
+            if refresh || (newNotification && self.childViewControllers.first is NotificationsViewController) {
               self.refreshViews()
-           }
+            }
           }
           else if errors?.count ?? 0 > 0 {
             let alert = UIAlertController(title: "Failed to load notifications", message: "A retry will occur after the refresh interval in settings. The errors are:\n\(DataController.messageForErrors(errors))", preferredStyle: .alert)
@@ -210,7 +210,7 @@ class MainContainerViewController: UIViewController {
   
   /// The container needs to get this, so that it can pass in a completion handler to the reload function.
   func reloadNotifications() {
-    loader.reloadNotifications { (success, errors, newNotifications) in
+    loader.reloadNotifications { (success, errors, refresh, newNotification) in
       DispatchQueue.main.async {
         guard success == true else {
           let alertController = UIAlertController(title: "Data refresh failed", message: DataController.messageForErrors(errors), preferredStyle: .alert)
@@ -220,14 +220,8 @@ class MainContainerViewController: UIViewController {
           return
         }
         DataController.startRefreshTimer(mainContainer: self)
-        if newNotifications.contains(where: { $0.refresh == true }) {
-          // TODO: verify that this does something
-          self.activityIndicator.startAnimating()
-          UIView.animate(withDuration: 0.3, animations: {
-            self.refreshViews()
-          }, completion: { (_) in
-            self.activityIndicator.stopAnimating()
-          })
+        if refresh || (newNotification && self.childViewControllers.first is NotificationsViewController){
+          self.refreshViews()
         }
       }
     }

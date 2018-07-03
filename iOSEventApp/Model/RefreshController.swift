@@ -8,6 +8,9 @@
 
 import Foundation
 
+/**
+ Central place to manage the refresh timer, which is static. A RefreshController should be created every time a new main container is instantiated, as the timer will not run when restart is called unless there is a main container.
+ */
 class RefreshController {
   var refreshRateMinutes: Int
   var refreshUntil: Date
@@ -69,8 +72,7 @@ class RefreshController {
     guard containerVC != nil && refreshRateMinutes > 0 else {
       return false
     }
-    return true
-//    return Date(timeIntervalSinceNow: TimeInterval(refreshRateMinutes * 60)) < self.refreshUntil
+    return Date(timeIntervalSinceNow: TimeInterval(refreshRateMinutes * 60)) < self.refreshUntil
   }
 }
 

@@ -6,14 +6,6 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
-/*
- This document contains the process of loading data into the various pages
-    from the database. It is sortd by page loading into. I dont necessarily
-    know which section is which but Imma do my best.
- 
- DataController also starts the refresh timer in the refreshController, which it keeps a static reference to. The refresh timer triggers a reload of notifications.
- */
-
 import Foundation
 import CoreData
 
@@ -70,6 +62,15 @@ struct MalformedDataInformation: CustomStringConvertible {
   }
 }
 
+/**
+ The DataController contains the process of loading data into the various pages
+ from the database. It is sortd by page loading into. I dont necessarily
+ know which section is which but Imma do my best.
+ 
+ DataController also starts the refresh timer in the refreshController, which it keeps a static reference to. The refresh timer triggers a reload of notifications.
+ 
+ Passing a context around different threads is against recommended practice. It will remain as is until changed.
+ */
 class DataController: NSObject {
   
   static var refreshController: RefreshController?
@@ -90,8 +91,8 @@ class DataController: NSObject {
   ///
   /// - Parameters:
   ///   - url: url linking to a webpage of json
-  ///   - completion: This will be on a background thread.
-  func loadDataFromURL(_ url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ newNotifications: [Notification]) -> Void)) {
+  ///   - completion: This will be on a background thread. Notifications are forwarded from loadNotifications.
+  func loadDataFromURL(_ url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
     
     let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
       guard err == nil else {
@@ -142,19 +143,12 @@ class DataController: NSObject {
         
         guard let generalDict = general as? [String: Any], let notificationsURLString = generalDict["notifications_url"] as? String else {
           self.trySave(onContext: context, currentErrors: errors) { (success, errorArray) in
-            if success {
-              UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt")
-            }
             completion(success, errorArray, [])
           }
           return
         }
         
-//        self.loadNotificationsFromURL(context: context, url: URL(string: notificationsURLString)!) { (success, nErrors) in
-        self.loadNotificationsFromURL(context: context, url: URL(string: "http://192.168.1.126:8081")!) { (success, nErrors, newNotifications)  in
-          if success {
-            UserDefaults.standard.set(Date(), forKey: "dataLastUpdatedAt")
-          }
+        self.loadNotificationsFromURL(context: context, url: URL(string: notificationsURLString)!) { (success, nErrors, newNotifications) in
           if let additionalErrors = nErrors {
             if case .unableToSave(_)? = additionalErrors.first {
               // The save error is the only error (the others were removed)
@@ -172,35 +166,12 @@ class DataController: NSObject {
     task.resume()
   }
   
-  /// Attempt to save, then execute the completion block. If the context has no objects after the save, failure will be passed into the completion block.
-  ///
-  /// - Parameters:
-  ///   - context: The context that may need to be saved.
-  ///   - currentErrors: The errors generated up to the point of the save. They will be replaced by a single error in the case of a save failure.
-  ///   - completion: Will be called in both success and failure cases.
-  private func trySave(onContext context: NSManagedObjectContext, currentErrors: [DataLoadingError]?, completion: ((_ success: Bool, _ error: [DataLoadingError]?) -> Void)) {
-    do {
-      if context.hasChanges {
-        try context.save()
-      }
-      let success = objectsInDataModel(onContext: context)
-      completion(success, (currentErrors?.count != 0) ? currentErrors : nil)
-    }
-    catch let error as NSError {
-      completion(false, [.unableToSave(error)])
-    }
-  }
- 
-  
-  /// Loads the data for notifications. This method will be called periodically to refresh the notifications.
-  ///
-  /// If a new notification contains the refresh key with a value of true, this method also triggers a reload of ALL data.
+  /// Loads the data for notifications. This method will be called periodically by reloadNotifications to refresh the notifications in memory
   ///
   /// - Parameters:
   ///   - url: URL to load data from
-  ///   - allowReload: If new notifications should displayed to the user and the interface refreshed (if a new refresh key is present)
-  ///   - completion: To be run after save.
-  func loadNotificationsFromURL(context: NSManagedObjectContext, url: URL, allowReload: Bool = false, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ newNotifications: [Notification]) -> Void)) {
+  ///   - completion: To be run after save. All notifications will be passed in.
+  func loadNotificationsFromURL(context: NSManagedObjectContext, url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
     
     let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
       guard err == nil else {
@@ -229,48 +200,24 @@ class DataController: NSObject {
         completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications json", propertyName: "notifications", missingProperty: nil))], [])
         return
       }
-      let existingNotifications = self.fetchAllObjects(onContext: context, forName: "Notification", includePropertyValues: true) as? [Notification]
-      // This is the best way to compare, and the existing notifications will be deleted by the time of comparison
-      let existingDateTitles = existingNotifications?.map({ ($0.date, $0.title) })
-      let errors = self.generateNotificationsModel(onContext: context, from: notificationDict)
-      let notifications = self.fetchAllObjects(onContext: context, forName: "Notification", includePropertyValues: true) as? [Notification]
-      var newNotifications = notifications?.filter({ notification in
-        !(existingDateTitles?.contains(where: { $0 == (notification.date, notification.title) }) ?? false)
-      })
-
-      UserDefaults.standard.set(url, forKey: "loadedNotificationsURL")
       
+      let errors = self.generateNotificationsModel(onContext: context, from: notificationDict)
+      UserDefaults.standard.set(url, forKey: "loadedNotificationsURL") // Seems best to put it after generating the model, but before save
+
       // If data is reloaded, it will be on a new context, so it is necessary to save here.
       self.trySave(onContext: context, currentErrors: errors) { (success, errors) in
         if success {
           UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
         }
-        if allowReload {
-          let dateFormatter = DateFormatter()
-          dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
-          let lastRefreshDate = UserDefaults.standard.object(forKey: "dataLastUpdatedAt") as! Date
-          // If a (true) refresh key newer than the dataLastUpdatedAt date in defaults, load data.
-          // There should be no refresh notifications without dates.
-          if newNotifications?.contains(where: { $0.refresh == true && (dateFormatter.date(from: $0.date!)! > lastRefreshDate) }) ?? false {
-            self.reloadAllData(completion: { (success, errors, returnNotifications) in
-              newNotifications?.append(contentsOf: returnNotifications)
-              completion(success, errors, newNotifications!)
-            })
-          }
-          else {
-            completion(success, errors, newNotifications ?? [])
-          }
-        }
-        else {
-          completion(success, errors, newNotifications ?? [])
-        }
+        let notifications = self.fetchAllObjects(onContext: context, forName: "Notification", includePropertyValues: true) as? [Notification]
+        completion(success, errors, notifications ?? [])
       }
     }
     
     task.resume()
   }
   
-  func reloadAllData(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ newNotifications: [Notification]) -> Void)) {
+  func reloadAllData(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
     guard let url = UserDefaults.standard.url(forKey: "loadedDataURL") else {
       completion(false, [DataLoadingError.unableToRetrieveData(NSError(domain: "URL Not Saved", code: 0, userInfo: ["message": "Please scan the event's qr code to reload data"]))], [])
       return
@@ -278,16 +225,62 @@ class DataController: NSObject {
     loadDataFromURL(url, completion: completion)
   }
   
-  func reloadNotifications(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ newNotifications: [Notification]) -> Void)) {
-        guard let url = URL(string: "http://192.168.1.126:8081") else {
-//    guard let url = UserDefaults.standard.url(forKey: "loadedNotificationsURL") else {
+  /// This method receives notifications and from them determines if the refresh and newNotification flags should be set. The user will be notified of any notifications newer than the last refresh date.
+  ///
+  /// This method will perform the data refresh if needed; the completion handler should do what is needed to refresh the views.
+  func reloadNotifications(completion: @escaping ((_ success: Bool, _ errors: [DataLoadingError]?, _ refresh: Bool, _ newNotification: Bool) -> Void)) {
+
+    // Get this now because it will be updated before the callback if data is loaded successfully
+    let lastRefreshDate = UserDefaults.standard.object(forKey: "notificationsLastUpdatedAt") as! Date
+
+    // This callback is executed after loading data
+    let loadedNotificationsCallback: ((_: Bool, _: [DataLoadingError]?, _: [Notification]) -> Void) = { (success, errors, notifications) in
+      let dateFormatter = DateFormatter()
+      dateFormatter.dateFormat = "MM/dd/yyyy HH:mm:ss"
+      // If a true refresh key newer than the notificationsLastUpdatedAt date in defaults, load data.
+      // There should be no refresh notifications without dates.
+      if notifications.contains(where: { $0.refresh == true && (dateFormatter.date(from: $0.date!)! > lastRefreshDate) }) {
+        self.reloadAllData(completion: { (success, errors, returnNotifications) in
+          // These returnNotifications come from another call to loadNotificationsFromURL from reloadAllData.
+          let newNotifications = returnNotifications.filter({ (dateFormatter.date(from: $0.date!)! > lastRefreshDate) })
+          UserNotificationController.sendNotifications(newNotifications)
+          completion(success, errors, true, true)
+        })
+      }
+      else {
+        // These are the notifications to filter, since reloadAllData is not being called
+        let newNotifications = notifications.filter({ (dateFormatter.date(from: $0.date!)! > lastRefreshDate) })
+        UserNotificationController.sendNotifications(newNotifications)
+        completion(success, errors, false, newNotifications.count > 0)
+      }
+    }
+    guard let url = UserDefaults.standard.url(forKey: "loadedNotificationsURL") else {
       // Fallback to attempting to reload all data
-      reloadAllData(completion: completion)
+      reloadAllData(completion: loadedNotificationsCallback)
       return
     }
     self.persistentContainer.performBackgroundTask({ (context) in
-      self.loadNotificationsFromURL(context: context, url: url, allowReload: true, completion: completion)
+      self.loadNotificationsFromURL(context: context, url: url, completion: loadedNotificationsCallback)
     })
+  }
+  
+  /// Attempt to save, then execute the completion block. If the context has no objects after the save, failure will be passed into the completion block.
+  ///
+  /// - Parameters:
+  ///   - context: The context that may need to be saved.
+  ///   - currentErrors: The errors generated up to the point of the save. They will be replaced by a single error in the case of a save failure.
+  ///   - completion: Will be called in both success and failure cases.
+  private func trySave(onContext context: NSManagedObjectContext, currentErrors: [DataLoadingError]?, completion: ((_ success: Bool, _ error: [DataLoadingError]?) -> Void)) {
+    do {
+      if context.hasChanges {
+        try context.save()
+      }
+      let success = objectsInDataModel(onContext: context)
+      completion(success, (currentErrors?.count != 0) ? currentErrors : nil)
+    }
+    catch let error as NSError {
+      completion(false, [.unableToSave(error)])
+    }
   }
   
   /// Sends the refresh rate and end date to the timer. If the timer is not going or receives a new refresh rate, it will restart.
@@ -377,6 +370,7 @@ extension DataController {
   func generatePrayerPartnerModel(onContext context: NSManagedObjectContext, from partnerGroups: Any?) -> [DataLoadingError]? {
     let alertModelName = "Prayer Partners"
     guard partnerGroups == nil || partnerGroups is [[String: Any]] else {
+      // It should be an array of dictionaries, with the nav information and the individual groups each getting a dictionary
       return [.unableToParse(alertModelName)]
     }
     if partnerGroups == nil {
@@ -427,6 +421,7 @@ extension DataController {
   func generateContactModel(onContext context: NSManagedObjectContext, from contacts: Any?) -> [DataLoadingError]? {
     let alertModelName = "Contacts"
     guard contacts == nil || contacts is [String: Any] else {
+      // Individual contacts are keyed to the contact name
       return [.unableToParse(alertModelName)]
     }
     if contacts == nil {
@@ -456,6 +451,7 @@ extension DataController {
   func generateHousingModel(onContext context: NSManagedObjectContext, from housingDict: Any?) -> [DataLoadingError]? {
     let alertModelName = "Housing"
     guard housingDict == nil || housingDict is [String: Any] else {
+      // Individual housings are keyed to the host name
       return [.unableToParse(alertModelName)]
     }
     if housingDict == nil {
@@ -493,7 +489,7 @@ extension DataController {
   }
   
   func generateGeneralModel(onContext context: NSManagedObjectContext, from generalDict: Any?) -> [DataLoadingError]? {
-    let alertModelName = "General [Event Information]"
+    let alertModelName = "General [Event Information]" // May be user facing
     guard generalDict == nil || generalDict is [String: Any] else {
       return [.unableToParse(alertModelName)]
     }
@@ -530,6 +526,7 @@ extension DataController {
   func generateContactPageModel(onContext context: NSManagedObjectContext, from contactPages: Any?) -> [DataLoadingError]? {
     let alertModelName = "Contact Page"
     guard contactPages == nil || contactPages is [String: Any] else {
+      // The contact page sections are keyed to the section number, e.g. "section_1"
       return [.unableToParse(alertModelName)]
     }
     if contactPages == nil {
@@ -569,9 +566,11 @@ extension DataController {
     return replaceOldDataWithNew(onContext: context, errors: errors, alertModelName: alertModelName, entityName: contactPageEntityName, newObjectDicts: contactPagesToCreate, sidebarKVPairs: sidebarKVPairs)
   }
   
+  /// Themes are not currently used in the app
   func generateThemeModel(onContext context: NSManagedObjectContext, from themes: Any?) -> [DataLoadingError]? {
     let alertModelName = "Themes"
     guard themes == nil || themes is [[String: Any]] else {
+      // There should be one theme per dictionary in the array
       return [.unableToParse(alertModelName)]
     }
     if themes == nil {
@@ -609,6 +608,7 @@ extension DataController {
   func generateInformationPageModel(onContext context: NSManagedObjectContext, from informationPages: Any?) -> [DataLoadingError]? {
     let alertModelName = "Information Pages"
     guard informationPages == nil || informationPages is [String: [[String: Any]]] else {
+      // Page sections keyed to page names. Sidebar data are in the array next to the sections.
       return [.unableToParse(alertModelName)]
     }
     if informationPages == nil {
@@ -619,7 +619,7 @@ extension DataController {
     let informationPageDict = (informationPages as! [String: [[String: Any]]]).sorted(by: { $0.key < $1.key})
     let infoPageEntityName = "InformationPage"
     let infoSectionEntityName = "InformationPageSection"
-    var pageNum = -1 // To offset the pre-increment
+    var pageNum = -1 // To offset the pre-increment (which is done so that the sidebarNum corresponds to the last created info page)
     var sidebarNum = pageNum+5 // The information pages are the last loadable pages, starting at order 5
     for (key, value) in informationPageDict {
       pageNum += 1 // Do first in case data cannot be loaded
@@ -649,32 +649,36 @@ extension DataController {
           errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Information Page \(pageIdentifier)", propertyName: "\(i)", missingProperty: "title and/or description")))
           continue
         }
+        // There are multiple sections per info page
         let sectionDict = ["title": title, "information": description, "infoPage": createdPage, "order": i] // Here the order will happen to start at 1
         _ = createObject(onContext: context, entityName: infoSectionEntityName, with: sectionDict) as! InformationPageSection
       }
     }
     
-    //TODO: TEST
     deleteAllInfoPageData(onContext: context, withSidebarPredictate: NSPredicate(format: "order.intValue > %i", sidebarNum))
 
     return (errors.count > 0) ? errors : nil
   }
   
+  /// Helper method to delete sidebar, information page, and information page sections. As it takes a predicate, it is used to delete individual info pages and then any extra pages (in the case of a page being removed in a reload).
   func deleteAllInfoPageData(onContext context: NSManagedObjectContext, withSidebarPredictate sbPredicate: NSPredicate) {
     let infoPageEntityName = "InformationPage"
     let infoSectionEntityName = "InformationPageSection"
+    // Delete all even in the case of deleting a sidebar where order == i (to clean up an interrupted data load [likely save] that resulted in duplicate entries)
     for oldSidebar in fetchAllObjects(onContext: context, forName: sidebarAppearanceEntityName, withPredicate: sbPredicate) ?? [] {
       for oldInfoPage in fetchAllObjects(onContext: context, forName: infoPageEntityName, withPredicate: NSPredicate(format: "infoNav == %@", oldSidebar)) ?? [] {
         deleteAll(onContext: context, forEntityName: infoSectionEntityName, withPredicate: NSPredicate(format: "infoPage == %@", oldInfoPage))
         context.delete(oldInfoPage)
-        context.delete(oldSidebar)
       }
+      context.delete(oldSidebar)
     }
   }
   
   func generateNotificationsModel(onContext context: NSManagedObjectContext, from notifications: Any?) -> [DataLoadingError]? {
     let alertModelName = "Notifications"
     guard notifications == nil || notifications is [String: Any] else {
+      // Notifications are dictionaries keyed to some notification number (they are ordered, but may start at 100)
+      // The Any part of notifications comes from the sidebar info.
       return [.unableToParse(alertModelName)]
     }
     if notifications == nil {
@@ -717,6 +721,8 @@ extension DataController {
   func generateSchedulePageModel(onContext context: NSManagedObjectContext, from schedulePages: Any?) -> [DataLoadingError]? {
     let alertModelName = "Schedule"
     guard schedulePages == nil || schedulePages is [String: Any] else {
+      // Schedule days are arrays of schedule items keyed to date strings like "03/05/2018"
+      // Sidebar information is next to the days
       return [.unableToParse(alertModelName)]
     }
     if schedulePages == nil {
@@ -829,8 +835,8 @@ extension DataController {
   /// Does not save the context after creation
   ///
   /// - Parameters:
-  ///   - entityName: <#entityName description#>
-  ///   - keyValuePairs: <#keyValuePairs description#>
+  ///   - entityName: Which object ("Notification", "Contact") is being created.
+  ///   - keyValuePairs: Key-value pairs corresponding to the desired property-values of the object
   /// - Returns: The created object
   func createObject(onContext context: NSManagedObjectContext, entityName: String, with keyValuePairs:
     [String: Any]) -> NSManagedObject? {

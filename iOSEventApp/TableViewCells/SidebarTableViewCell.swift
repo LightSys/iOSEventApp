@@ -8,6 +8,7 @@
 
 import UIKit
 
+/// Has an image view for an icon and a one-line label that will autoshrink a little bit.
 class SidebarTableViewCell: UITableViewCell {
     
   @IBOutlet weak var sideImageView: UIImageView!

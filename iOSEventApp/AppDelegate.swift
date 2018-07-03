@@ -45,13 +45,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   func application(_ application: UIApplication, performFetchWithCompletionHandler completionHandler: @escaping (UIBackgroundFetchResult) -> Void) {
     let loader = DataController(newPersistentContainer: persistentContainer)
-    loader.reloadNotifications { (success, errors, newNotifications) in
+    loader.reloadNotifications { (success, errors, refresh, newNotification) in
       if success {
-        if newNotifications.count > 0 {
+        // Refresh will be done on app launch, if there is a new notification
+        if newNotification {
           UserDefaults.standard.set(true, forKey: "notificationLoadedInBackground")
-          UserNotificationController.sendNotifications(newNotifications) {
-            completionHandler(.newData)
+          if refresh {
+            UserDefaults.standard.set(true, forKey: "refreshedDataInBackground") // Only set to true in case multiple fetches happen
           }
+          completionHandler(.newData)
         }
         else {
           completionHandler(.noData)
