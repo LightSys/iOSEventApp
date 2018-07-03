@@ -43,6 +43,9 @@ As the app is still in development and there are a lot of small items on this li
 - [ ] Thoroughly test error display in different (re)load scenarios
 - [ ] Ask server if there are new notifications past a certain date / fetch new notifications after a certain date (would likely require server changes)
 - [ ] About screen. It is hooked up but has no meaningful content.
+- [ ] Use LightSys provisioning profile + development team.
+- [ ] Check deployment target and allowed device types. 
+- [ ] PR from finishing_touches
 
 ### Needs designer attention
 - [ ] Background for logo
@@ -75,3 +78,5 @@ As the app is still in development and there are a lot of small items on this li
 - [ ] Improve managed object context usage (the data controller appears to violate Apple documentation's concurrency section by passing contexts between threads)
 - [ ] Make sure prayer partner groups have the same numbers as in the android app
 - [ ] Add some kind of order key to objects received in an array (not a dictionary) and update sorting to use that.
+- [ ] Start refresh timer when opening the app to go off when it would have gone off, if the timer did not fire when the app was opened.
+- [ ] Fix white bar above sidebar menu (very noticeable in app switcher)
