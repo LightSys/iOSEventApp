@@ -37,7 +37,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
   
   override func viewDidLoad() {
     super.viewDidLoad()
-    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 225
   }
     

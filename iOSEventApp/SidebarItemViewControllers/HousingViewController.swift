@@ -26,7 +26,7 @@ class HousingViewController: UIViewController, UITableViewDataSource, UITableVie
 
   override func viewDidLoad() {
     super.viewDidLoad()
-    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 231
 
     if let housing = dataArray as? [HousingUnit] {

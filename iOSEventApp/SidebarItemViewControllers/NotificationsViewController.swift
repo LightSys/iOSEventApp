@@ -32,7 +32,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
   override func viewDidLoad() {
     super.viewDidLoad()
     headerLabel.text = welcomeMessage
-    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 225
   }
   

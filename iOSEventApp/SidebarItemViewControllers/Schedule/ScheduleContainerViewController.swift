@@ -19,7 +19,7 @@ class ScheduleContainerViewController: UIViewController, TakesArrayData {
   override func viewDidLoad() {
     super.viewDidLoad()
     
-    if let scheduleVC = (childViewControllers.first as? ScheduleViewController), (dataArray?.count ?? 0) > 0 {
+    if let scheduleVC = (children.first as? ScheduleViewController), (dataArray?.count ?? 0) > 0 {
       scheduleVC.scheduleDays = (dataArray as? [ScheduleDay])?.sorted(by: { (day1, day2) -> Bool in
         return day1.date! < day2.date!
       })

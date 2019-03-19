@@ -24,7 +24,7 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
   override func viewDidLoad() {
     super.viewDidLoad()
     dayLabel.text = dayLabelText
-    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 175
 
     if let schedule = scheduleItems {

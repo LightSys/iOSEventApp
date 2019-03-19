@@ -94,7 +94,7 @@ class QRScannerViewController: UIViewController,
     previewLayer.videoGravity = .resizeAspectFill
     view.layer.addSublayer(previewLayer)
     
-    activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     activityIndicator.center = view.center
     activityIndicator.hidesWhenStopped = true
     view.addSubview(activityIndicator)

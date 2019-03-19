@@ -27,7 +27,7 @@ class SettingsViewController: UIViewController {
   private let animationTime: TimeInterval = 0.2
 
   override func viewDidLoad() {
-    activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    activityIndicator = UIActivityIndicatorView(style: .gray)
     activityIndicator.center = view.center
     activityIndicator.hidesWhenStopped = true
     view.addSubview(activityIndicator)
@@ -189,7 +189,7 @@ extension SettingsViewController {
       UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(selectedMinutes * 60))
     }
     else {
-      UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(UIApplicationBackgroundFetchIntervalNever))
+      UIApplication.shared.setMinimumBackgroundFetchInterval(TimeInterval(UIApplication.backgroundFetchIntervalNever))
     }
     if selectedMinutes != chosenRefreshRateMinutes {
       if selectedMinutes == defaultRefreshRateMinutes {

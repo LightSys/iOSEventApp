@@ -14,7 +14,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
 
   var window: UIWindow?
 
-  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+  func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
     
     // Can this be moved to after a qr code is scanned?
     UserNotificationController.sharedInstance.requestPermissions()
@@ -34,7 +34,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     // Background fetch is used to refresh the app data, and if possible display a notification to the user.
     // The system decides how often the background fetch really happens, so the user still may not see a notification until the app is opened.
     if refreshRateMinutes == -1 {
-      application.setMinimumBackgroundFetchInterval(UIApplicationBackgroundFetchIntervalNever)
+      application.setMinimumBackgroundFetchInterval(UIApplication.backgroundFetchIntervalNever)
     }
     else {
       application.setMinimumBackgroundFetchInterval(TimeInterval(refreshRateMinutes * 60))
@@ -73,7 +73,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
   }
   
   func applicationDidBecomeActive(_ application: UIApplication) {
-    if let navigationController = application.keyWindow?.rootViewController?.childViewControllers.first(where: { $0 is UINavigationController }) as? UINavigationController {
+    if let navigationController = application.keyWindow?.rootViewController?.children.first(where: { $0 is UINavigationController }) as? UINavigationController {
       if let mainContainer = navigationController.viewControllers.first(where: { $0 is MainContainerViewController }) as? MainContainerViewController {
         // The main container will decide if it is time to restart
         mainContainer.appBecameActive()

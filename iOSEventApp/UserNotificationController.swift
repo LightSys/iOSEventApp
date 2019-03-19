@@ -39,7 +39,7 @@ class UserNotificationController: NSObject {
         let content = UNMutableNotificationContent()
         content.title = titleBodyDate.0 ?? ""
         content.body = titleBodyDate.1 ?? ""
-        content.sound = UNNotificationSound.default()
+        content.sound = UNNotificationSound.default
         
         let request = UNNotificationRequest(identifier: "notification\(titleBodyDate.0 ?? "")\(titleBodyDate.2 ?? "")", content: content, trigger: nil)
         notificationCenter.add(request, withCompletionHandler: nil)
@@ -63,7 +63,7 @@ class UserNotificationController: NSObject {
       let content = UNMutableNotificationContent()
       content.title = "Notification fetch failed"
       content.body = failureMessage
-      content.sound = UNNotificationSound.default()
+      content.sound = UNNotificationSound.default
       
       let request = UNNotificationRequest(identifier: "failedFetchNotification", content: content, trigger: nil)
       notificationCenter.add(request, withCompletionHandler: nil)

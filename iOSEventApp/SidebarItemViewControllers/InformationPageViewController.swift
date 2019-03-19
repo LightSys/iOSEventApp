@@ -29,7 +29,7 @@ class InformationPageViewController: UIViewController, TakesArrayData, UITableVi
   override func viewDidLoad() {
     super.viewDidLoad()
     headerLabel.text = headerText
-    tableView.rowHeight = UITableViewAutomaticDimension
+    tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 300
   }
   

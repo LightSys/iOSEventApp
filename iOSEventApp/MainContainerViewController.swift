@@ -60,7 +60,7 @@ class MainContainerViewController: UIViewController {
       loadViewController(identifier: "welcome", entityNameForData: nil, informationPageName: nil)
     }
     
-    activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .gray)
+    activityIndicator = UIActivityIndicatorView(style: .gray)
     activityIndicator.center = view.center
     activityIndicator.hidesWhenStopped = true
     view.addSubview(activityIndicator)
@@ -90,7 +90,7 @@ class MainContainerViewController: UIViewController {
       refreshRateMinutes = chosenRate
     }
     
-    if UserDefaults.standard.bool(forKey: "notificationLoadedInBackground") || (UserDefaults.standard.bool(forKey: "refreshedDataInBackground") && childViewControllers.first is NotificationsViewController) {
+    if UserDefaults.standard.bool(forKey: "notificationLoadedInBackground") || (UserDefaults.standard.bool(forKey: "refreshedDataInBackground") && children.first is NotificationsViewController) {
       refreshViews()
     }
     UserDefaults.standard.set(false, forKey: "notificationLoadedInBackground")
@@ -101,7 +101,7 @@ class MainContainerViewController: UIViewController {
         DataController.startRefreshTimer(mainContainer: self)
         DispatchQueue.main.async {
           if success {
-            if refresh || (newNotification && self.childViewControllers.first is NotificationsViewController) {
+            if refresh || (newNotification && self.children.first is NotificationsViewController) {
               self.refreshViews()
             }
           }
@@ -133,11 +133,11 @@ class MainContainerViewController: UIViewController {
   func loadViewController(identifier: String, entityNameForData: String?, informationPageName pageName: String?) {
     let vc = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: identifier)
     let context = loader.persistentContainer.viewContext
-    if childViewControllers.count > 0 {
-      let childVC = childViewControllers[0]
+    if children.count > 0 {
+      let childVC = children[0]
       childVC.view.removeFromSuperview()
-      childVC.willMove(toParentViewController: nil)
-      childVC.removeFromParentViewController()
+      childVC.willMove(toParent: nil)
+      childVC.removeFromParent()
     }
     // The view controllers that get special treatment need information from multiple entities in core data.
     if let contactsVC = vc as? ContactsViewController{
@@ -181,9 +181,9 @@ class MainContainerViewController: UIViewController {
         }
       }
     }
-    addChildViewController(vc)
+    addChild(vc)
     containerView.addSubview(vc.view)
-    vc.didMove(toParentViewController: self)
+    vc.didMove(toParent: self)
     view.setNeedsLayout()
     
     currentPageInformation = (identifier, entityNameForData, pageName)
@@ -220,7 +220,7 @@ class MainContainerViewController: UIViewController {
           return
         }
         DataController.startRefreshTimer(mainContainer: self)
-        if refresh || (newNotification && self.childViewControllers.first is NotificationsViewController){
+        if refresh || (newNotification && self.children.first is NotificationsViewController){
           self.refreshViews()
         }
       }
