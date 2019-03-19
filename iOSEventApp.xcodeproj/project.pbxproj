@@ -59,6 +59,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1AFCFFCC22414F1A00869A74 /* Event App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Event App.entitlements"; sourceTree = "<group>"; };
 		4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarTableViewCell.swift; sourceTree = "<group>"; };
 		4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableViewController.swift; sourceTree = "<group>"; };
 		4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = PrayerPartnersTableViewCell.swift; sourceTree = "<group>"; };
@@ -148,6 +149,7 @@
 		F149D6C6204DCE2F000DA81A /* iOSEventApp */ = {
 			isa = PBXGroup;
 			children = (
+				1AFCFFCC22414F1A00869A74 /* Event App.entitlements */,
 				F149D6C7204DCE2F000DA81A /* AppDelegate.swift */,
 				F149D6C9204DCE2F000DA81A /* RootViewController.swift */,
 				F149D6F8204DE923000DA81A /* QRScannerViewController.swift */,
@@ -600,13 +602,14 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P38KZSHR4K;
 				INFOPLIST_FILE = iOSEventAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOSEventApp.app/iOSEventApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Event App.app/Event App";
 			};
 			name = Debug;
 		};
@@ -616,13 +619,14 @@
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P38KZSHR4K;
 				INFOPLIST_FILE = iOSEventAppTests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventAppTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
-				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/iOSEventApp.app/iOSEventApp";
+				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/Event App.app/Event App";
 			};
 			name = Release;
 		};
@@ -631,6 +635,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P38KZSHR4K;
 				INFOPLIST_FILE = iOSEventAppUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventAppUITests;
@@ -646,6 +651,7 @@
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = P38KZSHR4K;
 				INFOPLIST_FILE = iOSEventAppUITests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventAppUITests;
