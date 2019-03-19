@@ -309,6 +309,13 @@ class DataController: NSObject {
   static func dateForExpireString(_ dateString: String) -> Date {
     let dateFormatter = DateFormatter()
     dateFormatter.dateFormat = "MM/dd/yyyy"
+    
+    //if date is not entered, it will be 11/30/-0001,
+    // this set nil date to current date, if refresh_expire isn't entered
+    if dateString == "11/30/-0001"{
+        let currentDate = Date();
+        return currentDate;
+    }
     return dateFormatter.date(from: dateString)!
   }
   
