@@ -6,16 +6,17 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
-/*
- So the idea is that you go in to the QR scanner when you open the app. Once the
-    QR code has been scanned, the app will stay on that event, sourcing data
-    through that hyperlink, until otherwise notified. The ability to change the
-    QR code being used is in settings. We downloaded the QR code reader.
- */
+// The majority of this file (whatever enables it to scan QR codes) was downloaded from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code
 
 import UIKit
 import AVFoundation
 
+/**
+ So the idea is that you go in to the QR scanner when you open the app. Once the
+  QR code has been scanned, the app will stay on that event, sourcing data
+  through that hyperlink, until otherwise notified. The ability to change the
+  QR code being used is in settings. We downloaded the QR code reader.
+ */
 class QRScannerViewController: UIViewController,
         AVCaptureMetadataOutputObjectsDelegate {
 
@@ -27,29 +28,45 @@ class QRScannerViewController: UIViewController,
   var captureSession: AVCaptureSession!
   var previewLayer: AVCaptureVideoPreviewLayer!
   
-  var hasLeftScanner: Bool?
-  func shouldRunScan() -> Bool {
-    // If they have left the scanner, they have returned – and need to rescan.
-    if hasLeftScanner == true {
-      return true
-    }
-    
-    let isDataLoaded = UserDefaults.standard.object(forKey: "dataLoaded") as? Int ?? 0
-    return isDataLoaded == 0
-  }
-  
   override func viewDidLoad() {
     super.viewDidLoad()
     
     view.backgroundColor = UIColor.black
     captureSession = AVCaptureSession()
-    
-    guard let videoCaptureDevice = AVCaptureDevice.default(for: .video) else { return }
+  }
+  
+  func failed() {
+    let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
+    ac.addAction(UIAlertAction(title: "OK", style: .default))
+    present(ac, animated: true)
+    captureSession = nil
+  }
+  
+  func setupSession() {
+    var availableDevices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInTelephotoCamera], mediaType: .video, position: .back).devices
+    if availableDevices.count == 0 {
+      availableDevices = AVCaptureDevice.DiscoverySession(deviceTypes: [.builtInWideAngleCamera, .builtInTelephotoCamera], mediaType: .video, position: .front).devices
+    }
+    guard availableDevices.count > 0 else {
+      let alertController = UIAlertController(title: "No cameras available", message: "Please check camera permissions", preferredStyle: .alert)
+      let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+        self.performSegue(withIdentifier: "PresentMainContainer", sender: nil)
+      }
+      alertController.addAction(okAction)
+      present(alertController, animated: true, completion: nil)
+      return
+    }
+    let device = availableDevices.first(where: { $0.deviceType == .builtInWideAngleCamera }) ?? availableDevices.first!
     let videoInput: AVCaptureDeviceInput
-    
     do {
-      videoInput = try AVCaptureDeviceInput(device: videoCaptureDevice)
+      videoInput = try AVCaptureDeviceInput(device: device)
     } catch {
+      let alertController = UIAlertController(title: "Unable to start video session", message: "Please check camera permissions", preferredStyle: .alert)
+      let okAction = UIAlertAction(title: "OK", style: .default) { (_) in
+        self.performSegue(withIdentifier: "PresentMainContainer", sender: nil)
+      }
+      alertController.addAction(okAction)
+      present(alertController, animated: true, completion: nil)
       return
     }
     
@@ -77,56 +94,33 @@ class QRScannerViewController: UIViewController,
     previewLayer.videoGravity = .resizeAspectFill
     view.layer.addSublayer(previewLayer)
     
-    activityIndicator = UIActivityIndicatorView(activityIndicatorStyle: .whiteLarge)
+    activityIndicator = UIActivityIndicatorView(style: .whiteLarge)
     activityIndicator.center = view.center
     activityIndicator.hidesWhenStopped = true
     view.addSubview(activityIndicator)
-    
-    // Don't actually run the camera if the data is already loaded
-    guard shouldRunScan() else {
-      return
-    }
-    
-    captureSession.startRunning()
-  }
-  
-  func failed() {
-    let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
-    ac.addAction(UIAlertAction(title: "OK", style: .default))
-    present(ac, animated: true)
-    captureSession = nil
   }
   
   override func viewWillAppear(_ animated: Bool) {
     super.viewWillAppear(animated)
     
-    // Don't scan unless data is not loaded (or needs to be reloaded).
-    guard shouldRunScan() else {
-      return
+    if captureSession.inputs.count == 0 {
+      setupSession()
     }
     
-    if (captureSession?.isRunning == false) {
+    // If they arrive on the scanner, they have come back from the main container – and need to (re)scan.
+    if (captureSession.isRunning == false) {
       captureSession.startRunning()
     }
   }
   
-  override func viewDidAppear(_ animated: Bool) {
-    super.viewDidAppear(animated)
-    
-    guard shouldRunScan() == false else {
-      return
-    }
-    
-    performSegue(withIdentifier: "PresentMainContainer", sender: nil)
-  }
-  
+  // When the app is backgrounded, the capture session is automatically paused, then resumed when foregrounded.
+  // Not called when backgrounded. So this is only called when leaving for the main container.
   override func viewWillDisappear(_ animated: Bool) {
     super.viewWillDisappear(animated)
     
-    if (captureSession?.isRunning == true) {
+    if (captureSession.isRunning == true) {
       captureSession.stopRunning()
     }
-    hasLeftScanner = true
   }
   
   func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
@@ -150,37 +144,66 @@ class QRScannerViewController: UIViewController,
     }
   }
   
-  /// <#Description#>
+  /// If there is a url, load data from it. Notify the user of any errors.
   ///
   /// - Parameters:
-  ///   - code: <#code description#>
+  ///   - code: The string form of the QR code scanned
   ///   - completion: Performed on the main thread
   func found(code: String, completion: @escaping ((_ success: Bool) -> Void)) {
-    if let url = URL(string: code) {
+     if let url = URL(string: code) {
       activityIndicator.startAnimating()
-      loader.loadDataFromURL(url, completion: { (success) in
-        DispatchQueue.main.async {
-          self.activityIndicator.stopAnimating()
-          completion(success)
-        }
-        // TODO: what to do in case of failure?
-      })
+      (UIApplication.shared.delegate as! AppDelegate).persistentContainer.performBackgroundTask { (context) in
+        
+        // The user won't want notifications from a different event... clear everything except chosen refresh rate
+        UserDefaults.standard.removeObject(forKey: "defaultRefreshRateMinutes")
+        UserDefaults.standard.removeObject(forKey: "loadedDataURL")
+        UserDefaults.standard.removeObject(forKey: "loadedNotificationsURL")
+        UserDefaults.standard.removeObject(forKey: "notificationsLastUpdatedAt")
+        UserDefaults.standard.removeObject(forKey: "notificationLoadedInBackground")
+        UserDefaults.standard.removeObject(forKey: "refreshedDataInBackground")
+
+        self.loader.deleteAllObjects(onContext: context)
+        
+        self.loader.loadDataFromURL(url, completion: { (success, errors, _) in
+          DispatchQueue.main.async {
+            self.activityIndicator.stopAnimating()
+            
+            if success == false {
+              let alertController = UIAlertController(title: "Failed to load data", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+              let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+                completion(success)
+              })
+              alertController.addAction(okAction)
+              self.present(alertController, animated: true, completion: nil)
+            }
+            else if errors?.count ?? 0 > 0 {
+              let alertController = UIAlertController(title: "Data loaded with some errors", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+              let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+                completion(success)
+              })
+              alertController.addAction(okAction)
+              self.present(alertController, animated: true, completion: nil)
+            }
+            else {
+              completion(success)
+            }
+          }
+        })
+      }
     }
     else {
-      completion(false)
+      let alertController = UIAlertController(title: "Invalid url", message: "\(code) is not a valid url", preferredStyle: .alert)
+      let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+        completion(false)
+      })
+      alertController.addAction(okAction)
+      self.present(alertController, animated: true, completion: nil)
     }
   }
   
-  override var prefersStatusBarHidden: Bool {
-    return true
-  }
-  
-  override var supportedInterfaceOrientations: UIInterfaceOrientationMask {
-    return .portrait
-  }
-
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if let mainContainer = segue.destination as? MainContainerViewController {
+      delegate?.refreshSidebar()
       mainContainer.delegate = delegate
     }
   }

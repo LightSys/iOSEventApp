@@ -8,19 +8,8 @@
 
 import UIKit
 
+/// One header and a large text view. The cell should expand as needed (see `ContactsViewController`). Each cell corresponds to a contact page.
 class ContactTableViewCell: UITableViewCell {
   @IBOutlet weak var cellHeader: UILabel!
   @IBOutlet weak var cellBody: UITextView!
-  
-    override func awakeFromNib() {
-        super.awakeFromNib()
-        // Initialization code
-    }
-
-    override func setSelected(_ selected: Bool, animated: Bool) {
-        super.setSelected(selected, animated: animated)
-
-        // Configure the view for the selected state
-    }
-
 }

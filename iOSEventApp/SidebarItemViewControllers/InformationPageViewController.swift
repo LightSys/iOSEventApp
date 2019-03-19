@@ -8,19 +8,29 @@
 
 import UIKit
 
+extension InformationPageSection: IsComparable {
+  var compareString: String? {
+    return String(order)
+  }
+}
+
+/**
+ Displays each section in the data array as one cell. There may need to be multiple
+  instances of InformationPageViewController in the sidebar, as it is the generic
+  "information page" for the event app.
+ */
 class InformationPageViewController: UIViewController, TakesArrayData, UITableViewDelegate, UITableViewDataSource {
-  
+
+  @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var headerLabel: UILabel!
+  var headerText: String?
   var dataArray: [Any]?
-  
+
   override func viewDidLoad() {
     super.viewDidLoad()
-    
-    // Do any additional setup after loading the view.
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+    headerLabel.text = headerText
+    tableView.rowHeight = UITableView.automaticDimension
+    tableView.estimatedRowHeight = 300
   }
   
   func numberOfSections(in tableView: UITableView) -> Int {

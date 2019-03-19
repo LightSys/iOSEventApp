@@ -8,13 +8,16 @@
 
 import UIKit
 
-protocol ViewControllerSwitching:AnyObject {
-  func switchTo(vcName: String, entityNameForData: String, informationPageName pageName: String?)
+protocol MenuDelegate:AnyObject {
+  func switchTo(vcName: String, entityNameForData: String?, informationPageName pageName: String?)
+  func swipedToClose()
 }
-
+/**
+ Loads the SidebarAppearances and tells the RootViewController what view controller to load with what data.
+ */
 class SidebarTableViewController: UITableViewController {
   
-  weak var vcSwitchingDelegate: ViewControllerSwitching?
+  weak var menuDelegate: MenuDelegate?
   
   var _variableSidebarItems = [SidebarAppearance]()
   var variableSidebarItems: [SidebarAppearance] {
@@ -35,33 +38,55 @@ class SidebarTableViewController: UITableViewController {
   }
   
   func reloadSidebarItems() {
-    let loader = DataController(newPersistentContainer:
-      (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
-    
-    let sidebarItems = (loader.fetchAllObjects(forName: "SidebarAppearance")
+    let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+    let loader = DataController(newPersistentContainer: container)
+    let context = container.viewContext
+
+    let sidebarItems = (loader.fetchAllObjects(onContext: context, forName: "SidebarAppearance")
       as! [SidebarAppearance]).sorted(by: { (item1, item2) -> Bool in
         return item1.order! < item2.order!
       })
     variableSidebarItems = sidebarItems
+    
+    if let data = (loader.fetchAllObjects(onContext: context, forName: "General")?.first as? General)?.logo, let imageData = Data(base64Encoded: data) {
+      let image = UIImage(data: imageData)
+      let imageView = UIImageView(image: image)
+      // Shrink image view's width (and keep aspect ratio)
+      let maxWidth = view.frame.size.width
+      if imageView.frame.size.width > maxWidth {
+        imageView.frame.size.height *= maxWidth / imageView.frame.size.width
+        imageView.frame.size.width = maxWidth
+      }
+      // Shrink image view's height (and keep aspect ratio)
+      let maxHeight: CGFloat = 160
+      if imageView.frame.size.height > maxHeight {
+        imageView.frame.size.width *= maxHeight / imageView.frame.size.height
+        imageView.frame.size.height = maxHeight
+      }
+      // To prevent the image view from stretching and provide a background.
+      let containingView = UIView(frame: CGRect(x: 0, y: 0, width: maxWidth, height: imageView.frame.size.height))
+      
+      // Background
+      let background = CAGradientLayer()
+      background.colors = [UIColor(red: 111/256.0, green: 148/256.0, blue: 221/256.0, alpha: 1).cgColor, UIColor.blue.cgColor]
+      // Make the gradient horizontal instead of vertical
+      background.transform = CATransform3DMakeRotation(CGFloat.pi / 2, 0, 0, 1)
+      background.frame = containingView.frame // Must come after the transform
+      
+      // Add views and layers
+      containingView.layer.addSublayer(background)
+      containingView.addSubview(imageView)
+      tableView.tableHeaderView = containingView
+    }
+    else {
+      tableView.tableHeaderView = nil
+    }
+    
+    tableView.reloadData()
   }
   
-  override func viewWillAppear(_ animated: Bool) {
-
-    super.viewWillAppear(animated)
-    
-    
-    
-    
-    // Uncomment the following line to preserve selection between presentations
-    // self.clearsSelectionOnViewWillAppear = false
-    
-    // Uncomment the following line to display an Edit button in the navigation bar for this view controller.
-    // self.navigationItem.rightBarButtonItem = self.editButtonItem
-  }
-  
-  override func didReceiveMemoryWarning() {
-    super.didReceiveMemoryWarning()
-    // Dispose of any resources that can be recreated.
+  @IBAction func swipedLeft(_ sender: Any) {
+    menuDelegate?.swipedToClose()
   }
   
   // MARK: - Table view data source
@@ -71,7 +96,11 @@ class SidebarTableViewController: UITableViewController {
   }
 
   override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-    return variableSidebarItems.count + 2 // About, and Settings
+    guard variableSidebarItems.count > 0 else {
+      return 3 // Welcome, About, Settings
+    }
+    // Welcome not shown
+    return variableSidebarItems.count + 2 // About and Settings are constant
   }
   
   override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -79,30 +108,34 @@ class SidebarTableViewController: UITableViewController {
     case 0...(variableSidebarItems.count == 0 ? 0 : variableSidebarItems.count-1):
       if variableSidebarItems.count > 0 {
         if variableSidebarItems[indexPath.row].nav == "Notifications" {
-          vcSwitchingDelegate?.switchTo(vcName: "notifications", entityNameForData: "Notification", informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "notifications", entityNameForData: nil, informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Contacts" {
-          vcSwitchingDelegate?.switchTo(vcName: "contacts", entityNameForData: "Contact", informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "contacts", entityNameForData: nil, informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Housing" {
-          vcSwitchingDelegate?.switchTo(vcName: "housing", entityNameForData: "HousingUnit", informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "housing", entityNameForData: "HousingUnit", informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Schedule" {
-          vcSwitchingDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay", informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay", informationPageName: nil)
         }
         else if variableSidebarItems[indexPath.row].nav == "Prayer Partners" {
-          vcSwitchingDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup", informationPageName: nil)
+          menuDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup", informationPageName: nil)
         }
         else {
-          vcSwitchingDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row].nav)
+          menuDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row].nav)
         }
+      } else {
+        menuDelegate?.switchTo(vcName: "welcome", entityNameForData: nil, informationPageName: nil)
       }
-      print("case \(indexPath.row)")
-    case variableSidebarItems.count:
-      print("About selected")
+    case variableSidebarItems.count, 1:
+      // Case one is covered earlier if data is loaded. By default switch statements don't fall through in swift.
+      menuDelegate?.switchTo(vcName: "about", entityNameForData: nil, informationPageName: nil)
     default:
-      vcSwitchingDelegate?.switchTo(vcName: "settings", entityNameForData: "", informationPageName: nil)
+      // Settings is always at index 2 or greater
+      menuDelegate?.switchTo(vcName: "settings", entityNameForData: nil, informationPageName: nil)
     }
+    tableView.deselectRow(at: indexPath, animated: true)
   }
   
   override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -114,11 +147,17 @@ class SidebarTableViewController: UITableViewController {
       cell.sideImageView.image = UIImage(named: variableSidebarItems[row].icon!)
       cell.label.text = variableSidebarItems[row].nav!
     }
-    else if row == variableSidebarItems.count {
+    else if row == 0 {
+      // Only if data isn't loaded
+      cell.label.text = "Welcome"
+    }
+    else if row == variableSidebarItems.count || row == 1 {
+      // After welcome or all variable items
       cell.sideImageView.image = UIImage(named: "ic_info")
       cell.label.text = "About"
     }
     else {
+      // Settings is last
       cell.sideImageView.image = nil
       cell.label.text = "Settings"
     }

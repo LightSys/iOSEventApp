@@ -8,20 +8,9 @@
 
 import UIKit
 
+/// A large group number label on the left with a centered vertically infinite line label on the right.
 class PrayerPartnersTableViewCell: UITableViewCell {
   
-  @IBOutlet weak var partnersView: UITextView!
+  @IBOutlet weak var partnersLabel: UILabel!
   @IBOutlet weak var groupNumberLabel: UILabel!
-  
-  override func awakeFromNib() {
-    super.awakeFromNib()
-    
-  }
-  
-  override func setSelected(_ selected: Bool, animated: Bool) {
-    super.setSelected(selected, animated: animated)
-    
-    // Configure the view for the selected state
-  }
-  
 }
