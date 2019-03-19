@@ -6,8 +6,8 @@
 //  Copyright © 2018 LightSys. All rights reserved.
 //
 
-import XCTest
-@testable import iOSEventApp
+import XCTest;
+@testable import Event_App;
 
 class iOSEventAppTests: XCTestCase {
     
