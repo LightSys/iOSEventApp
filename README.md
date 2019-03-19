@@ -38,14 +38,13 @@ As the app is still in development and there are a lot of small items on this li
 
 ### Important
 
-- [ ] Update as needed to ensure compatibility with the new web app
+Update as needed to ensure compatibility with the new web app (Complete as of 3/19/19)
 - [ ] Fix the core data crash (results occasionally from the "Refresh event data now" button in settings) **--Claimed**
 - [ ] Thoroughly test error display in different (re)load scenarios
-- [ ] Ask server if there are new notifications past a certain date / fetch new notifications after a certain date (would likely require server changes)
+- [ ] Check and ensure proper handling of version number from JSON.
 - [ ] About screen. It is hooked up but has no meaningful content.
 - [ ] Use LightSys provisioning profile + development team.
-- [ ] Check deployment target and allowed device types. 
-- [ ] PR from finishing_touches
+- [ ] Check deployment target and allowed device types.
 
 ### Needs designer attention
 - [ ] Background for logo
