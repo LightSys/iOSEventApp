@@ -78,6 +78,7 @@ class DataController: NSObject {
   var persistentContainer: NSPersistentContainer
   let sidebarNameKey = "nav"
   let sidebarIconKey = "icon"
+  let versionNumber = "version_num"
   let sidebarAppearanceEntityName = "SidebarAppearance"
   let orderKey = "order"
   
@@ -681,6 +682,7 @@ extension DataController {
     }
   }
   
+  //Documented by Littlesnowman88
   func generateNotificationsModel(onContext context: NSManagedObjectContext, from notifications: Any?) -> [DataLoadingError]? {
     let alertModelName = "Notifications"
     guard notifications == nil || notifications is [String: Any] else {
@@ -697,6 +699,7 @@ extension DataController {
     var sidebarKVPairs = [String: String]()
     let notificationsDict = notifications as! [String: Any]
     
+    //establish sidebar label, icon, and the notifications json (section) version number.
     guard let sidebarName = notificationsDict[sidebarNameKey] as? String else {
       return [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications", propertyName: nil, missingProperty: sidebarNameKey))]
     }
@@ -704,16 +707,20 @@ extension DataController {
     if let sidebarIcon = notificationsDict[sidebarIconKey] as? String {
       sidebarKVPairs[sidebarIconKey] = sidebarIcon
     }
-
-    for (key, value) in notificationsDict where key != sidebarNameKey && key != sidebarIconKey {
+    //now, process remaining notifications, based on a stringified number key
+    for (key, value) in notificationsDict where key != sidebarNameKey && key != sidebarIconKey && key != versionNumber {
+      //make a copy of value to work off of.
       if let valueDict = value as? [String: Any] {
+        // if unable to build a proper notification, add an error and move on to the next notification
         guard let num = Int(key), let title = valueDict["title"], let body = valueDict["body"], let date = valueDict["date"] else {
-          errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Notification", propertyName: nil, missingProperty: nil)))
-          continue
+            errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Notification", propertyName: nil, missingProperty: nil)))
+            continue
         }
+        //otherwise, build the notification and add it to be processed more later.
         let notificationDict = ["notificationNumber": num, "title": title, "body": body, "date": date]
         notificationsToCreate.append(notificationDict)
       }
+      //else, a copy wasn't able to be made.
       else {
         errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Notification", propertyName: nil, missingProperty: nil)))
       }
@@ -823,6 +830,7 @@ extension DataController {
     }
     
     deleteAll(onContext: context, forEntityName: entityName)
+    //when this function processes notifications, newObjectDicts = notificationsToCreate
     for kvDict in newObjectDicts {
       _ = createObject(onContext: context, entityName: entityName, with: kvDict)
     }
