@@ -707,11 +707,11 @@ extension DataController {
 
     for (key, value) in notificationsDict where key != sidebarNameKey && key != sidebarIconKey {
       if let valueDict = value as? [String: Any] {
-        guard let num = Int(key), let title = valueDict["title"], let body = valueDict["body"], let date = valueDict["date"], let refresh = valueDict["refresh"] else {
+        guard let num = Int(key), let title = valueDict["title"], let body = valueDict["body"], let date = valueDict["date"] else {
           errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Notification", propertyName: nil, missingProperty: nil)))
           continue
         }
-        let notificationDict = ["notificationNumber": num, "title": title, "body": body, "date": date, "refresh": refresh]
+        let notificationDict = ["notificationNumber": num, "title": title, "body": body, "date": date]
         notificationsToCreate.append(notificationDict)
       }
       else {
