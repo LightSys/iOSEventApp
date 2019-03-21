@@ -318,6 +318,7 @@
                         <viewLayoutGuide key="safeArea" id="7Lh-ZG-MAv"/>
                     </view>
                     <connections>
+                        <outlet property="headerLabel" destination="ds6-Af-guJ" id="LMY-4H-QUv"/>
                         <outlet property="tableView" destination="YCp-5y-U4I" id="aE6-l6-YhO"/>
                     </connections>
                 </viewController>
@@ -733,6 +734,9 @@
                         </constraints>
                         <viewLayoutGuide key="safeArea" id="mir-5G-owC"/>
                     </view>
+                    <connections>
+                        <outlet property="headerLabel" destination="ZIm-Iv-cgW" id="EDg-s5-YBJ"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="Psu-zi-IGn" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
@@ -1192,6 +1196,7 @@ Person 3</string>
                         <viewLayoutGuide key="safeArea" id="ZSY-No-cm0"/>
                     </view>
                     <connections>
+                        <outlet property="headerLabel" destination="oX5-dm-jkO" id="2NL-fb-cT5"/>
                         <outlet property="tableView" destination="96T-Hl-QnP" id="qOQ-bD-JNo"/>
                     </connections>
                 </viewController>

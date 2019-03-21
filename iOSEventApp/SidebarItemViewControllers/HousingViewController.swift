@@ -38,9 +38,14 @@ class HousingViewController: UIViewController, UITableViewDataSource, UITableVie
       for contact in contacts ?? [] {
         contactsByName[contact.name ?? ""] = contact
       }
-      let housingJSON = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance")
-        as! [SidebarAppearance]
-      headerLabel.text = housingJSON[0].nav
+      //after having accessed the event json, retrieve the housing page nav title.
+      //get access to the event json and retrieve the schedule page nav title.
+      let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
+      for navName in navNames {
+        if (navName.category == "Housing") {
+          headerLabel.text = navName.nav
+        }
+      }
     }
   }
   
