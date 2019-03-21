@@ -64,8 +64,8 @@ struct MalformedDataInformation: CustomStringConvertible {
 
 /**
  The DataController contains the process of loading data into the various pages
- from the database. It is sortd by page loading into. I dont necessarily
- know which section is which but Imma do my best.
+ from the database. It is sorted by page loading into. I dont necessarily
+ know which section is which but Imma do my best. -nathanielbscout
  
  DataController also starts the refresh timer in the refreshController, which it keeps a static reference to. The refresh timer triggers a reload of notifications.
  
@@ -78,6 +78,7 @@ class DataController: NSObject {
   var persistentContainer: NSPersistentContainer
   let sidebarNameKey = "nav"
   let sidebarIconKey = "icon"
+  let sidebarCatKey = "category"
   let versionNumber = "version_num"
   let sidebarAppearanceEntityName = "SidebarAppearance"
   let orderKey = "order"
@@ -406,6 +407,7 @@ extension DataController {
           if let iconName = obj[sidebarIconKey] as? String {
             sidebarKVPairs[sidebarIconKey] = iconName
           }
+          sidebarKVPairs[sidebarCatKey] = "PrayerPartners"
         }
         else {
           errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "PrayerPartners", propertyName: "nav", missingProperty: "name")))
@@ -476,6 +478,7 @@ extension DataController {
     }
     sidebarKVPairs[sidebarNameKey] = navName
     sidebarKVPairs[orderKey] = "3"
+    sidebarKVPairs[sidebarCatKey] = "Housing"
     if let iconName = housing[sidebarIconKey] as? String {
       sidebarKVPairs[sidebarIconKey] = iconName
     }
@@ -551,6 +554,7 @@ extension DataController {
     }
     sidebarKVPairs[sidebarNameKey] = sidebarName
     sidebarKVPairs[orderKey] = "1"
+    sidebarKVPairs[sidebarCatKey] = "ContactPage"
     if let iconName = contactPageDict[sidebarIconKey] as? String {
       sidebarKVPairs[sidebarIconKey] = iconName
     }
@@ -704,6 +708,7 @@ extension DataController {
       return [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications", propertyName: nil, missingProperty: sidebarNameKey))]
     }
     sidebarKVPairs[sidebarNameKey] = sidebarName
+    sidebarKVPairs[sidebarCatKey] = "Notifications"
     if let sidebarIcon = notificationsDict[sidebarIconKey] as? String {
       sidebarKVPairs[sidebarIconKey] = sidebarIcon
     }
@@ -750,6 +755,7 @@ extension DataController {
       return [.partiallyMalformed(MalformedDataInformation(objectName: "Schedule", propertyName: nil, missingProperty: sidebarNameKey))]
     }
     sidebarKVPairs[sidebarNameKey] = sidebarName
+    sidebarKVPairs[sidebarCatKey] = "Schedule"
     if let sidebarIcon = schedulePageDict[sidebarIconKey] as? String {
       sidebarKVPairs[sidebarIconKey] = sidebarIcon
     }
