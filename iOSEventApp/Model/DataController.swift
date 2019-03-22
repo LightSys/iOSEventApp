@@ -86,7 +86,126 @@ class DataController: NSObject {
   init(newPersistentContainer: NSPersistentContainer) {
     persistentContainer = newPersistentContainer
   }
+  
+  // Using the version number, fetch relevant data from the server and update appropriate data
+  //
+  
+  func loadFromURL(_ url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void), context: NSManagedObjectContext) -> Void {
+  
+    var versionNum : [String]
+    if let general = self.fetchAllObjects(onContext: context, forName: "General")?.first as? General {
+      
+      // Grab our local version number
+      if let versionNumString = general.version_num {
+        versionNum = versionNumString.components(separatedBy: ",")
+      } else {
+        versionNum = ["-1", "-1"]
+      }
+      
+      // build the URL string
+      let endpointString = url.absoluteString + "config=" + versionNum[0] + "&notify=" + versionNum[1]
+      let getURL = URL(string: endpointString)!
+      
+      // perform the query using the following callback
+      let task = URLSession.shared.dataTask(with: getURL) { (data, response, err) in
+        // ensuring no errors came back
+        guard err == nil else {
+          completion(false, [.unableToRetrieveData(err!)], [])
+          return
+        }
+        // ensuring we have data
+        guard let unwrappedData = data else {
+          completion(false, [.noData], [])
+          return
+        }
 
+        // ensuring that our data is a JSON
+        var jsonDict: [String: Any]
+        do {
+          guard let json = try JSONSerialization.jsonObject(with: unwrappedData) as? [String: Any] else {
+            completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Data json", propertyName: nil, missingProperty: nil))], [])
+            return
+          }
+          jsonDict = json
+        }
+        // if corrupted JSON, quit
+        catch {
+          completion(false, [.unableToSerializeJSON], [])
+          return
+        }
+
+        // Check JSON for the new version number
+        let version_string = jsonDict[self.versionNumber] as! String
+        let newVersionNumber = (version_string.split(separator: ","))
+        //if both config and notifications need updating
+        if (newVersionNumber[0] != versionNum[0] && newVersionNumber[1] != versionNum[1]) {
+          self.loadConfig(url: url, json: jsonDict, completion: completion)
+          self.loadNotifications(context: context, url: url, json: jsonDict, completion: completion)
+        }
+        // only config needs updating
+        else if (newVersionNumber[0] != versionNum[0]) { self.loadConfig(url: url, json: jsonDict, completion: completion) }
+        // only notifications need updating
+        else if (newVersionNumber[1] != versionNum[1]) { self.loadNotifications(context: context, url: url, json: jsonDict, completion: completion) }
+        //no updates needed, so signal success
+        else { completion(true, [], []) }
+      }
+      task.resume()
+    }
+  }
+ 
+  //helper function to load configuration details from json
+  func loadConfig(url: URL, json: [String: Any], completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
+    self.persistentContainer.performBackgroundTask({ (context) in
+      
+      var dataLoadingErrors = [[DataLoadingError]?]()
+      
+      // The "generate" methods insert data on the given context without saving.
+      dataLoadingErrors.append(self.generatePrayerPartnerModel(onContext: context, from: json["prayer_partners"]))
+      dataLoadingErrors.append(self.generateHousingModel(onContext: context, from: json["housing"]))
+      let general = json["general"]
+      dataLoadingErrors.append(self.generateGeneralModel(onContext: context, from: general))
+      dataLoadingErrors.append(self.generateContactPageModel(onContext: context, from: json["contact_page"]))
+      dataLoadingErrors.append(self.generateContactModel(onContext: context, from: json["contacts"]))
+      dataLoadingErrors.append(self.generateThemeModel(onContext: context, from: json["theme"]))
+      dataLoadingErrors.append(self.generateInformationPageModel(onContext: context, from: json["information_page"]))
+      dataLoadingErrors.append(self.generateSchedulePageModel(onContext: context, from: json["schedule"]))
+      
+      if let general = self.fetchAllObjects(onContext: context, forName: "General")?.first as? General, general.refresh != 0 {
+        UserDefaults.standard.set(general.refresh, forKey: "defaultRefreshRateMinutes")
+        UserDefaults.standard.set(general.refresh_expire, forKey: "refreshExpireString")
+      }
+      
+      let errors = dataLoadingErrors.compactMap({ $0 }).joined().map({ $0 }) as [DataLoadingError]
+      
+      // This should be set regardless of success or failure
+      UserDefaults.standard.set(url, forKey: "loadedDataURL")
+      
+      self.trySave(onContext: context, currentErrors: errors) { (success, errorArray) in
+        completion(success, errorArray, [])}
+      })
+  }
+  
+  func loadNotifications(context: NSManagedObjectContext, url: URL, json: [String: Any], completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
+    guard let notificationDict = json["notifications"] as? [String: Any] else {
+      completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications json", propertyName: "notifications", missingProperty: nil))], [])
+      return
+    }
+    
+    let errors = self.generateNotificationsModel(onContext: context, from: notificationDict)
+    //ACTUALLY not a notificationsURL, but I don't yet know what this would break if I change the forKey. TODO: examine. -LS88
+    UserDefaults.standard.set(url, forKey: "loadedNotificationsURL")
+    
+    // If data is reloaded, it will be on a new context, so it is necessary to save here.
+    self.trySave(onContext: context, currentErrors: errors) { (success, errors) in
+      if success {
+        UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
+      }
+      let notifications = self.fetchAllObjects(onContext: context, forName: "Notification", includePropertyValues: true) as? [Notification]
+      completion(success, errors, notifications ?? [])
+    }
+  }
+  
+  
   /// Retrieve data for an event and load it into the core data model. If a url for notifications is loaded, then the notifications will also be retrieved and loaded in this call.
   ///
   /// When loading data, any old data is deleted only after the new data is parsed correctly. To start from a 'clean slate' clear all data from the persistentContainer before calling this method.
@@ -94,79 +213,6 @@ class DataController: NSObject {
   /// - Parameters:
   ///   - url: url linking to a webpage of json
   ///   - completion: This will be on a background thread. Notifications are forwarded from loadNotifications.
-  func loadDataFromURL(_ url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
-    
-    let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
-      guard err == nil else {
-        completion(false, [.unableToRetrieveData(err!)], [])
-        return
-      }
-      guard let unwrappedData = data else {
-        completion(false, [.noData], [])
-        return
-      }
-      
-      var jsonDict: [String: Any]
-      do {
-        guard let json = try JSONSerialization.jsonObject(with: unwrappedData) as? [String: Any] else {
-          completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Data json", propertyName: nil, missingProperty: nil))], [])
-          return
-        }
-        jsonDict = json
-      }
-      catch {
-        completion(false, [.unableToSerializeJSON], [])
-        return
-      }
-      self.persistentContainer.performBackgroundTask({ (context) in
-        
-        var dataLoadingErrors = [[DataLoadingError]?]()
-        
-        // The "generate" methods insert data on the given context without saving. 
-        dataLoadingErrors.append(self.generatePrayerPartnerModel(onContext: context, from: jsonDict["prayer_partners"]))
-        dataLoadingErrors.append(self.generateHousingModel(onContext: context, from: jsonDict["housing"]))
-        let general = jsonDict["general"]
-        dataLoadingErrors.append(self.generateGeneralModel(onContext: context, from: general))
-        dataLoadingErrors.append(self.generateContactPageModel(onContext: context, from: jsonDict["contact_page"]))
-        dataLoadingErrors.append(self.generateContactModel(onContext: context, from: jsonDict["contacts"]))
-        dataLoadingErrors.append(self.generateThemeModel(onContext: context, from: jsonDict["theme"]))
-        dataLoadingErrors.append(self.generateInformationPageModel(onContext: context, from: jsonDict["information_page"]))
-        dataLoadingErrors.append(self.generateSchedulePageModel(onContext: context, from: jsonDict["schedule"]))
-        
-        if let general = self.fetchAllObjects(onContext: context, forName: "General")?.first as? General, general.refresh != 0 {
-          UserDefaults.standard.set(general.refresh, forKey: "defaultRefreshRateMinutes")
-          UserDefaults.standard.set(general.refresh_expire, forKey: "refreshExpireString")
-        }
-
-        var errors = dataLoadingErrors.compactMap({ $0 }).joined().map({ $0 }) as [DataLoadingError]
-
-        // This should be set regardless of success or failure
-        UserDefaults.standard.set(url, forKey: "loadedDataURL")
-        
-        guard let generalDict = general as? [String: Any], let notificationsURLString = generalDict["notifications_url"] as? String else {
-          self.trySave(onContext: context, currentErrors: errors) { (success, errorArray) in
-            completion(success, errorArray, [])
-          }
-          return
-        }
-        
-        self.loadNotificationsFromURL(context: context, url: URL(string: notificationsURLString)!) { (success, nErrors, newNotifications) in
-          if let additionalErrors = nErrors {
-            if case .unableToSave(_)? = additionalErrors.first {
-              // The save error is the only error (the others were removed)
-              errors = additionalErrors
-            }
-            else {
-              errors.append(contentsOf: additionalErrors)
-            }
-          }
-          // Notifications' success is the same as success for the data load, because they share a save.
-          completion(success, errors, newNotifications)
-        }
-      })
-    }
-    task.resume()
-  }
   
   /// Loads the data for notifications. This method will be called periodically by reloadNotifications to refresh the notifications in memory
   ///
@@ -174,49 +220,6 @@ class DataController: NSObject {
   ///   - url: URL to load data from
   ///   - completion: To be run after save. All notifications will be passed in.
   func loadNotificationsFromURL(context: NSManagedObjectContext, url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
-    
-    let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
-      guard err == nil else {
-        completion(false, [.unableToRetrieveNotifications(err!)], [])
-        return
-      }
-      guard let unwrappedData = data else {
-        completion(false, [.noNotifications], [])
-        return
-      }
-      
-      var jsonDict: [String: Any]
-      do {
-        guard let json = try JSONSerialization.jsonObject(with: unwrappedData) as? [String: Any] else {
-          completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications json", propertyName: nil, missingProperty: nil))], [])
-          return
-        }
-        jsonDict = json
-      }
-      catch {
-        completion(false, [.unableToSerializeNotificationsJSON], [])
-        return
-      }
-      
-      guard let notificationDict = jsonDict["notifications"] as? [String: Any] else {
-        completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications json", propertyName: "notifications", missingProperty: nil))], [])
-        return
-      }
-      
-      let errors = self.generateNotificationsModel(onContext: context, from: notificationDict)
-      UserDefaults.standard.set(url, forKey: "loadedNotificationsURL") // Seems best to put it after generating the model, but before save
-
-      // If data is reloaded, it will be on a new context, so it is necessary to save here.
-      self.trySave(onContext: context, currentErrors: errors) { (success, errors) in
-        if success {
-          UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
-        }
-        let notifications = self.fetchAllObjects(onContext: context, forName: "Notification", includePropertyValues: true) as? [Notification]
-        completion(success, errors, notifications ?? [])
-      }
-    }
-    
-    task.resume()
   }
   
   func reloadAllData(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
