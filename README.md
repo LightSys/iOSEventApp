@@ -34,9 +34,10 @@ As the app is still in development and there are a lot of small items on this li
 ### Important
 
 Update as needed to ensure compatibility with the new web app (Complete as of 3/21/19)
-- [ ] Fix the core data crash (results occasionally from the "Refresh event data now" button in settings) **--Claimed**
+- [ ] Schedule Day: Switch from reading UI to reading local JSON copy (see compiler warnings for trouble spots) --LS88 Task
+- [ ] Fix the core data crash (results occasionally from the "Refresh event data now" button in settings) **--Claimed--**
 - [ ] Thoroughly test error display in different (re)load scenarios
-- [ ] Check and ensure proper handling of version number from JSON.
+- [ ] Check and ensure proper handling of version number from JSON. **--Claied--**
 - [ ] Use LightSys provisioning profile + development team.
 - [ ] Check deployment target and allowed device types.
 
