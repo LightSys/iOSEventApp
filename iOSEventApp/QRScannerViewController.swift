@@ -17,6 +17,8 @@ import AVFoundation
   through that hyperlink, until otherwise notified. The ability to change the
   QR code being used is in settings. We downloaded the QR code reader.
  */
+
+// TODO: Increase the tezt size of the button text, on the ipad it's small and will not fit apple's standards
 class QRScannerViewController: UIViewController,
         AVCaptureMetadataOutputObjectsDelegate {
 
@@ -33,9 +35,10 @@ class QRScannerViewController: UIViewController,
     
     view.backgroundColor = UIColor.black
     captureSession = AVCaptureSession()
+    
   }
-  
-  func failed() {
+    
+    func failed() {
     let ac = UIAlertController(title: "Scanning not supported", message: "Your device does not support scanning a code from an item. Please use a device with a camera.", preferredStyle: .alert)
     ac.addAction(UIAlertAction(title: "OK", style: .default))
     present(ac, animated: true)
