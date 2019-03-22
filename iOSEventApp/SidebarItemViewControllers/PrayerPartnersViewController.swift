@@ -10,7 +10,7 @@ import UIKit
 
 extension PrayerPartnerGroup: IsComparable {
   var compareString: String? {
-    return students
+    return String(order)
   }
 }
 

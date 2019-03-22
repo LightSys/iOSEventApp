@@ -69,7 +69,7 @@ struct MalformedDataInformation: CustomStringConvertible {
  
  DataController also starts the refresh timer in the refreshController, which it keeps a static reference to. The refresh timer triggers a reload of notifications.
  
- Passing a context around different threads is against recommended practice. It will remain as is until changed.
+ The context should not be carelessly accessed from a thread different from the one it was created on. The only time a context is potentially passed between threads in this class is when a data task is performed - and it may be improperly handled in `loadNotificationsFromURL` or methods that call it, but since there are no clear issues right now it is being left alone.
  */
 class DataController: NSObject {
   
@@ -150,6 +150,8 @@ class DataController: NSObject {
           return
         }
         
+        // This is in a performBackgroundTask block.
+        // I still don't think the context should *really* be passed like this, but there are no apparent issues with this at the moment.
         self.loadNotificationsFromURL(context: context, url: URL(string: notificationsURLString)!) { (success, nErrors, newNotifications) in
           if let additionalErrors = nErrors {
             if case .unableToSave(_)? = additionalErrors.first {
@@ -391,10 +393,11 @@ extension DataController {
     var sidebarKVPairs = [String: String]()
     let groupDicts = partnerGroups as! [[String: Any]]
     
-    for obj in groupDicts {
+    // The prayer partners come in an array, and so the order should be preserved.
+    for (index, obj) in groupDicts.enumerated() {
       if let partnerNames = obj["students"] {
         if partnerNames is String {
-          groupstoCreate.append(["students": partnerNames])
+          groupstoCreate.append(["students": partnerNames, "order": Int16(index)])
         }
         else {
           errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "PrayerPartnerGroup", propertyName: "students", missingProperty: nil)))
@@ -638,7 +641,7 @@ extension DataController {
       sidebarNum += 1
       
       let pageIdentifier = key
-      // Ideally this wouldn't be hardcoded for an index of 0
+      // The event data has the sidebar info at the first index of each page array
       guard let sidebarName = value[0][sidebarNameKey] as? String else {
         errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Information Page \(pageNum)", propertyName: pageIdentifier, missingProperty: sidebarNameKey)))
         continue
