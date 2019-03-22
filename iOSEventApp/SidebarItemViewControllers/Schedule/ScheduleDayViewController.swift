@@ -18,6 +18,7 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var dayLabel: UILabel!
   var dayLabelText: String?
+  var dayLabelDate: String = ""
   var scheduleItems: [ScheduleItem]?
   var contactsByName = [String: Contact]()
   
@@ -65,7 +66,11 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
       else {
         contactInfo = contact?.address ?? contact?.phone ?? ""
       }
-      cell.eventLocation.text = location
+        if location != "null"{
+            cell.eventLocation.text = location
+        } else {
+            cell.eventLocation.text = ""
+        }
       cell.contactTextView.text = contactInfo
       if contactInfo == "" {
         cell.contactBottomSpaceConstraint.constant = 0

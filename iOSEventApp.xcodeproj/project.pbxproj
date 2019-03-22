@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		1A875100224457B400A51209 /* AboutPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8750FF224457B400A51209 /* AboutPageViewController.swift */; };
 		4DD00E09204E1A6D0000B10B /* SidebarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */; };
 		4DD00E0F204F5B6D0000B10B /* SidebarTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */; };
 		4DD00E10204F5B6D0000B10B /* PrayerPartnersTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */; };
@@ -59,6 +60,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		1A8750FF224457B400A51209 /* AboutPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPageViewController.swift; sourceTree = "<group>"; };
 		1AFCFFCC22414F1A00869A74 /* Event App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Event App.entitlements"; sourceTree = "<group>"; };
 		4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarTableViewCell.swift; sourceTree = "<group>"; };
 		4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SidebarTableViewController.swift; sourceTree = "<group>"; };
@@ -211,6 +213,7 @@
 				4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */,
 				4DD00E0E204F5B6D0000B10B /* PrayerPartnersViewController.swift */,
 				F1274FCF20D3ECAE00FFE1E4 /* WelcomeViewController.swift */,
+				1A8750FF224457B400A51209 /* AboutPageViewController.swift */,
 			);
 			path = SidebarItemViewControllers;
 			sourceTree = "<group>";
@@ -400,6 +403,7 @@
 				F11F455F20E85B73004ECBCE /* UserNotificationController.swift in Sources */,
 				F15E98E220521D2700C088D3 /* ScheduleDayViewController.swift in Sources */,
 				4DD00E152051A65F0000B10B /* MainContainerViewController.swift in Sources */,
+				1A875100224457B400A51209 /* AboutPageViewController.swift in Sources */,
 				F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */,
 				F1AF665E205251E700B8820D /* ScheduleContainerViewController.swift in Sources */,
 				F149D6D0204DCE2F000DA81A /* iOSEventApp.xcdatamodeld in Sources */,

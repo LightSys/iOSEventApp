@@ -27,11 +27,12 @@ extension ContactPageSection: Comparable {
 }
 
 /**
- Displays the contact pages and the contacts in the same cell as the last page.
+ Displays the contact pages and the contacts in the same cell as the l/Users/avloaner/Documents/iOSEventApp/iOSEventApp/SidebarItemViewControllers/PrayerPartnersViewController.swiftast page.
  */
 class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
   
   @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var headerLabel: UILabel!
   var contactPageSections: [ContactPageSection]?
   var contactArray: [Contact]?
   
@@ -39,6 +40,16 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
     super.viewDidLoad()
     tableView.rowHeight = UITableView.automaticDimension
     tableView.estimatedRowHeight = 225
+    
+    //get access to the event json and retrieve the contacts page nav title.
+    let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+    let loader = DataController(newPersistentContainer: container)
+    let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
+    for navName in navNames {
+      if (navName.category == "ContactPage") {
+        headerLabel.text = navName.nav
+      }
+    }
   }
     
   func numberOfSections(in tableView: UITableView) -> Int {

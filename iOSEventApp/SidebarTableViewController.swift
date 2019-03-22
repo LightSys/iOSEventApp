@@ -107,19 +107,19 @@ class SidebarTableViewController: UITableViewController {
     switch indexPath.row {
     case 0...(variableSidebarItems.count == 0 ? 0 : variableSidebarItems.count-1):
       if variableSidebarItems.count > 0 {
-        if variableSidebarItems[indexPath.row].nav == "Notifications" {
+        if variableSidebarItems[indexPath.row].category == "Notifications" {
           menuDelegate?.switchTo(vcName: "notifications", entityNameForData: nil, informationPageName: nil)
         }
-        else if variableSidebarItems[indexPath.row].nav == "Contacts" {
+        else if variableSidebarItems[indexPath.row].category == "ContactPage" {
           menuDelegate?.switchTo(vcName: "contacts", entityNameForData: nil, informationPageName: nil)
         }
-        else if variableSidebarItems[indexPath.row].nav == "Housing" {
+        else if variableSidebarItems[indexPath.row].category == "Housing" {
           menuDelegate?.switchTo(vcName: "housing", entityNameForData: "HousingUnit", informationPageName: nil)
         }
-        else if variableSidebarItems[indexPath.row].nav == "Schedule" {
+        else if variableSidebarItems[indexPath.row].category == "Schedule" {
           menuDelegate?.switchTo(vcName: "schedule", entityNameForData: "ScheduleDay", informationPageName: nil)
         }
-        else if variableSidebarItems[indexPath.row].nav == "Prayer Partners" {
+        else if variableSidebarItems[indexPath.row].category == "PrayerPartners" {
           menuDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup", informationPageName: nil)
         }
         else {

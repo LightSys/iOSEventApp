@@ -21,7 +21,7 @@ extension PrayerPartnerGroup: IsComparable {
 class PrayerPartnersViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
 
   @IBOutlet weak var tableView: UITableView!
-
+  @IBOutlet weak var headerLabel: UILabel!
   var dataArray: [Any]?
   lazy var stringArray: [String]? = {
       return (dataArray as? [PrayerPartnerGroup])?.map({ $0.students! })
@@ -31,6 +31,16 @@ class PrayerPartnersViewController: UIViewController, UITableViewDataSource, UIT
   
   override func viewDidLoad() {
     super.viewDidLoad()
+    
+    //get access to the event json and retrieve the prayer partners nav title.
+    let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+    let loader = DataController(newPersistentContainer: container)
+    let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
+    for navName in navNames {
+      if (navName.category == "PrayerPartners") {
+        headerLabel.text = navName.nav
+      }
+    }
   }
   
   // MARK: - Table view data source

@@ -64,8 +64,8 @@ struct MalformedDataInformation: CustomStringConvertible {
 
 /**
  The DataController contains the process of loading data into the various pages
- from the database. It is sortd by page loading into. I dont necessarily
- know which section is which but Imma do my best.
+ from the database. It is sorted by page loading into. I dont necessarily
+ know which section is which but Imma do my best. -nathanielbscout
  
  DataController also starts the refresh timer in the refreshController, which it keeps a static reference to. The refresh timer triggers a reload of notifications.
  
@@ -78,6 +78,8 @@ class DataController: NSObject {
   var persistentContainer: NSPersistentContainer
   let sidebarNameKey = "nav"
   let sidebarIconKey = "icon"
+  let sidebarCatKey = "category"
+  let versionNumber = "version_num"
   let sidebarAppearanceEntityName = "SidebarAppearance"
   let orderKey = "order"
   
@@ -405,6 +407,7 @@ extension DataController {
           if let iconName = obj[sidebarIconKey] as? String {
             sidebarKVPairs[sidebarIconKey] = iconName
           }
+          sidebarKVPairs[sidebarCatKey] = "PrayerPartners"
         }
         else {
           errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "PrayerPartners", propertyName: "nav", missingProperty: "name")))
@@ -475,6 +478,7 @@ extension DataController {
     }
     sidebarKVPairs[sidebarNameKey] = navName
     sidebarKVPairs[orderKey] = "3"
+    sidebarKVPairs[sidebarCatKey] = "Housing"
     if let iconName = housing[sidebarIconKey] as? String {
       sidebarKVPairs[sidebarIconKey] = iconName
     }
@@ -522,7 +526,9 @@ extension DataController {
         newGeneral["logo"] = logoImageString.data(using: .utf8)
       }
       else {
-        errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "General", propertyName: "logo", missingProperty: nil)))
+        // The current code sends the user an error, but we decided to comment out the code because the logo is optional and the user should not be yelled at. Unless this is required, the code will be commented out. For the time being, it will be a simple print statement.
+        //        errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "General", propertyName: "logo", missingProperty: nil)))
+        print("No logo, this is optional")
       }
     }
    
@@ -550,6 +556,7 @@ extension DataController {
     }
     sidebarKVPairs[sidebarNameKey] = sidebarName
     sidebarKVPairs[orderKey] = "1"
+    sidebarKVPairs[sidebarCatKey] = "ContactPage"
     if let iconName = contactPageDict[sidebarIconKey] as? String {
       sidebarKVPairs[sidebarIconKey] = iconName
     }
@@ -681,6 +688,7 @@ extension DataController {
     }
   }
   
+  //Documented by Littlesnowman88
   func generateNotificationsModel(onContext context: NSManagedObjectContext, from notifications: Any?) -> [DataLoadingError]? {
     let alertModelName = "Notifications"
     guard notifications == nil || notifications is [String: Any] else {
@@ -697,23 +705,29 @@ extension DataController {
     var sidebarKVPairs = [String: String]()
     let notificationsDict = notifications as! [String: Any]
     
+    //establish sidebar label, icon, and the notifications json (section) version number.
     guard let sidebarName = notificationsDict[sidebarNameKey] as? String else {
       return [.partiallyMalformed(MalformedDataInformation(objectName: "Notifications", propertyName: nil, missingProperty: sidebarNameKey))]
     }
     sidebarKVPairs[sidebarNameKey] = sidebarName
+    sidebarKVPairs[sidebarCatKey] = "Notifications"
     if let sidebarIcon = notificationsDict[sidebarIconKey] as? String {
       sidebarKVPairs[sidebarIconKey] = sidebarIcon
     }
-
-    for (key, value) in notificationsDict where key != sidebarNameKey && key != sidebarIconKey {
+    //now, process remaining notifications, based on a stringified number key
+    for (key, value) in notificationsDict where key != sidebarNameKey && key != sidebarIconKey && key != versionNumber {
+      //make a copy of value to work off of.
       if let valueDict = value as? [String: Any] {
-        guard let num = Int(key), let title = valueDict["title"], let body = valueDict["body"], let date = valueDict["date"], let refresh = valueDict["refresh"] else {
-          errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Notification", propertyName: nil, missingProperty: nil)))
-          continue
+        // if unable to build a proper notification, add an error and move on to the next notification
+        guard let num = Int(key), let title = valueDict["title"], let body = valueDict["body"], let date = valueDict["date"] else {
+            errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Notification", propertyName: nil, missingProperty: nil)))
+            continue
         }
-        let notificationDict = ["notificationNumber": num, "title": title, "body": body, "date": date, "refresh": refresh]
+        //otherwise, build the notification and add it to be processed more later.
+        let notificationDict = ["notificationNumber": num, "title": title, "body": body, "date": date]
         notificationsToCreate.append(notificationDict)
       }
+      //else, a copy wasn't able to be made.
       else {
         errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Notification", propertyName: nil, missingProperty: nil)))
       }
@@ -743,6 +757,7 @@ extension DataController {
       return [.partiallyMalformed(MalformedDataInformation(objectName: "Schedule", propertyName: nil, missingProperty: sidebarNameKey))]
     }
     sidebarKVPairs[sidebarNameKey] = sidebarName
+    sidebarKVPairs[sidebarCatKey] = "Schedule"
     if let sidebarIcon = schedulePageDict[sidebarIconKey] as? String {
       sidebarKVPairs[sidebarIconKey] = sidebarIcon
     }
@@ -823,6 +838,7 @@ extension DataController {
     }
     
     deleteAll(onContext: context, forEntityName: entityName)
+    //when this function processes notifications, newObjectDicts = notificationsToCreate
     for kvDict in newObjectDicts {
       _ = createObject(onContext: context, entityName: entityName, with: kvDict)
     }

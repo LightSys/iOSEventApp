@@ -35,7 +35,7 @@ class RootViewController: UIViewController {
   override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
     if segue.identifier == "embedNavigationController" {
       embeddedNavigationController =
-        segue.destination as! UINavigationController
+        (segue.destination as! UINavigationController)
       (embeddedNavigationController.viewControllers[0]
         as? QRScannerViewController)?.delegate = self // The qr scanner will pass this on to any new main container after a scan.
       let mainContainerVC = UIStoryboard(name: "Main", bundle: nil).instantiateViewController(withIdentifier: "mainContainer") as! MainContainerViewController
@@ -43,7 +43,7 @@ class RootViewController: UIViewController {
       embeddedNavigationController.viewControllers.append(mainContainerVC)
     }
     else if segue.identifier == "embedSidebarViewController" {
-      sidebarViewController = segue.destination as! SidebarTableViewController
+      sidebarViewController = (segue.destination as! SidebarTableViewController)
       sidebarViewController.menuDelegate = self
     }
   }
