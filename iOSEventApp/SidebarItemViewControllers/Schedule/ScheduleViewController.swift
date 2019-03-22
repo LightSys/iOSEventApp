@@ -104,3 +104,23 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
     return nil
   }
 }
+
+// day of week algorithm from
+// https://stackoverflow.com/questions/25533147/get-day-of-week-using-nsdate
+func getDayOfWeek(_ today:String) -> String {
+  let formatter  = DateFormatter()
+  formatter.dateFormat = "MM-dd-yyyy"
+  guard let todayDate = formatter.date(from: today) else { return "" }
+  let myCalendar = Calendar(identifier: .gregorian)
+  let weekDay = myCalendar.component(.weekday, from: todayDate)
+  
+  let mappings = [1: "Sunday",
+              2: "Monday",
+              3: "Tuesday",
+              4: "Wednesday",
+              5: "Thursday",
+              6: "Friday",
+              7: "Saturday"]
+  
+  return mappings[weekDay] as! String
+}
