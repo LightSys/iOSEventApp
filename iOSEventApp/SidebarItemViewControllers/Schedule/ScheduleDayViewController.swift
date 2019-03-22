@@ -65,7 +65,11 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
       else {
         contactInfo = contact?.address ?? contact?.phone ?? ""
       }
-      cell.eventLocation.text = location
+        if location != "null"{
+            cell.eventLocation.text = location
+        } else {
+            cell.eventLocation.text = ""
+        }
       cell.contactTextView.text = contactInfo
       if contactInfo == "" {
         cell.contactBottomSpaceConstraint.constant = 0
