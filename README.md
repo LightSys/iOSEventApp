@@ -28,21 +28,15 @@ The navigation controller is used for its navigation bar. The only two view cont
 
 The individual pages are children of the `MainContainerViewController`. There will only be one child at a time: when a new page is selected, it replaces the previous page as the sole child of `MainContainerViewController`.
 
-## Attribution
-
-The code in `QRScannerViewController` that scans QR codes came from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code 
-
-
 ## To-do list
 As the app is still in development and there are a lot of small items on this list, it makes sense to put these here for now, instead of using the issue tracker.
 
 ### Important
 
-Update as needed to ensure compatibility with the new web app (Complete as of 3/19/19)
+Update as needed to ensure compatibility with the new web app (Complete as of 3/21/19)
 - [ ] Fix the core data crash (results occasionally from the "Refresh event data now" button in settings) **--Claimed**
 - [ ] Thoroughly test error display in different (re)load scenarios
 - [ ] Check and ensure proper handling of version number from JSON.
-- [ ] About screen. It is hooked up but has no meaningful content.
 - [ ] Use LightSys provisioning profile + development team.
 - [ ] Check deployment target and allowed device types.
 
@@ -57,7 +51,7 @@ Update as needed to ensure compatibility with the new web app (Complete as of 3/
 - [ ] Make sure there is always an activity indicator when refreshing data.
 - [ ] Preserve spot on screens after data refresh
 - [ ] Attempt to move notifications permissions to when the user first sees the notifications screen (Apple may not allow it)
-- [ ] Revisit having phone and car icons in schedule (they are currently hidden from the user because they are superfluous)
+- [ ] Revisit having phone and car icons in schedule (they are currently hidden from the user)
 - [ ] Cancel ongoing url session when going to QR scanner (to avoid trying to insert the wrong data into an event)
 - [ ] Display day of the week in schedule (i.e. let the user know it is Tuesday in addition to the fourth of March)
 - [ ] Convert times in schedule based off of time zones (the app has no concept of time zones right now)
