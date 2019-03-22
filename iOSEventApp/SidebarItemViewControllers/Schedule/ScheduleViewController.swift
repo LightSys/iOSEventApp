@@ -60,7 +60,10 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
     if day.items?.count ?? 0 > 0 {
       newVC.scheduleItems = (Array(day.items!) as? [ScheduleItem])?.sorted()
     }
-    newVC.dayLabelText = day.date
+    
+    let weekDate = day.date as! String
+    let dayOfWeek = getDayOfWeek(weekDate)
+    newVC.dayLabelText = dayOfWeek + " " + weekDate
     viewControllerDict[dayName] = newVC
     newVC.view.frame = view.frame
     return newVC
@@ -68,7 +71,10 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
   
   func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
     if let dayVC = viewController as? ScheduleDayViewController {
-      let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabel.text!)!
+//      let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabel.text!)!
+      let dayVC_DateString = dayVC.dayLabel.text as! String
+      let dayVC_Date = dayVC_DateString.components(separatedBy: " ")[1]
+      let vcIndex = scheduleLabelTexts!.index(of: dayVC_Date) as! Int
       
       if 0 < vcIndex {
         let newIndex = vcIndex-1
@@ -87,7 +93,11 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
   
   func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
     if let dayVC = viewController as? ScheduleDayViewController {
-      let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabel.text!)!
+      
+      let dayVC_DateString = dayVC.dayLabel.text as! String
+      let dayVC_Date = dayVC_DateString.components(separatedBy: " ")[1]
+      let vcIndex = scheduleLabelTexts!.index(of: dayVC_Date) as! Int
+      //      let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabel.text!)!
       
       if vcIndex < scheduleDays!.count-1 {
         let newIndex = vcIndex+1
