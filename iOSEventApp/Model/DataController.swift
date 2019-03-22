@@ -105,7 +105,13 @@ class DataController: NSObject {
     }
   
     // build the URL string
-    let endpointString = url.absoluteString + "config=" + versionNum[0] + "&notify=" + versionNum[1]
+    var endpointString: String;
+    if (url.absoluteString.contains("?")) {
+      endpointString = url.absoluteString + "&"
+    } else {
+      endpointString = url.absoluteString + "?"
+    }
+    endpointString += "config=" + versionNum[0] + "&notify=" + versionNum[1]
     let getURL = URL(string: endpointString)!
     
     // perform the query using the following callback
@@ -180,7 +186,7 @@ class DataController: NSObject {
       
       // This should be set regardless of success or failure
       UserDefaults.standard.set(url, forKey: "loadedDataURL")
-      
+      // self.trySave(onContext: context, currentErrors: errors) { (success, errors) in
       self.trySave(onContext: context, currentErrors: errors) { (success, errorArray) in
         completion(success, errorArray, [])}
       })
@@ -217,8 +223,9 @@ class DataController: NSObject {
       completion(false, [DataLoadingError.unableToRetrieveData(NSError(domain: "URL Not Saved", code: 0, userInfo: ["message": "Please scan the event's qr code to reload data"]))], [])
       return
     }
-    //TODO: DOES THIS WORK?
-    loadFromURL(url, completion: completion, context: self.persistentContainer.viewContext)
+    self.persistentContainer.performBackgroundTask({ (context) in
+      self.loadFromURL(url, completion: completion, context: context)
+    })
   }
   
   /// This method receives notifications and from them determines if the refresh and newNotification flags should be set. The user will be notified of any notifications newer than the last refresh date.
@@ -256,7 +263,7 @@ class DataController: NSObject {
       return
     }
     self.persistentContainer.performBackgroundTask({ (context) in
-      self.loadFromURL(url: url, completion: loadedNotificationsCallback, context: context)
+      self.loadFromURL(url, completion: loadedNotificationsCallback, context: context)
     })
   }
   
