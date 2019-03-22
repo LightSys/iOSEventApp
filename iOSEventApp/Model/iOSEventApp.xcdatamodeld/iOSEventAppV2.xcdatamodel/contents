@@ -64,6 +64,7 @@
         <relationship name="day" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduleDay" inverseName="items" inverseEntity="ScheduleDay" syncable="YES"/>
     </entity>
     <entity name="SidebarAppearance" representedClassName="SidebarAppearance" syncable="YES" codeGenerationType="class">
+        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
         <attribute name="nav" attributeType="String" syncable="YES"/>
         <attribute name="optionalIdentifier" optional="YES" attributeType="String" syncable="YES"/>
@@ -85,7 +86,7 @@
         <element name="PrayerPartnerGroup" positionX="0" positionY="45" width="128" height="60"/>
         <element name="ScheduleDay" positionX="-9" positionY="81" width="128" height="75"/>
         <element name="ScheduleItem" positionX="0" positionY="90" width="128" height="135"/>
-        <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="120"/>
+        <element name="SidebarAppearance" positionX="9" positionY="54" width="128" height="135"/>
         <element name="Theme" positionX="36" positionY="135" width="128" height="75"/>
     </elements>
 </model>

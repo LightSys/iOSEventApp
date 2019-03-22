@@ -21,6 +21,7 @@ extension HousingUnit: IsComparable {
  */
 class HousingViewController: UIViewController, UITableViewDataSource, UITableViewDelegate, TakesArrayData {
   @IBOutlet weak var tableView: UITableView!
+  @IBOutlet weak var headerLabel : UILabel!
   var dataArray: [Any]?
   var contactsByName = [String: Contact]()
 
@@ -36,6 +37,14 @@ class HousingViewController: UIViewController, UITableViewDataSource, UITableVie
       let contacts = loader.fetchAllObjects(onContext: container.viewContext, forName: "Contact", withPredicate: predicate, includePropertyValues: true) as? [Contact]
       for contact in contacts ?? [] {
         contactsByName[contact.name ?? ""] = contact
+      }
+      //after having accessed the event json, retrieve the housing page nav title.
+      //get access to the event json and retrieve the schedule page nav title.
+      let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
+      for navName in navNames {
+        if (navName.category == "Housing") {
+          headerLabel.text = navName.nav
+        }
       }
     }
   }
