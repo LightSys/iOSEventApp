@@ -526,7 +526,9 @@ extension DataController {
         newGeneral["logo"] = logoImageString.data(using: .utf8)
       }
       else {
-        errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "General", propertyName: "logo", missingProperty: nil)))
+        // The current code sends the user an error, but we decided to comment out the code because the logo is optional and the user should not be yelled at. Unless this is required, the code will be commented out. For the time being, it will be a simple print statement.
+        //        errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "General", propertyName: "logo", missingProperty: nil)))
+        print("No logo, this is optional")
       }
     }
    
