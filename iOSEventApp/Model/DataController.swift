@@ -88,72 +88,73 @@ class DataController: NSObject {
   }
   
   // Using the version number, fetch relevant data from the server and update appropriate data
-  //
-  
+  // -LS88
   func loadFromURL(_ url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void), context: NSManagedObjectContext) -> Void {
   
     var versionNum : [String]
+    
     if let general = self.fetchAllObjects(onContext: context, forName: "General")?.first as? General {
-      
       // Grab our local version number
       if let versionNumString = general.version_num {
         versionNum = versionNumString.components(separatedBy: ",")
-      } else {
+      } else { //corrupted general section
         versionNum = ["-1", "-1"]
       }
-      
-      // build the URL string
-      let endpointString = url.absoluteString + "config=" + versionNum[0] + "&notify=" + versionNum[1]
-      let getURL = URL(string: endpointString)!
-      
-      // perform the query using the following callback
-      let task = URLSession.shared.dataTask(with: getURL) { (data, response, err) in
-        // ensuring no errors came back
-        guard err == nil else {
-          completion(false, [.unableToRetrieveData(err!)], [])
-          return
-        }
-        // ensuring we have data
-        guard let unwrappedData = data else {
-          completion(false, [.noData], [])
-          return
-        }
-
-        // ensuring that our data is a JSON
-        var jsonDict: [String: Any]
-        do {
-          guard let json = try JSONSerialization.jsonObject(with: unwrappedData) as? [String: Any] else {
-            completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Data json", propertyName: nil, missingProperty: nil))], [])
-            return
-          }
-          jsonDict = json
-        }
-        // if corrupted JSON, quit
-        catch {
-          completion(false, [.unableToSerializeJSON], [])
-          return
-        }
-
-        // Check JSON for the new version number
-        let version_string = jsonDict[self.versionNumber] as! String
-        let newVersionNumber = (version_string.split(separator: ","))
-        //if both config and notifications need updating
-        if (newVersionNumber[0] != versionNum[0] && newVersionNumber[1] != versionNum[1]) {
-          self.loadConfig(url: url, json: jsonDict, completion: completion)
-          self.loadNotifications(context: context, url: url, json: jsonDict, completion: completion)
-        }
-        // only config needs updating
-        else if (newVersionNumber[0] != versionNum[0]) { self.loadConfig(url: url, json: jsonDict, completion: completion) }
-        // only notifications need updating
-        else if (newVersionNumber[1] != versionNum[1]) { self.loadNotifications(context: context, url: url, json: jsonDict, completion: completion) }
-        //no updates needed, so signal success
-        else { completion(true, [], []) }
-      }
-      task.resume()
+    } else { //no general section (and thus most likely no json) has been saved.
+      versionNum = ["-1", "-1"]
     }
+  
+    // build the URL string
+    let endpointString = url.absoluteString + "config=" + versionNum[0] + "&notify=" + versionNum[1]
+    let getURL = URL(string: endpointString)!
+    
+    // perform the query using the following callback
+    let task = URLSession.shared.dataTask(with: getURL) { (data, response, err) in
+      // ensuring no errors came back
+      guard err == nil else {
+        completion(false, [.unableToRetrieveData(err!)], [])
+        return
+      }
+      // ensuring we have data
+      guard let unwrappedData = data else {
+        completion(false, [.noData], [])
+        return
+      }
+
+      // ensuring that our data is a JSON
+      var jsonDict: [String: Any]
+      do {
+        guard let json = try JSONSerialization.jsonObject(with: unwrappedData) as? [String: Any] else {
+          completion(false, [.partiallyMalformed(MalformedDataInformation(objectName: "Data json", propertyName: nil, missingProperty: nil))], [])
+          return
+        }
+        jsonDict = json
+      }
+      // if corrupted JSON, quit
+      catch {
+        completion(false, [.unableToSerializeJSON], [])
+        return
+      }
+
+      // Check JSON for the new version number
+      let version_string = jsonDict[self.versionNumber] as! String
+      let newVersionNumber = (version_string.split(separator: ","))
+      //if both config and notifications need updating
+      if (newVersionNumber[0] != versionNum[0] && newVersionNumber[1] != versionNum[1]) {
+        self.loadConfig(url: url, json: jsonDict, completion: completion)
+        self.loadNotifications(context: context, url: url, json: jsonDict, completion: completion)
+      }
+      // only config needs updating
+      else if (newVersionNumber[0] != versionNum[0]) { self.loadConfig(url: url, json: jsonDict, completion: completion) }
+      // only notifications need updating
+      else if (newVersionNumber[1] != versionNum[1]) { self.loadNotifications(context: context, url: url, json: jsonDict, completion: completion) }
+      //no updates needed, so signal success
+      else { completion(true, [], []) }
+    }
+    task.resume()
   }
  
-  //helper function to load configuration details from json
+  //helper function to load configuration details from json. -LS88
   func loadConfig(url: URL, json: [String: Any], completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
     self.persistentContainer.performBackgroundTask({ (context) in
       
@@ -205,29 +206,19 @@ class DataController: NSObject {
     }
   }
   
-  
-  /// Retrieve data for an event and load it into the core data model. If a url for notifications is loaded, then the notifications will also be retrieved and loaded in this call.
-  ///
-  /// When loading data, any old data is deleted only after the new data is parsed correctly. To start from a 'clean slate' clear all data from the persistentContainer before calling this method.
-  ///
-  /// - Parameters:
-  ///   - url: url linking to a webpage of json
-  ///   - completion: This will be on a background thread. Notifications are forwarded from loadNotifications.
-  
   /// Loads the data for notifications. This method will be called periodically by reloadNotifications to refresh the notifications in memory
   ///
   /// - Parameters:
   ///   - url: URL to load data from
   ///   - completion: To be run after save. All notifications will be passed in.
-  func loadNotificationsFromURL(context: NSManagedObjectContext, url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
-  }
   
   func reloadAllData(completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
     guard let url = UserDefaults.standard.url(forKey: "loadedDataURL") else {
       completion(false, [DataLoadingError.unableToRetrieveData(NSError(domain: "URL Not Saved", code: 0, userInfo: ["message": "Please scan the event's qr code to reload data"]))], [])
       return
     }
-    loadDataFromURL(url, completion: completion)
+    //TODO: DOES THIS WORK?
+    loadFromURL(url, completion: completion, context: self.persistentContainer.viewContext)
   }
   
   /// This method receives notifications and from them determines if the refresh and newNotification flags should be set. The user will be notified of any notifications newer than the last refresh date.
@@ -265,7 +256,7 @@ class DataController: NSObject {
       return
     }
     self.persistentContainer.performBackgroundTask({ (context) in
-      self.loadNotificationsFromURL(context: context, url: url, completion: loadedNotificationsCallback)
+      self.loadFromURL(url: url, completion: loadedNotificationsCallback, context: context)
     })
   }
   

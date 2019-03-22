@@ -163,8 +163,7 @@ class QRScannerViewController: UIViewController,
         UserDefaults.standard.removeObject(forKey: "refreshedDataInBackground")
 
         self.loader.deleteAllObjects(onContext: context)
-        self.loader.loadFromURL(url, completion: {(_, _, _) in}, context: context)
-        self.loader.loadDataFromURL(url, completion: { (success, errors, _) in
+        self.loader.loadFromURL(url, completion: {(success, errors, _) in
           DispatchQueue.main.async {
             self.activityIndicator.stopAnimating()
             
@@ -188,7 +187,7 @@ class QRScannerViewController: UIViewController,
               completion(success)
             }
           }
-        })
+        }, context: context)
       }
     }
     else {
