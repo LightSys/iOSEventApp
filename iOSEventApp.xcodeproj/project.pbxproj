@@ -101,6 +101,7 @@
 		F1AF66712053292300B8820D /* ContactTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ContactTableViewCell.swift; sourceTree = "<group>"; };
 		F1AF66732053433B00B8820D /* NotificationTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NotificationTableViewCell.swift; sourceTree = "<group>"; };
 		F1DB720A20A6655C00B30C54 /* iOSEventAppV2.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iOSEventAppV2.xcdatamodel; sourceTree = "<group>"; };
+		F1EE2DC422453D88006E9A1A /* iOSEventAppV3.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = iOSEventAppV3.xcdatamodel; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -718,10 +719,11 @@
 		F149D6CE204DCE2F000DA81A /* iOSEventApp.xcdatamodeld */ = {
 			isa = XCVersionGroup;
 			children = (
+				F1EE2DC422453D88006E9A1A /* iOSEventAppV3.xcdatamodel */,
 				F1DB720A20A6655C00B30C54 /* iOSEventAppV2.xcdatamodel */,
 				F149D6CF204DCE2F000DA81A /* iOSEventApp.xcdatamodel */,
 			);
-			currentVersion = F1DB720A20A6655C00B30C54 /* iOSEventAppV2.xcdatamodel */;
+			currentVersion = F1EE2DC422453D88006E9A1A /* iOSEventAppV3.xcdatamodel */;
 			path = iOSEventApp.xcdatamodeld;
 			sourceTree = "<group>";
 			versionGroupType = wrapper.xcdatamodel;

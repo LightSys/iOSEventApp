@@ -17,7 +17,11 @@ protocol TakesArrayData: AnyObject {
   var dataArray: [Any]? { get set }
 }
 
-/// A workaround to allow sorting of data without having to do a separate if else for every data type.
+/**
+ A workaround to allow sorting of data without having to do a separate if else for every data type.
+ 
+ It is important to sort for consistency across devices - although sometimes the order needs to be kept the same as in the JSON (e.g. prayer partners), which can be handled by passing the indices as strings.
+ */
 protocol IsComparable {
   var compareString: String? { get }
 }
@@ -168,7 +172,8 @@ class MainContainerViewController: UIViewController {
       }
 
       if let takesArrayData = vc as? TakesArrayData {
-        if let sortable = data as? [IsComparable] { // All objects in the array are the same type
+        // Sort the data if possible - it is simpler to sort here and not in each individual sidebar view controller.
+        if let sortable = data as? [IsComparable] {
           takesArrayData.dataArray = sortable.sorted(by: { (obj1, obj2) -> Bool in
             guard let str1 = obj1.compareString, let str2 = obj2.compareString else {
               return false

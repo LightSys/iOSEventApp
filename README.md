@@ -39,7 +39,7 @@ As the app is still in development and there are a lot of small items on this li
 ### Important
 
 - [ ] Update as needed to ensure compatibility with the new web app
-- [ ] Fix the core data crash (results occasionally from the "Refresh event data now" button in settings) **--Claimed**
+- [ ] Fix the core data crash (results occasionally from the "Refresh event data now" button in settings). @nathanielbscout took a look at this but couldn't reliably reproduce it - it is not fixed.
 - [ ] Thoroughly test error display in different (re)load scenarios
 - [ ] Ask server if there are new notifications past a certain date / fetch new notifications after a certain date (would likely require server changes)
 - [ ] About screen. It is hooked up but has no meaningful content.
@@ -75,8 +75,8 @@ As the app is still in development and there are a lot of small items on this li
 - [ ] Create an app widget (to give directions without being in the app; be cognizant of different map apps)
 - [ ] Alternate event app text (in place of logo when it is missing, like in the android app)
 - [ ] Swipe from edge of screen to open menu
-- [ ] Improve managed object context usage (the data controller appears to violate Apple documentation's concurrency section by passing contexts between threads) **--Claimed**
-- [ ] Make sure prayer partner groups have the same numbers as in the android app **--Claimed**
-- [ ] Add some kind of order key to objects received in an array (not a dictionary) and update sorting to use that. **--Claimed**
+- [ ] Improve managed object context usage (the data controller appears to violate Apple documentation's concurrency section by passing contexts between threads). @nathanielbscout took a look at this, but found that it only happens in a couple of places. It may cause some trouble, but there are not any clear issues with it.
+- [x] Make sure prayer partner groups have the same numbers as in the android app.
+- [x] Add some kind of order key to objects received in an array (not a dictionary) and update sorting to use that.
 - [ ] Start refresh timer when opening the app to go off when it would have gone off, if the timer did not fire when the app was opened.
 - [ ] Fix white bar above sidebar menu (very noticeable in app switcher)
