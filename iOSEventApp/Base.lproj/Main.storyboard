@@ -777,7 +777,14 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <viewLayoutGuide key="safeArea" id="z0R-se-1XN"/>
                     </view>
-                    <navigationItem key="navigationItem" id="EMW-sS-9iy"/>
+                    <navigationItem key="navigationItem" id="EMW-sS-9iy">
+                        <barButtonItem key="leftBarButtonItem" title="Back" id="HPl-nB-Yxz">
+                            <connections>
+                                <action selector="menuButtonPressed:" destination="ozD-MV-NIX" id="q4x-o9-SPT"/>
+                                <segue destination="ED7-5z-P1d" kind="show" id="62G-VX-VdA"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
                     <connections>
                         <segue destination="ED7-5z-P1d" kind="show" identifier="PresentMainContainer" id="hS5-6P-MeK"/>
                     </connections>
@@ -1327,4 +1334,7 @@ Person 3</string>
         <image name="ic_call_phone" width="18" height="18"/>
         <image name="ic_car" width="18" height="16"/>
     </resources>
+    <inferredMetricsTieBreakers>
+        <segue reference="hS5-6P-MeK"/>
+    </inferredMetricsTieBreakers>
 </document>
