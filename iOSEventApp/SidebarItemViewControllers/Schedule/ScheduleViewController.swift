@@ -61,9 +61,11 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
       newVC.scheduleItems = (Array(day.items!) as? [ScheduleItem])?.sorted()
     }
     
-    let weekDate = day.date as! String
+    let weekDate = day.date!
     let dayOfWeek = getDayOfWeek(weekDate)
-    newVC.dayLabelText = dayOfWeek + " " + weekDate
+    let formattedWeekDate = formatDate(weekDate)
+    newVC.dayLabelText = dayOfWeek + " " + formattedWeekDate
+    newVC.dayLabelDate = day.date!
     viewControllerDict[dayName] = newVC
     newVC.view.frame = view.frame
     return newVC
@@ -71,10 +73,8 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
   
   func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
     if let dayVC = viewController as? ScheduleDayViewController {
-//      let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabel.text!)!
-      let dayVC_DateString = dayVC.dayLabel.text as! String
-      let dayVC_Date = dayVC_DateString.components(separatedBy: " ")[1]
-      let vcIndex = scheduleLabelTexts!.index(of: dayVC_Date) as! Int
+
+      let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabelDate)!
       
       if 0 < vcIndex {
         let newIndex = vcIndex-1
@@ -94,10 +94,8 @@ extension ScheduleViewController: UIPageViewControllerDataSource {
   func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
     if let dayVC = viewController as? ScheduleDayViewController {
       
-      let dayVC_DateString = dayVC.dayLabel.text as! String
-      let dayVC_Date = dayVC_DateString.components(separatedBy: " ")[1]
-      let vcIndex = scheduleLabelTexts!.index(of: dayVC_Date) as! Int
-      //      let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabel.text!)!
+//      let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabelDate) as! Int
+      let vcIndex = scheduleLabelTexts!.index(of: dayVC.dayLabelDate)!
       
       if vcIndex < scheduleDays!.count-1 {
         let newIndex = vcIndex+1
@@ -132,5 +130,44 @@ func getDayOfWeek(_ today:String) -> String {
               6: "Friday",
               7: "Saturday"]
   
-  return mappings[weekDay] as! String
+  return mappings[weekDay]!
+}
+
+func formatDate(_ date: String) -> String {
+  
+  // mapping month numbers to month names
+  let months = [01: "January",
+                02: "February",
+                03: "March",
+                04: "April",
+                05: "May",
+                06: "June",
+                07: "July",
+                08: "August",
+                09: "September",
+                10: "October",
+                11: "November",
+                12: "December"] as [Int: String]
+  
+  // splitting up the date string into components
+  let dateSegments = date.components(separatedBy: "/")
+  let mm: Int = (dateSegments[0] as NSString).integerValue
+  let dd: Int = (dateSegments[1] as NSString).integerValue
+  let yyyy = dateSegments[2]
+  
+  // determining the proper superscript to add to the day
+  var superscript: String;
+  switch dd {
+  case 1:
+    superscript = "st"
+  case 2:
+    superscript = "nd"
+  case 3:
+    superscript = "rd"
+  default:
+    superscript = "th"
+  }
+  
+  // recombining the datestring back together
+  return months[mm]! + " " + String(dd) + superscript + " " + yyyy
 }

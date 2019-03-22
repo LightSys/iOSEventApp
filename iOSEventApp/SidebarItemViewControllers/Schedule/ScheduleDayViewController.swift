@@ -18,6 +18,7 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
   @IBOutlet weak var tableView: UITableView!
   @IBOutlet weak var dayLabel: UILabel!
   var dayLabelText: String?
+  var dayLabelDate: String = ""
   var scheduleItems: [ScheduleItem]?
   var contactsByName = [String: Contact]()
   
