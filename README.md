@@ -6,7 +6,7 @@ Provide attendees at events / conferences with information about the event, diss
 
 ## Installing the App
 
-This code can be used with a personal apple developer account. In Xcode modify the team and bundle identifier, then install.
+This code can be used with a personal apple developer account. In Xcode modify the team and bundle identifier, then install. NOTE: this WILL change files in gitHub. So, if you work with multiple developer accounts, you may end up frequently resetting your environment's bundle id and team until a lightSys team is made.
 
 ## Event Data
 
@@ -33,8 +33,8 @@ As the app is still in development and there are a lot of small items on this li
 
 ### Important
 
-Update as needed to ensure compatibility with the new web app (Complete as of 3/21/19)
-- [ ] Schedule Day: Switch from reading UI to reading local JSON copy (see compiler warnings for trouble spots) --LS88 Task
+Update as needed to ensure compatibility with the new web app (Complete as of 3/22/19)
+- [ ] FIX version number in version_num development branch (currently debugging). **--Claimed by LS88--*
 - [ ] Fix the core data crash (results occasionally from the "Refresh event data now" button in settings) **--Claimed--**
 - [ ] Thoroughly test error display in different (re)load scenarios
 - [ ] Check and ensure proper handling of version number from JSON. **--Claied--**
