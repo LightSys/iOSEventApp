@@ -234,7 +234,7 @@ class DataController: NSObject {
 
     // Get this now because it will be updated before the callback if data is loaded successfully
     let lastRefreshDate = UserDefaults.standard.object(forKey: "notificationsLastUpdatedAt") as! Date
-
+    
     // This callback is executed after loading data
     let loadedNotificationsCallback: ((_: Bool, _: [DataLoadingError]?, _: [Notification]) -> Void) = { (success, errors, notifications) in
       let dateFormatter = DateFormatter()
@@ -677,8 +677,11 @@ extension DataController {
     let infoPageEntityName = "InformationPage"
     let infoSectionEntityName = "InformationPageSection"
     // Delete all even in the case of deleting a sidebar where order == i (to clean up an interrupted data load [likely save] that resulted in duplicate entries)
-    for oldSidebar in fetchAllObjects(onContext: context, forName: sidebarAppearanceEntityName, withPredicate: sbPredicate) ?? [] {
-      for oldInfoPage in fetchAllObjects(onContext: context, forName: infoPageEntityName, withPredicate: NSPredicate(format: "infoNav == %@", oldSidebar)) ?? [] {
+    //refactored some by Littlesnowman88 to reduce the number of calls to "fetchAllObjects(...)".
+    let oldSidebars = fetchAllObjects(onContext: context, forName: sidebarAppearanceEntityName, withPredicate: sbPredicate) ?? [];
+    for oldSidebar in oldSidebars {
+      let oldInfoPages = fetchAllObjects(onContext: context, forName: infoPageEntityName, withPredicate: NSPredicate(format: "infoNav == %@", oldSidebar)) ?? []
+      for oldInfoPage in oldInfoPages {
         deleteAll(onContext: context, forEntityName: infoSectionEntityName, withPredicate: NSPredicate(format: "infoPage == %@", oldInfoPage))
         context.delete(oldInfoPage)
       }
