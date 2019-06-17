@@ -23,15 +23,16 @@ import UIKit
  The phone and car images have been hidden.
  */
 class ScheduleTableViewCell: UITableViewCell {
-
-  @IBOutlet weak var startLabel: UILabel!
-  @IBOutlet weak var endLabel: UILabel!
-  @IBOutlet weak var phoneImageView: UIImageView!
-  @IBOutlet weak var carImageView: UIImageView!
-  @IBOutlet weak var eventName: UILabel!
-  @IBOutlet weak var eventLocation: UILabel!
-  @IBOutlet weak var contactTextView: UITextView!
-  @IBOutlet weak var contactBottomSpaceConstraint: NSLayoutConstraint!
-  @IBOutlet weak var locationHeightConstraint: NSLayoutConstraint!
-  @IBOutlet weak var contactHeightConstraint: NSLayoutConstraint!
+    
+    @IBOutlet weak var startLabel: UILabel!
+    @IBOutlet weak var endLabel: UILabel!
+    @IBOutlet weak var phoneImageView: UIImageView!
+    @IBOutlet weak var carImageView: UIImageView!
+    @IBOutlet weak var eventName: UILabel!
+    @IBOutlet weak var eventLocation: UILabel!
+    @IBOutlet weak var contactTextView: UITextView!
+    @IBOutlet weak var contactBottomSpaceConstraint: NSLayoutConstraint!
+    @IBOutlet weak var locationHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var contactHeightConstraint: NSLayoutConstraint!
+    @IBOutlet weak var timeBarView: UIView!
 }

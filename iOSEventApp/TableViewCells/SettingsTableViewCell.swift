@@ -10,6 +10,6 @@ import UIKit
 
 /// The cell should only contain a one line label
 class SettingsTableViewCell: UITableViewCell {
-
-  @IBOutlet weak var cellLabel: UILabel!
+    
+    @IBOutlet weak var cellLabel: UILabel!
 }

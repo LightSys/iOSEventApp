@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14460.31" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="14490.70" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" useSafeAreas="YES" colorMatched="YES" initialViewController="BYZ-38-t0r">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
     <dependencies>
         <deployment identifier="iOS"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14460.20"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.IBCocoaTouchPlugin" version="14490.49"/>
         <capability name="Safe area layout guides" minToolsVersion="9.0"/>
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
@@ -202,6 +202,7 @@
                                             <outlet property="locationHeightConstraint" destination="Cel-Nl-u1s" id="blJ-Rb-MIG"/>
                                             <outlet property="phoneImageView" destination="Hb8-7M-ZW1" id="p2p-h4-V4K"/>
                                             <outlet property="startLabel" destination="GhC-GC-6i7" id="Yh6-AO-9mG"/>
+                                            <outlet property="timeBarView" destination="NIY-3Y-fWt" id="YGh-di-N0N"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -1040,6 +1041,7 @@
                                         <connections>
                                             <outlet property="leftTextView" destination="dbO-8G-uaK" id="YKO-e8-vxq"/>
                                             <outlet property="rightTextView" destination="fwh-CV-joa" id="VBB-Ug-4Rg"/>
+                                            <outlet property="titleHeight" destination="gj4-Tn-c3h" id="qme-L8-lDv"/>
                                             <outlet property="titleLabel" destination="oFY-HD-4iN" id="s39-Hx-okT"/>
                                         </connections>
                                     </tableViewCell>

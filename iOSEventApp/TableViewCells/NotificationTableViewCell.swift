@@ -10,8 +10,8 @@ import UIKit
 
 /// Should be set (in NotificationsViewController) to expand with the text view. The title label is one line with autoshrink-enabled.
 class NotificationTableViewCell: UITableViewCell {
-
-  @IBOutlet weak var dateLabel: UILabel!
-  @IBOutlet weak var bodyTextView: UITextView!
-  @IBOutlet weak var titleLabel: UILabel!
+    
+    @IBOutlet weak var dateLabel: UILabel!
+    @IBOutlet weak var bodyTextView: UITextView!
+    @IBOutlet weak var titleLabel: UILabel!
 }
