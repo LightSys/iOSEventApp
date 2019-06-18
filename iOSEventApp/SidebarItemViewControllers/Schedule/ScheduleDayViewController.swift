@@ -8,6 +8,17 @@
 
 import UIKit
 
+extension Theme: Comparable {
+    public static func < (lhs: Theme, rhs: Theme) -> Bool {
+        guard var id1 = lhs.themeValue, var id2 = rhs.themeValue else {
+            return false
+        }
+        id1 = String(id1.split(separator: "#")[1])
+        id2 = String(id2.split(separator: "#")[1])
+        return Int(id1, radix:16)! < Int(id2, radix:16)!
+    }
+}
+
 /**
  Displays schedule items in chronological order in a table view. This class loads
  all contacts for its schedule items so that it can display that in the cells.
@@ -21,12 +32,17 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
     var dayLabelDate: String = ""
     var scheduleItems: [ScheduleItem]?
     var contactsByName = [String: Contact]()
+    var themeSections: [Theme]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         dayLabel.text = dayLabelText
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 175
+        
+        let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
+        let loader = DataController(newPersistentContainer: container)
+        themeSections = loader.fetchAllObjects(onContext: container.viewContext, forName: "Theme") as! [Theme]
         
         if let schedule = scheduleItems {
             let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
@@ -54,16 +70,11 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
         
         let row = indexPath.row
         let scheduleItem = scheduleItems![row]
-//        print("Schedule item: \(scheduleItem)")
-//        print("Number of schedule item rows: \(scheduleItems!.count)")
-//        print("Current row: \(row)")
-//        print("description of scheduleItems: \(scheduleItems?.description)")
-//        print("item day: \(scheduleItem.day!.date!)")
-//        print(indexPath.description)
+        
         cell.startLabel.text = amPMTime(twentyFourHour: scheduleItem.startTime!, minutesOffset: "0")
         cell.endLabel.text = amPMTime(twentyFourHour: scheduleItem.startTime!, minutesOffset: scheduleItem.length!)
         cell.eventName.text = scheduleItem.itemDescription ?? ""
-//        print("ScheduleItem: \(scheduleItem)")
+
         if let location = scheduleItem.location {
             let contact = contactsByName[location]
             var contactInfo = ""
@@ -90,6 +101,21 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
             cell.contactBottomSpaceConstraint.constant = 0
             cell.contactHeightConstraint.constant = 0
             cell.locationHeightConstraint.constant = 0
+        }
+        
+        let themeArray: [Theme]? = themeSections
+        for theme in themeArray! {
+            if (theme.themeName == scheduleItem.category!) {
+                let themeRGB: String = String((theme.themeValue?.split(separator: "#")[0])!)
+                let greenStartIdx = themeRGB.index(themeRGB.startIndex, offsetBy: 2)
+                let blueStartIdx = themeRGB.index(greenStartIdx, offsetBy: 2)
+                let themeRed:Int = Int(String(themeRGB[..<greenStartIdx]), radix:16)!
+                let themeGreen:Int = Int(String(themeRGB[greenStartIdx..<blueStartIdx]), radix:16)!
+                let themeBlue:Int = Int(String(themeRGB[blueStartIdx..<themeRGB.endIndex]), radix:16)!
+                let themeColor = UIColor(red: CGFloat(themeRed/255), green: CGFloat(themeGreen/255), blue: CGFloat(themeBlue/255), alpha: 0.15)
+                cell.backgroundColor = themeColor
+                cell.contactTextView.backgroundColor = themeColor.withAlphaComponent(0)
+            }
         }
         
         return cell

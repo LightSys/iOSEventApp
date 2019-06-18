@@ -681,6 +681,7 @@
                         <outlet property="pickerContainerView" destination="CdZ-qP-9O4" id="A6P-AT-agL"/>
                         <outlet property="ratePickerView" destination="vDa-Vw-Hbm" id="rd0-xU-RIY"/>
                         <outlet property="tableView" destination="31y-eY-ogJ" id="gJk-aG-PnW"/>
+                        <segue destination="TS2-PA-uWY" kind="show" identifier="ChangeEventsSegue" id="68x-EV-P0n"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="s18-n4-TQ5" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -691,6 +692,82 @@
                 </tapGestureRecognizer>
             </objects>
             <point key="canvasLocation" x="3500" y="2508.3958020989508"/>
+        </scene>
+        <!--Change Events View Controller-->
+        <scene sceneID="EaX-2I-NrG">
+            <objects>
+                <viewController id="TS2-PA-uWY" customClass="ChangeEventsViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
+                    <view key="view" contentMode="scaleToFill" id="NTd-25-wSq">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="sAe-q2-vNj">
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="76"/>
+                                <subviews>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Settings" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" minimumFontSize="28" adjustsFontForContentSizeCategory="YES" translatesAutoresizingMaskIntoConstraints="NO" id="aad-s2-gY3">
+                                        <rect key="frame" x="69" y="15" width="235" height="45"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES" heightSizable="YES" flexibleMaxY="YES"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="34"/>
+                                        <color key="textColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <color key="backgroundColor" red="0.2474228144" green="0.32983464000000001" blue="0.4958202243" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="76" id="gUZ-dL-BXV"/>
+                                </constraints>
+                            </view>
+                            <tableView clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="60" estimatedRowHeight="60" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="pLM-5f-vRz">
+                                <rect key="frame" x="0.0" y="76" width="375" height="591"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <prototypes>
+                                    <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" selectionStyle="blue" hidesAccessoryWhenEditing="NO" indentationLevel="1" indentationWidth="0.0" reuseIdentifier="changeEventCell" id="iZP-oq-Ehl" customClass="ChangeEventTableViewCell" customModule="Event_App" customModuleProvider="target">
+                                        <rect key="frame" x="0.0" y="28" width="375" height="60"/>
+                                        <autoresizingMask key="autoresizingMask"/>
+                                        <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="iZP-oq-Ehl" id="xZe-Zd-ASK">
+                                            <rect key="frame" x="0.0" y="0.0" width="375" height="59.5"/>
+                                            <autoresizingMask key="autoresizingMask"/>
+                                            <subviews>
+                                                <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Scan new QR code" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="6gg-EM-VuX">
+                                                    <rect key="frame" x="16" y="9" width="344" height="41"/>
+                                                    <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                    <fontDescription key="fontDescription" type="system" pointSize="24"/>
+                                                    <color key="textColor" red="0.2470588235" green="0.3294117647" blue="0.4941176471" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                                    <nil key="highlightedColor"/>
+                                                </label>
+                                            </subviews>
+                                        </tableViewCellContentView>
+                                        <connections>
+                                            <outlet property="cellLabel" destination="6gg-EM-VuX" id="b1u-O3-hRV"/>
+                                        </connections>
+                                    </tableViewCell>
+                                </prototypes>
+                                <sections/>
+                                <connections>
+                                    <outlet property="dataSource" destination="TS2-PA-uWY" id="o2Q-AR-0gu"/>
+                                    <outlet property="delegate" destination="TS2-PA-uWY" id="OU4-HE-q1Y"/>
+                                </connections>
+                            </tableView>
+                        </subviews>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="pLM-5f-vRz" firstAttribute="top" secondItem="sAe-q2-vNj" secondAttribute="bottom" id="Emv-oZ-zm0"/>
+                            <constraint firstItem="sAe-q2-vNj" firstAttribute="top" secondItem="NTd-25-wSq" secondAttribute="top" id="GaP-8n-2gc"/>
+                            <constraint firstItem="pLM-5f-vRz" firstAttribute="bottom" secondItem="j3b-Fn-T1X" secondAttribute="bottom" id="bZI-5Z-jWr"/>
+                            <constraint firstItem="sAe-q2-vNj" firstAttribute="leading" secondItem="j3b-Fn-T1X" secondAttribute="leading" id="dFA-MV-2Jd"/>
+                            <constraint firstItem="pLM-5f-vRz" firstAttribute="trailing" secondItem="j3b-Fn-T1X" secondAttribute="trailing" id="jKc-Mz-tNy"/>
+                            <constraint firstItem="pLM-5f-vRz" firstAttribute="leading" secondItem="j3b-Fn-T1X" secondAttribute="leading" id="pXt-jl-8Mp"/>
+                            <constraint firstItem="sAe-q2-vNj" firstAttribute="trailing" secondItem="j3b-Fn-T1X" secondAttribute="trailing" id="wqs-Dv-vnl"/>
+                        </constraints>
+                        <viewLayoutGuide key="safeArea" id="j3b-Fn-T1X"/>
+                    </view>
+                    <connections>
+                        <outlet property="tableView" destination="pLM-5f-vRz" id="f6v-YY-2DN"/>
+                    </connections>
+                </viewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="mp0-sa-OKz" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="3501.5999999999999" y="3225.3373313343332"/>
         </scene>
         <!--Schedule Container View Controller-->
         <scene sceneID="9wz-By-eQY">

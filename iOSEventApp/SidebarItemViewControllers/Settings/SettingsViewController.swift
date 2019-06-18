@@ -72,7 +72,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return 3
+        return 4
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -92,6 +92,8 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             else {
                 labelText = "Automatic refresh disabled"
             }
+        case 3:
+            labelText = "Change or delete events"
         default:
             labelText = ""
         }
@@ -138,6 +140,8 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
             UIView.animate(withDuration: animationTime) {
                 self.pickerContainerView.alpha = 1
             }
+        case 3:
+            [self .performSegue(withIdentifier: "ChangeEventsSegue", sender: self)]
         default:
             print("default case") // Shouldn't happen if only 3 cells
         }

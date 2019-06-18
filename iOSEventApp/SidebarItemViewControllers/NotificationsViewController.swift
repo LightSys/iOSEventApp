@@ -65,6 +65,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
             // Get most recent event
             cell.titleLabel.text = "Most Recently"
             
+            
         } else {
             // Get upcoming event
             cell.titleLabel.text = "Upcoming"

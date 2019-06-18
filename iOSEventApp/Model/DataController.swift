@@ -113,6 +113,7 @@ class DataController: NSObject {
                     return
                 }
                 jsonDict = json
+//                print("JSON dictionary is: \(jsonDict)")
             }
             catch {
                 completion(false, [.unableToSerializeJSON], [])
@@ -580,7 +581,6 @@ extension DataController {
         return replaceOldDataWithNew(onContext: context, errors: errors, alertModelName: alertModelName, entityName: contactPageEntityName, newObjectDicts: contactPagesToCreate, sidebarKVPairs: sidebarKVPairs)
     }
     
-    /// Themes are not currently used in the app
     func generateThemeModel(onContext context: NSManagedObjectContext, from themes: Any?) -> [DataLoadingError]? {
         let alertModelName = "Themes"
         guard themes == nil || themes is [[String: Any]] else {
@@ -593,14 +593,14 @@ extension DataController {
         
         let themeDictArray = themes as! [[String: Any]]
         var errors = [DataLoadingError]()
-        var themesToCreate = [[String: Any]]()
+        var themesToCreate = [[String:Any]]()
         
         for theme in themeDictArray {
             guard let themeName = theme.keys.first, let themeValue = theme.values.first else {
                 errors.append(.partiallyMalformed(MalformedDataInformation(objectName: "Theme", propertyName: theme.keys.first, missingProperty: nil)))
                 continue
             }
-            themesToCreate.append(["themeName": themeName, "themeValue": themeValue])
+            themesToCreate.append(["themeName": themeName, "themeValue": "\(themeValue)"])
         }
         
         guard errors.count == 0 || themesToCreate.count > 0 else {
@@ -609,10 +609,10 @@ extension DataController {
         }
         
         for theme in themesToCreate {
-            _ = createObject(onContext: context, entityName: "Theme", with: theme)
+            let _ = createObject(onContext: context, entityName: "Theme", with: theme)
         }
         
-        return (errors.count > 0) ? errors : nil
+        return replaceOldDataWithNew(onContext: context, errors: errors, alertModelName: alertModelName, entityName: "Theme", newObjectDicts: themesToCreate, sidebarKVPairs: nil)
     }
     
     /// This method does not call replaceOldDataWithNew to end, as it must delete multiple sidebars, multiple information pages, and many info page sections.

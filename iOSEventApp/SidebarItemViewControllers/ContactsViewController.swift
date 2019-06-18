@@ -50,15 +50,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
                 headerLabel.text = navName.nav
             }
         }
-        print("Content: " + contactPageSections![1].content!)
-        print("Header: " + contactPageSections![1].header!)
-        print("Id: " + contactPageSections![1].id!)
-        print("Key: " + contactPageSections![1].key!)
-        print(contactPageSections?.count ?? 0)
-        //    print("Content: " + contactPageSections![2].content!)
-        //    print("Header: " + contactPageSections![2].header!)
-        //    print("Id: " + contactPageSections![2].id!)
-        //    print("Key: " + contactPageSections![2].key!)
+        print("ContactPageSections: \(contactPageSections)")
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

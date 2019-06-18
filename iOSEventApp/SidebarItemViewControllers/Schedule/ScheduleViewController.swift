@@ -14,6 +14,8 @@ extension ScheduleItem: Comparable {
     }
 }
 
+
+
 /**
  A UIPageViewController! This is its own dataSource, so it instantiates schedule days with sorted schedule items.
  Once a view controller has been created, while the user is on the schedule, that day is stored in memory for reuse.
@@ -60,6 +62,7 @@ class ScheduleViewController: UIPageViewController {
         let today: String =  monthString + "/" + dayString + "/" + String(year)
         
         for index in 0..<scheduleDays!.count {
+            // Start screen on today's events if there are events today
             if scheduleDays?[index].date! == today {
                 if let day = scheduleDays?[index] {
                     let dayLabel = scheduleLabelTexts![index]
@@ -102,10 +105,6 @@ class ScheduleViewController: UIPageViewController {
             }
         }
     }
-}
-
-extension ScheduleViewController: UIPageViewControllerDelegate {
-    
 }
 
 extension ScheduleViewController: UIPageViewControllerDataSource {
