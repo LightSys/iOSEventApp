@@ -165,6 +165,13 @@ AVCaptureMetadataOutputObjectsDelegate {
                 UserDefaults.standard.removeObject(forKey: "notificationLoadedInBackground")
                 UserDefaults.standard.removeObject(forKey: "refreshedDataInBackground")
                 
+                if var savedURLs = UserDefaults.standard.dictionary(forKey: "savedURLs") {
+                    savedURLs["new"] = code
+                    UserDefaults.standard.set(savedURLs, forKey: "savedURLs")
+                } else {
+                    UserDefaults.standard.set(["new": code], forKey: "savedURLs")
+                }
+                
                 self.loader.deleteAllObjects(onContext: context)
                 
                 self.loader.loadDataFromURL(url, completion: { (success, errors, _) in

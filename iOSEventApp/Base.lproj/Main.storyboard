@@ -13,7 +13,7 @@
         <!--Root View Controller-->
         <scene sceneID="tne-QT-ifu">
             <objects>
-                <viewController id="BYZ-38-t0r" customClass="RootViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="rootController" id="BYZ-38-t0r" customClass="RootViewController" customModule="Event_App" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="8bC-Xf-vdC">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
@@ -831,7 +831,7 @@
         <!--Navigation Controller-->
         <scene sceneID="Jq3-qd-Wrs">
             <objects>
-                <navigationController id="WWl-Mu-AjF" sceneMemberID="viewController">
+                <navigationController storyboardIdentifier="navigationController" id="WWl-Mu-AjF" sceneMemberID="viewController">
                     <modalPageSheetSimulatedSizeMetrics key="simulatedDestinationMetrics"/>
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" translucent="NO" id="Wmp-KW-287">
                         <rect key="frame" x="0.0" y="20" width="375" height="44"/>
@@ -1421,6 +1421,6 @@ Person 3</string>
         <image name="ic_car" width="18" height="16"/>
     </resources>
     <inferredMetricsTieBreakers>
-        <segue reference="hS5-6P-MeK"/>
+        <segue reference="62G-VX-VdA"/>
     </inferredMetricsTieBreakers>
 </document>

@@ -14,7 +14,6 @@ import UIKit
 class WelcomeViewController: UIViewController {
     
     @IBAction func tappedScan(_ sender: Any) {
-        print("Test message")
         navigationController?.popViewController(animated: true)
     }
 }

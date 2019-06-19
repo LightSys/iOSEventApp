@@ -137,6 +137,12 @@ class DataController: NSObject {
                 if let general = self.fetchAllObjects(onContext: context, forName: "General")?.first as? General, general.refresh != 0 {
                     UserDefaults.standard.set(general.refresh, forKey: "defaultRefreshRateMinutes")
                     UserDefaults.standard.set(general.refresh_expire, forKey: "refreshExpireString")
+                    
+                    var URLDict: [String:Any] = UserDefaults.standard.dictionary(forKey: "savedURLs")!
+                    URLDict.updateValue(URLDict["new"]!, forKey: general.event_name!)
+                    URLDict.removeValue(forKey: "new")
+                    UserDefaults.standard.set(URLDict, forKey: "savedURLs")
+                    UserDefaults.standard.set(general.event_name, forKey: "currentEvent")
                 }
                 
                 var errors = dataLoadingErrors.compactMap({ $0 }).joined().map({ $0 }) as [DataLoadingError]

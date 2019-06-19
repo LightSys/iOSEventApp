@@ -48,7 +48,11 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         // Add 2 rows for upcoming/recent events
-        return (notificationArray?.count ?? 0) + 2
+        if let _ = UserDefaults.standard.string(forKey: "currentEvent") {
+            return (notificationArray?.count ?? 0) + 2
+        } else {
+            return 0
+        }
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {

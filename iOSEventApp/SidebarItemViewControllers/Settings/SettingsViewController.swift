@@ -43,6 +43,7 @@ class SettingsViewController: UIViewController {
             }
         }
         
+        
         var chosenRate = UserDefaults.standard.integer(forKey: "chosenRefreshRateMinutes")
         if chosenRate == 0 {
             chosenRate = defaultRate
