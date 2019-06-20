@@ -164,6 +164,7 @@ AVCaptureMetadataOutputObjectsDelegate {
                 UserDefaults.standard.removeObject(forKey: "notificationsLastUpdatedAt")
                 UserDefaults.standard.removeObject(forKey: "notificationLoadedInBackground")
                 UserDefaults.standard.removeObject(forKey: "refreshedDataInBackground")
+                UserDefaults.standard.removeObject(forKey: "currentEvent")
                 
                 if var savedURLs = UserDefaults.standard.dictionary(forKey: "savedURLs") {
                     savedURLs["new"] = code

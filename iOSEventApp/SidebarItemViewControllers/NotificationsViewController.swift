@@ -71,7 +71,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
             cell.titleLabel.text = notificationArray?[indexPath.row - 2].title
             cell.bodyTextView.text = notificationArray?[indexPath.row - 2].body
             let dateString : String = (notificationArray?[indexPath.row - 2].date) ?? ""
-//            print("DateString: \(dateString)")
+            print("DateString: \(dateString)")
             cell.dateLabel.text = String(dateString[..<dateString.index(dateString.startIndex, offsetBy: 10)])
             
         } else if indexPath.row == 1 {
