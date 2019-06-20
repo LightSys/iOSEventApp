@@ -42,7 +42,6 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
         let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
         let loader = DataController(newPersistentContainer: container)
         scheduleItems = loader.fetchAllObjects(onContext: container.viewContext, forName: "ScheduleItem") as? [ScheduleItem]
-        print("Date format: \(scheduleItems![0].day?.date)")
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -71,7 +70,11 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
             cell.titleLabel.text = notificationArray?[indexPath.row - 2].title
             cell.bodyTextView.text = notificationArray?[indexPath.row - 2].body
             let dateString : String = (notificationArray?[indexPath.row - 2].date) ?? ""
-            print("DateString: \(dateString)")
+            guard dateString.count > 10 else {
+                print("date String too short! \(dateString)")
+                cell.dateLabel.text = dateString
+                return cell
+            }
             cell.dateLabel.text = String(dateString[..<dateString.index(dateString.startIndex, offsetBy: 10)])
             
         } else if indexPath.row == 1 {
@@ -223,7 +226,9 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
         if time.count == 4 {
             if Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! < 12 {
             return "\(time[..<time.index(time.startIndex, offsetBy: 2)]):\(time[time.index(time.startIndex, offsetBy: 2)...]) AM"
-            } else {
+            } else if Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! == 24 {
+                return "12:\(time[time.index(time.startIndex, offsetBy: 2)...]) AM"
+            }else {
                 let afternoonTime = Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! - 12
                 return "\(afternoonTime):\(time[time.index(time.startIndex, offsetBy: 2)...]) PM"
             }

@@ -66,7 +66,10 @@ class HousingViewController: UIViewController, UITableViewDataSource, UITableVie
             if (indexPath.row != 0 && driver == housingUnitArray[indexPath.row - 1].driver) {
                 // Hide Driver cell if the driver for this location is the same as the previous location
                 cell.titleHeight.constant = 0
-            } else {
+            } else if driver == "" {
+                // Hide Driver cell if the driver for this location if the driver field is blank
+                cell.titleHeight.constant = 0
+            }else {
                 cell.titleLabel.text = "Driver: " + driver
             }
         }

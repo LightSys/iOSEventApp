@@ -126,11 +126,11 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
                     if (self.textArray[indexPath.row] == current) {
                         self.deleteData()
                         // Send user to welcome screen
+                        UIApplication.shared.keyWindow?.rootViewController = self.storyboard!.instantiateViewController(withIdentifier: "rootController")
                     }
                 }
                 self.textArray.remove(at: indexPath.row)
                 
-                UIApplication.shared.keyWindow?.rootViewController = self.storyboard!.instantiateViewController(withIdentifier: "rootController")
             }
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
                 UIAlertAction in
