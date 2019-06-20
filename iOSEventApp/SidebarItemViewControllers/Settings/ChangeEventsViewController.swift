@@ -26,6 +26,11 @@ class ChangeEventsViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
         view.addSubview(activityIndicator)
         self.tableView.allowsMultipleSelectionDuringEditing = false
+        // "new" blank item sometimes sneaking into savedURLs dictionary
+        if URLArray!.keys.contains("new") {
+            URLArray!["new"] = nil
+            UserDefaults.standard.set(URLArray, forKey: "savedURLs")
+        }
     }
 }
 
@@ -66,12 +71,13 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
         let cell = tableView.dequeueReusableCell(withIdentifier: "changeEventCell", for: indexPath) as! ChangeEventTableViewCell
         
         // If user taps on cell with data currently loaded, do nothing
-        if cell.cellLabel.text == UserDefaults.standard.string(forKey: "currentEvent") {
+        if self.textArray[indexPath.row] == UserDefaults.standard.string(forKey: "currentEvent") {
+            tableView.deselectRow(at: indexPath, animated: true)
             return
         }
         
         // Create the alert controller to confirm event loading
-        let alertController = UIAlertController(title: "Load saved event?", message: "Do want to load \(self.textArray[indexPath.row])?", preferredStyle: .alert)
+        let alertController = UIAlertController(title: "Load saved event?", message: "Do want to load \(self.textArray[indexPath.row])? (Check the menu after loading for event)", preferredStyle: .alert)
         
         // Create the actions
         let okAction = UIAlertAction(title: "Load", style: UIAlertAction.Style.default) {
@@ -79,9 +85,11 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
             
             // Load information from event/cell selected
             self.deleteData()
-            let url = self.URLArray![cell.cellLabel.text!]!
+            let url = self.URLArray![self.textArray[indexPath.row]]!
             self.loadData("\(url)")
-            
+
+            // rootController sends to welcome page, navigationController sends to QR scanning, mainContainer sends to blankish notification page, notifications sends to blank notification page, sidebarController sends to broken sidebar page
+            UIApplication.shared.keyWindow?.rootViewController = self.storyboard!.instantiateViewController(withIdentifier: "rootController")
         }
         let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
             UIAlertAction in
@@ -93,9 +101,6 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
         
         // Present the controller
         self.present(alertController, animated: true, completion: nil)
-        
-        
-        
         
         
         // Cells are selectable but shouldn't stay selected
@@ -124,6 +129,8 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
                     }
                 }
                 self.textArray.remove(at: indexPath.row)
+                
+                UIApplication.shared.keyWindow?.rootViewController = self.storyboard!.instantiateViewController(withIdentifier: "rootController")
             }
             let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
                 UIAlertAction in
@@ -159,7 +166,6 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
                 loader.deleteAllObjects(onContext: context)
                 // Refresh sidebar
                 
-                UIApplication.shared.keyWindow?.rootViewController = self.storyboard!.instantiateViewController(withIdentifier: "rootController")
 
                 
                 
@@ -168,7 +174,63 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
         }
     }
     
-    func loadData(_ url : String) {
+    func loadData(_ urlString : String) {
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.performBackgroundTask { (context) in
+            DispatchQueue.main.async {
+                
+                let url: URL = URL(string: urlString)!
+                
+                
+                
+                let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+                loader.loadDataFromURL(url, completion: { (success, errors, _) in
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        
+                        if success == false {
+                            let alertController = UIAlertController(title: "Failed to load data", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+    //                            completion(success)
+                            })
+                            alertController.addAction(okAction)
+                            self.present(alertController, animated: true, completion: nil)
+                        }
+                        else if errors?.count ?? 0 > 0 {
+                            let alertController = UIAlertController(title: "Data loaded with some errors", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+    //                            completion(success)
+                            })
+                            alertController.addAction(okAction)
+                            self.present(alertController, animated: true, completion: nil)
+                        }
+                        else {
+    //                        completion(success)
+                        }
+                    }
+                })
+            
+                let general = loader.fetchAllObjects(onContext: context, forName: "General")?.first as? General
+                UserDefaults.standard.set(general?.event_name, forKey: "currentEvent")
+                UserDefaults.standard.set(url, forKey: "loadedDataURL")
+                UserDefaults.standard.set(url, forKey: "loadedNotificationsURL")
+                UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
+                
+                
+                loader.reloadNotifications { (success, errors, refresh, newNotification) in
+                    DispatchQueue.main.async {
+                        guard success == true else {
+                            let alertController = UIAlertController(title: "Data refresh failed", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                            alertController.addAction(okAction)
+                            self.present(alertController, animated: true, completion: nil)
+                            return
+                        }
+                    }
+                }
+            }
+        
+        }
         
     }
 }
+    

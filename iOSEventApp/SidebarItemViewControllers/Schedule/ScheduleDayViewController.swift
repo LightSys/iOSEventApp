@@ -42,7 +42,7 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
         
         let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
         let loader = DataController(newPersistentContainer: container)
-        themeSections = loader.fetchAllObjects(onContext: container.viewContext, forName: "Theme") as! [Theme]
+        themeSections = loader.fetchAllObjects(onContext: container.viewContext, forName: "Theme") as? [Theme]
         
         if let schedule = scheduleItems {
             let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer

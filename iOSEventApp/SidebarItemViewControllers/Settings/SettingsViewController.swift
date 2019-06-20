@@ -144,7 +144,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         case 3:
             [self .performSegue(withIdentifier: "ChangeEventsSegue", sender: self)]
         default:
-            print("default case") // Shouldn't happen if only 3 cells
+            print("default case") // Shouldn't happen if only 4 cells
         }
         // Cells are selectable but shouldn't stay selected
         tableView.deselectRow(at: indexPath, animated: true)

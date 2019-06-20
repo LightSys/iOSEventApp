@@ -36,7 +36,7 @@ protocol IsComparable {
  but it does own the menu button.
  */
 class MainContainerViewController: UIViewController {
-    let loader = DataController(newPersistentContainer:
+    var loader = DataController(newPersistentContainer:
         (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
     var currentPageInformation: (identifier: String, entityName: String?, informationPageName: String?)?
     var activityIndicator: UIActivityIndicatorView!
@@ -51,6 +51,9 @@ class MainContainerViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        loader = DataController(newPersistentContainer:
+            (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+        
         // By default, one of these is loaded.
         if loader.objectsInDataModel(onContext: loader.persistentContainer.viewContext) {
             loadViewController(identifier: "notifications", entityNameForData: nil, informationPageName: nil)
@@ -59,6 +62,7 @@ class MainContainerViewController: UIViewController {
         else {
             loadViewController(identifier: "welcome", entityNameForData: nil, informationPageName: nil)
         }
+        
         
         activityIndicator = UIActivityIndicatorView(style: .gray)
         activityIndicator.center = view.center

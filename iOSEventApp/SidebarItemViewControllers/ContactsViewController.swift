@@ -50,7 +50,6 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
                 headerLabel.text = navName.nav
             }
         }
-        print("ContactPageSections: \(contactPageSections)")
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -89,7 +88,6 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
             let importantContactArray : Array<String> = importantContacts.components(separatedBy: ":")
             for contact in contactArray! {
                 if (importantContactArray.contains(contact.name!)) {
-                    print(contact.name!)
                     bodyText?.append("\n")
                     if let name = contact.name {
                         bodyText?.append("\n\(name)")

@@ -139,9 +139,11 @@ class DataController: NSObject {
                     UserDefaults.standard.set(general.refresh_expire, forKey: "refreshExpireString")
                     
                     var URLDict: [String:Any] = UserDefaults.standard.dictionary(forKey: "savedURLs")!
-                    URLDict.updateValue(URLDict["new"]!, forKey: general.event_name!)
-                    URLDict.removeValue(forKey: "new")
-                    UserDefaults.standard.set(URLDict, forKey: "savedURLs")
+                    if let _ = URLDict["new"] {
+                        URLDict.updateValue(URLDict["new"]!, forKey: general.event_name!)
+                        URLDict.removeValue(forKey: "new")
+                        UserDefaults.standard.set(URLDict, forKey: "savedURLs")
+                    }
                     UserDefaults.standard.set(general.event_name, forKey: "currentEvent")
                 }
                 
