@@ -47,7 +47,11 @@ class InformationPageViewController: UIViewController, TakesArrayData, UITableVi
         let infoSectionArray = dataArray as! [InformationPageSection]
         
         cell.headerLabel.text = infoSectionArray[indexPath.row].title
-        cell.textView.text = infoSectionArray[indexPath.row].information
+        var infoArray = infoSectionArray[indexPath.row].information?.components(separatedBy: "~")
+        cell.textView.text = infoArray![0]
+        for index in 1..<infoArray!.count {
+            cell.textView.text += "•\(infoArray![index])"
+        }
         
         return cell
     }
