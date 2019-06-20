@@ -123,8 +123,13 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
     
     func amPMTime(twentyFourHour startTime: String, minutesOffset: String) -> String {
         let stringLength = startTime.count
+        var startTimeString = startTime
         
-        guard var numericHours = Int(startTime.prefix(stringLength-2)), var numericMinutes = Int(startTime.suffix(2)), let offset = Int(minutesOffset) else {
+        if startTime == "0" {
+            startTimeString = "0000"
+        }
+        
+        guard var numericHours = Int(startTimeString.prefix(stringLength-2)), var numericMinutes = Int(startTimeString.suffix(2)), let offset = Int(minutesOffset) else {
             return ""
         }
         
