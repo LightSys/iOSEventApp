@@ -110,6 +110,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
         } else {
             // Get upcoming event
             if let nextItem: ScheduleItem = findNextEvent() {
+//                print(nextItem.day?.date)
                 cell.titleLabel.text = "Upcoming"
                 // Format date string
                 let date = Date()
@@ -166,7 +167,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
         result.startTime = "0000"
         // Loop through today's events
         for item in scheduleItems! {
-            if (item.day!.date == today && Int(item.startTime!)! < now && Int(item.startTime!)! > Int(result.startTime!)!) {
+            if (item.day!.date == today && Int(item.startTime!)! <= now && Int(item.startTime!)! > Int(result.startTime!)!) {
                 result = item
             }
         }

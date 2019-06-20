@@ -31,6 +31,7 @@ class InformationPageViewController: UIViewController, TakesArrayData, UITableVi
         headerLabel.text = headerText
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 300
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

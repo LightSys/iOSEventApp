@@ -40,6 +40,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         super.viewDidLoad()
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 225
+        tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         
         //get access to the event json and retrieve the contacts page nav title.
         let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
@@ -88,7 +89,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
             let importantContactArray : Array<String> = importantContacts.components(separatedBy: ":")
             for contact in contactArray! {
                 if (importantContactArray.contains(contact.name!)) {
-                    bodyText?.append("\n")
+//                    bodyText?.append("\n")
                     if let name = contact.name {
                         bodyText?.append("\n\(name)")
                     }
@@ -98,6 +99,7 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
                     if let phone = contact.phone {
                         bodyText?.append("\n\(phone)")
                     }
+                    bodyText?.append("\n")
                 }
             }
             cell.cellBody.text = bodyText

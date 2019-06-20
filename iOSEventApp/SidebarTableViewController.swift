@@ -27,6 +27,7 @@ class SidebarTableViewController: UITableViewController {
         set {
             _variableSidebarItems = newValue
             tableView.reloadData()
+            tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         }
     }
     
@@ -68,7 +69,7 @@ class SidebarTableViewController: UITableViewController {
             
             // Background
             let background = CAGradientLayer()
-            background.colors = [UIColor(red: 111/256.0, green: 148/256.0, blue: 221/256.0, alpha: 1).cgColor, UIColor.blue.cgColor]
+            background.colors = [UIColor(red: 0x60/256.0, green: 0x80/256.0, blue: 0xC0/256.0, alpha: 1).cgColor, UIColor(red: 0x30/256.0, green: 0x40/256.0, blue: 0x60/256.0, alpha: 1).cgColor]
             // Make the gradient horizontal instead of vertical
             background.transform = CATransform3DMakeRotation(CGFloat.pi / 2, 0, 0, 1)
             background.frame = containingView.frame // Must come after the transform
