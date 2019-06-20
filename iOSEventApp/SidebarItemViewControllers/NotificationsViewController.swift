@@ -99,9 +99,8 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
                 if mostRecentItem.location != "null" {
                     cell.bodyTextView.text += " at:\n\(mostRecentItem.location!)"
                 }
+                hasRecentEvent = true
             } else {
-                cell.isHidden = true
-                // Need to collapse cell to 0 height
                 hasRecentEvent = false
             }
             
@@ -130,9 +129,8 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
                 if nextItem.location != "null" {
                     cell.bodyTextView.text += " at:\n\(nextItem.location!)"
                 }
+                hasNextEvent = true
             } else {
-                cell.isHidden = true
-                // Need to collapse cell to 0 height
                 hasNextEvent = false
             }
             
@@ -141,6 +139,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
         
     }
     
+    /// Sets the height for rows to 0 if there is no upcoming or recent event
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
         if indexPath.row == 0 && !hasNextEvent {
             return 0.0
@@ -222,9 +221,14 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
     
     func formatTime(_ time: String) -> String {
         if time.count == 4 {
-            return "\(time[..<time.index(time.startIndex, offsetBy: 2)]):\(time[time.index(time.startIndex, offsetBy: 2)...])"
+            if Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! < 12 {
+            return "\(time[..<time.index(time.startIndex, offsetBy: 2)]):\(time[time.index(time.startIndex, offsetBy: 2)...]) AM"
+            } else {
+                let afternoonTime = Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! - 12
+                return "\(afternoonTime):\(time[time.index(time.startIndex, offsetBy: 2)...]) PM"
+            }
         } else {
-            return "\(time[..<time.index(time.startIndex, offsetBy: 1)]):\(time[time.index(time.startIndex, offsetBy: 1)...])"
+            return "\(time[..<time.index(time.startIndex, offsetBy: 1)]):\(time[time.index(time.startIndex, offsetBy: 1)...]) AM"
         }
         
     }
