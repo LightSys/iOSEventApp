@@ -36,6 +36,7 @@ class SidebarTableViewController: UITableViewController {
     
     weak var menuDelegate: MenuDelegate?
     
+    var themes: [Theme]?
     var _variableSidebarItems = [SidebarAppearance]()
     var variableSidebarItems: [SidebarAppearance] {
         get {
@@ -58,6 +59,7 @@ class SidebarTableViewController: UITableViewController {
     func reloadSidebarItems() {
         let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
         let loader = DataController(newPersistentContainer: container)
+        themes = loader.fetchAllObjects(onContext: container.viewContext, forName: "Theme") as? [Theme]
         let context = container.viewContext
         
         let sidebarItems = (loader.fetchAllObjects(onContext: context, forName: "SidebarAppearance")
@@ -86,7 +88,7 @@ class SidebarTableViewController: UITableViewController {
             
             // Background
             let background = CAGradientLayer()
-            background.colors = [UIColor(red: 0x60/256.0, green: 0x80/256.0, blue: 0xC0/256.0, alpha: 1).cgColor, UIColor(red: 0x30/256.0, green: 0x40/256.0, blue: 0x60/256.0, alpha: 1).cgColor]
+            background.colors = getThemeColors()
             // Make the gradient horizontal instead of vertical
             background.transform = CATransform3DMakeRotation(CGFloat.pi / 2, 0, 0, 1)
             background.frame = containingView.frame // Must come after the transform
@@ -167,6 +169,7 @@ class SidebarTableViewController: UITableViewController {
         }
         else if row == 0 {
             // Only if data isn't loaded
+            cell.sideImageView.image = UIImage(named: "ic_camera")
             cell.label.text = "Welcome"
         }
         else if row == variableSidebarItems.count || row == 1 {
@@ -179,7 +182,38 @@ class SidebarTableViewController: UITableViewController {
             cell.sideImageView.image = UIImage(named: "settingsIcon")
             cell.label.text = "Settings"
         }
+        // set cell color to light theme
+        cell.contentView.backgroundColor = UIColor(cgColor: getThemeColors()[0])
         return cell
+    }
+    
+    func getThemeColors() -> [CGColor] {
+        let themeArray: [Theme]? = themes
+        // set default values
+        var result: [CGColor] = [UIColor(red: 0x60/256.0, green: 0x80/256.0, blue: 0xC0/256.0, alpha: 1).cgColor, UIColor(red: 0x30/256.0, green: 0x40/256.0, blue: 0x60/256.0, alpha: 1).cgColor]
+        for theme in themeArray ?? [] {
+            if (theme.themeName == "themeColor") {
+                let themeRGB: String = String((theme.themeValue?.split(separator: "#")[0])!)
+                let greenStartIdx = themeRGB.index(themeRGB.startIndex, offsetBy: 2)
+                let blueStartIdx = themeRGB.index(greenStartIdx, offsetBy: 2)
+                let themeRed:Int = Int(String(themeRGB[..<greenStartIdx]), radix:16)!
+                let themeGreen:Int = Int(String(themeRGB[greenStartIdx..<blueStartIdx]), radix:16)!
+                let themeBlue:Int = Int(String(themeRGB[blueStartIdx..<themeRGB.endIndex]), radix:16)!
+                let themeColor = UIColor(red: CGFloat(themeRed)/256.0, green: CGFloat(themeGreen)/256.0, blue: CGFloat(themeBlue)/256.0, alpha: 1).cgColor
+                result[0] = themeColor
+            } else if (theme.themeName == "themeDark") {
+                let themeRGB: String = String((theme.themeValue?.split(separator: "#")[0])!)
+                let greenStartIdx = themeRGB.index(themeRGB.startIndex, offsetBy: 2)
+                let blueStartIdx = themeRGB.index(greenStartIdx, offsetBy: 2)
+                let themeRed:Int = Int(String(themeRGB[..<greenStartIdx]), radix:16)!
+                let themeGreen:Int = Int(String(themeRGB[greenStartIdx..<blueStartIdx]), radix:16)!
+                let themeBlue:Int = Int(String(themeRGB[blueStartIdx..<themeRGB.endIndex]), radix:16)!
+                let themeColor = UIColor(red: CGFloat(themeRed)/256.0, green: CGFloat(themeGreen)/256.0, blue: CGFloat(themeBlue)/256.0, alpha: 1).cgColor
+                result[1] = themeColor
+            }
+        }
+        
+        return result
     }
 }
 

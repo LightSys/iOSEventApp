@@ -42,10 +42,6 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         tableView.estimatedRowHeight = 225
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none
         
-        //get access to the event json and retrieve the contacts page nav title.
-        let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-        let loader = DataController(newPersistentContainer: container)
-        let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

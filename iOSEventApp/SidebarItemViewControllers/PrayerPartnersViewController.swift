@@ -32,11 +32,6 @@ class PrayerPartnersViewController: UIViewController, UITableViewDataSource, UIT
     override func viewDidLoad() {
         super.viewDidLoad()
         tableView.tableFooterView = UIView()
-        
-        //get access to the event json and retrieve the prayer partners nav title.
-        let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-        let loader = DataController(newPersistentContainer: container)
-        let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
     }
     
     // MARK: - Table view data source

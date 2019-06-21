@@ -40,7 +40,6 @@ class HousingViewController: UIViewController, UITableViewDataSource, UITableVie
             }
             //after having accessed the event json, retrieve the housing page nav title.
             //get access to the event json and retrieve the schedule page nav title.
-            let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
         }
     }
     

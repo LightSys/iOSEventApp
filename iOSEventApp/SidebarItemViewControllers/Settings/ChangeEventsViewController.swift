@@ -69,7 +69,6 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "changeEventCell", for: indexPath) as! ChangeEventTableViewCell
         
         // If user taps on cell with data currently loaded, do nothing
         if self.textArray[indexPath.row] == UserDefaults.standard.string(forKey: "currentEvent") {

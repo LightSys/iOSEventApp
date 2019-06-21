@@ -44,6 +44,7 @@ class MainContainerViewController: UIViewController {
     @IBOutlet weak var navigationView: UINavigationItem!
     @IBOutlet weak var containerView: UIView!
     weak var delegate: MenuButton?
+    var themes: [Theme]?
     
     @IBAction func menuButtonTapped(_ sender: Any) {
         delegate?.menuButtonTapped()
