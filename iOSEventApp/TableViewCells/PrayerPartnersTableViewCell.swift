@@ -10,7 +10,7 @@ import UIKit
 
 /// A large group number label on the left with a centered vertically infinite line label on the right.
 class PrayerPartnersTableViewCell: UITableViewCell {
-  
-  @IBOutlet weak var partnersLabel: UILabel!
-  @IBOutlet weak var groupNumberLabel: UILabel!
+    
+    @IBOutlet weak var partnersLabel: UILabel!
+    @IBOutlet weak var groupNumberLabel: UILabel!
 }

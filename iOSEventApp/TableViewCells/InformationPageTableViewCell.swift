@@ -10,7 +10,7 @@ import UIKit
 
 /// One header and a large text view. The cell should expand as needed (see `InformationPageViewController`). Each cell corresponds to an information page section.
 class InformationPageTableViewCell: UITableViewCell {
-
-  @IBOutlet weak var headerLabel: UILabel!
-  @IBOutlet weak var textView: UITextView!
+    
+    @IBOutlet weak var headerLabel: UILabel!
+    @IBOutlet weak var textView: UITextView!
 }

@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		123FF7DE22BD44A2005B0FED /* settingsIcon.png in Resources */ = {isa = PBXBuildFile; fileRef = 123FF7DD22BD44A2005B0FED /* settingsIcon.png */; };
+		12AC19D022B96FD50017720F /* ChangeEventsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12AC19CF22B96FD50017720F /* ChangeEventsViewController.swift */; };
+		12AC19D222B975AF0017720F /* ChangeEventTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 12AC19D122B975AF0017720F /* ChangeEventTableViewCell.swift */; };
 		1A875100224457B400A51209 /* AboutPageViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 1A8750FF224457B400A51209 /* AboutPageViewController.swift */; };
 		4DD00E09204E1A6D0000B10B /* SidebarTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */; };
 		4DD00E0F204F5B6D0000B10B /* SidebarTableViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 4DD00E0A204F5B660000B10B /* SidebarTableViewController.swift */; };
@@ -60,6 +63,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		123FF7DD22BD44A2005B0FED /* settingsIcon.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; name = settingsIcon.png; path = iOSEventApp/settingsIcon.png; sourceTree = "<group>"; };
+		12AC19CF22B96FD50017720F /* ChangeEventsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeEventsViewController.swift; sourceTree = "<group>"; };
+		12AC19D122B975AF0017720F /* ChangeEventTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ChangeEventTableViewCell.swift; sourceTree = "<group>"; };
 		1A8750FF224457B400A51209 /* AboutPageViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AboutPageViewController.swift; sourceTree = "<group>"; };
 		1AFCFFCC22414F1A00869A74 /* Event App.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = "Event App.entitlements"; sourceTree = "<group>"; };
 		4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SidebarTableViewCell.swift; sourceTree = "<group>"; };
@@ -128,9 +134,19 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		12AC19CC22B96F3E0017720F /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				F1AF66632052F67300B8820D /* SettingsViewController.swift */,
+				12AC19CF22B96FD50017720F /* ChangeEventsViewController.swift */,
+			);
+			path = Settings;
+			sourceTree = "<group>";
+		};
 		F149D6BB204DCE2F000DA81A = {
 			isa = PBXGroup;
 			children = (
+				123FF7DD22BD44A2005B0FED /* settingsIcon.png */,
 				F149D6C6204DCE2F000DA81A /* iOSEventApp */,
 				F149D6DE204DCE2F000DA81A /* iOSEventAppTests */,
 				F149D6E9204DCE2F000DA81A /* iOSEventAppUITests */,
@@ -198,6 +214,7 @@
 				4DD00E0B204F5B6C0000B10B /* PrayerPartnersTableViewCell.swift */,
 				4DD00E08204E1A6D0000B10B /* SidebarTableViewCell.swift */,
 				F1AF66732053433B00B8820D /* NotificationTableViewCell.swift */,
+				12AC19D122B975AF0017720F /* ChangeEventTableViewCell.swift */,
 			);
 			path = TableViewCells;
 			sourceTree = "<group>";
@@ -205,11 +222,11 @@
 		F1AF666E2053247200B8820D /* SidebarItemViewControllers */ = {
 			isa = PBXGroup;
 			children = (
+				12AC19CC22B96F3E0017720F /* Settings */,
 				F1AF6670205324B600B8820D /* Schedule */,
 				F1AF665F2052F65400B8820D /* ContactsViewController.swift */,
 				F1AF66612052F66A00B8820D /* InformationPageViewController.swift */,
 				F1AF66692052FB7600B8820D /* HousingViewController.swift */,
-				F1AF66632052F67300B8820D /* SettingsViewController.swift */,
 				4DD00E0D204F5B6D0000B10B /* NotificationsViewController.swift */,
 				4DD00E0E204F5B6D0000B10B /* PrayerPartnersViewController.swift */,
 				F1274FCF20D3ECAE00FFE1E4 /* WelcomeViewController.swift */,
@@ -354,6 +371,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				F149D6D5204DCE2F000DA81A /* LaunchScreen.storyboard in Resources */,
+				123FF7DE22BD44A2005B0FED /* settingsIcon.png in Resources */,
 				F149D6D2204DCE2F000DA81A /* Assets.xcassets in Resources */,
 				F149D6CD204DCE2F000DA81A /* Main.storyboard in Resources */,
 			);
@@ -380,6 +398,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				12AC19D222B975AF0017720F /* ChangeEventTableViewCell.swift in Sources */,
 				F1AF666A2052FB7600B8820D /* HousingViewController.swift in Sources */,
 				4DD00E12204F5B6D0000B10B /* NotificationsViewController.swift in Sources */,
 				F156099C20A9C0E700122209 /* RefreshController.swift in Sources */,
@@ -402,6 +421,7 @@
 				F1274FD020D3ECAE00FFE1E4 /* WelcomeViewController.swift in Sources */,
 				F11F455F20E85B73004ECBCE /* UserNotificationController.swift in Sources */,
 				F15E98E220521D2700C088D3 /* ScheduleDayViewController.swift in Sources */,
+				12AC19D022B96FD50017720F /* ChangeEventsViewController.swift in Sources */,
 				4DD00E152051A65F0000B10B /* MainContainerViewController.swift in Sources */,
 				1A875100224457B400A51209 /* AboutPageViewController.swift in Sources */,
 				F149D6C8204DCE2F000DA81A /* AppDelegate.swift in Sources */,
@@ -579,7 +599,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = P38KZSHR4K;
+				DEVELOPMENT_TEAM = YUJ6283SN4;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventAppLS88;
@@ -596,7 +616,7 @@
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "iPhone Developer";
 				CODE_SIGN_STYLE = Automatic;
-				DEVELOPMENT_TEAM = P38KZSHR4K;
+				DEVELOPMENT_TEAM = YUJ6283SN4;
 				INFOPLIST_FILE = iOSEventApp/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = LightSys.iOSEventAppLS88;

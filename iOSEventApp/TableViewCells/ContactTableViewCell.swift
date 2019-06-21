@@ -10,6 +10,6 @@ import UIKit
 
 /// One header and a large text view. The cell should expand as needed (see `ContactsViewController`). Each cell corresponds to a contact page.
 class ContactTableViewCell: UITableViewCell {
-  @IBOutlet weak var cellHeader: UILabel!
-  @IBOutlet weak var cellBody: UITextView!
+    @IBOutlet weak var cellHeader: UILabel!
+    @IBOutlet weak var cellBody: UITextView!
 }
