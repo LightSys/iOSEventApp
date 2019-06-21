@@ -14,7 +14,7 @@ import UIKit
  */
 class ScheduleContainerViewController: UIViewController, TakesArrayData {
     
-    @IBOutlet weak var headerLabel: UILabel!
+//    @IBOutlet weak var headerLabel: UILabel!
     var dataArray: [Any]?
     
     override func viewDidLoad() {
@@ -23,11 +23,6 @@ class ScheduleContainerViewController: UIViewController, TakesArrayData {
         let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
         let loader = DataController(newPersistentContainer: container)
         let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
-        for navName in navNames {
-            if (navName.category == "Schedule") {
-                headerLabel.text = navName.nav
-            }
-        }
         
         //get access to the schedule days and load them.
         if let scheduleVC = (children.first as? ScheduleViewController), (dataArray?.count ?? 0) > 0 {

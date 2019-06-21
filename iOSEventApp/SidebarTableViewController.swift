@@ -12,6 +12,23 @@ protocol MenuDelegate:AnyObject {
     func switchTo(vcName: String, entityNameForData: String?, informationPageName pageName: String?)
     func swipedToClose()
 }
+
+/// Inserts padding around an Image
+extension UIImage {
+    
+    func addImagePadding(x: CGFloat, y: CGFloat) -> UIImage? {
+        let width: CGFloat = size.width + x
+        let height: CGFloat = size.height + y
+        UIGraphicsBeginImageContextWithOptions(CGSize(width: width, height: height), false, 0)
+        let origin: CGPoint = CGPoint(x: (width - size.width) / 2, y: (height - size.height) / 2)
+        draw(at: origin)
+        let imageWithPadding = UIGraphicsGetImageFromCurrentImageContext()
+        UIGraphicsEndImageContext()
+        
+        return imageWithPadding
+    }
+}
+
 /**
  Loads the SidebarAppearances and tells the RootViewController what view controller to load with what data.
  */
@@ -51,7 +68,7 @@ class SidebarTableViewController: UITableViewController {
         
         if let data = (loader.fetchAllObjects(onContext: context, forName: "General")?.first as? General)?.logo, let imageData = Data(base64Encoded: data) {
             let image = UIImage(data: imageData)
-            let imageView = UIImageView(image: image)
+            let imageView = UIImageView(image: image?.addImagePadding(x: 150, y: 100))
             // Shrink image view's width (and keep aspect ratio)
             let maxWidth = view.frame.size.width
             if imageView.frame.size.width > maxWidth {
@@ -159,7 +176,7 @@ class SidebarTableViewController: UITableViewController {
         }
         else {
             // Settings is last
-            cell.sideImageView.image = nil
+            cell.sideImageView.image = UIImage(named: "settingsIcon")
             cell.label.text = "Settings"
         }
         return cell

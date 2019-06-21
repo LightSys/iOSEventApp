@@ -22,13 +22,13 @@ extension InformationPageSection: IsComparable {
 class InformationPageViewController: UIViewController, TakesArrayData, UITableViewDelegate, UITableViewDataSource {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var headerLabel: UILabel!
+//    @IBOutlet weak var headerLabel: UILabel!
     var headerText: String?
     var dataArray: [Any]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        headerLabel.text = headerText
+//        headerLabel.text = headerText
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 300
         tableView.separatorStyle = UITableViewCell.SeparatorStyle.none

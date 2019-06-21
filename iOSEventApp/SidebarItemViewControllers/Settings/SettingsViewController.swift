@@ -31,6 +31,7 @@ class SettingsViewController: UIViewController {
         activityIndicator.center = view.center
         activityIndicator.hidesWhenStopped = true
         view.addSubview(activityIndicator)
+        tableView.tableFooterView = UIView()
         
         pickerContainerView.alpha = 0 // If set in the storyboard, it is impossible to see the view
         
@@ -94,7 +95,7 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
                 labelText = "Automatic refresh disabled"
             }
         case 3:
-            labelText = "Change or delete events"
+            labelText = "Load/delete events"
         default:
             labelText = ""
         }

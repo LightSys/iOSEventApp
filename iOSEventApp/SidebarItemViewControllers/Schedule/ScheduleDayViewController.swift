@@ -39,6 +39,7 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
         dayLabel.text = dayLabelText
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 175
+        tableView.tableFooterView = UIView()
         
         let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
         let loader = DataController(newPersistentContainer: container)

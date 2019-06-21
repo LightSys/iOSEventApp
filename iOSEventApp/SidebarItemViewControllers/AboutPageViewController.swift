@@ -15,15 +15,14 @@ import UIKit
 class AboutPageViewController: UIViewController {
     
     //MARK: About Page
-    @IBOutlet weak var headerLabel: UILabel!
+//    @IBOutlet weak var headerLabel: UILabel!
     @IBOutlet weak var copyright: UITextView!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         let url = "https://github.com/LightSys/iOSEventApp"
-        let text = "LightSysEvents (iOS App) 1.0\nCopyright © 2018-2019 LightSys Technology Services, Inc. this app was created for the use of distributing event information for ministry events.\n\nThisApp\'s source code is also available under the GPLv3 open-source license at: " + url
+        let text = "\nLightSysEvents (iOS App) 1.0\nCopyright © 2018-2019 LightSys Technology Services, Inc. this app was created for the use of distributing event information for ministry events.\n\nThisApp\'s source code is also available under the GPLv3 open-source license at: " + url
         
-        headerLabel.text = "About"
         setEndHyperLinkText(url: url, textView: copyright, contents: text)
     }
     

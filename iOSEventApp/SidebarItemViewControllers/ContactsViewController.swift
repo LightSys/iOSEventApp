@@ -32,7 +32,7 @@ extension ContactPageSection: Comparable {
 class ContactsViewController: UIViewController, UITableViewDataSource, UITableViewDelegate {
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var headerLabel: UILabel!
+//    @IBOutlet weak var headerLabel: UILabel!
     var contactPageSections: [ContactPageSection]?
     var contactArray: [Contact]?
     
@@ -46,11 +46,6 @@ class ContactsViewController: UIViewController, UITableViewDataSource, UITableVi
         let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
         let loader = DataController(newPersistentContainer: container)
         let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
-        for navName in navNames {
-            if (navName.category == "ContactPage") {
-                headerLabel.text = navName.nav
-            }
-        }
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {

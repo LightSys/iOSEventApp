@@ -27,7 +27,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
     var notificationArray: [Notification]?
     
     @IBOutlet weak var tableView: UITableView!
-    @IBOutlet weak var headerLabel: UILabel!
+//    @IBOutlet weak var headerLabel: UILabel!
     var welcomeMessage: String?
     var scheduleItems: [ScheduleItem]?
     var hasRecentEvent = true
@@ -35,9 +35,10 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        headerLabel.text = welcomeMessage
+//        headerLabel.text = welcomeMessage
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 225
+        tableView.tableFooterView = UIView()
         
         let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
         let loader = DataController(newPersistentContainer: container)

@@ -26,6 +26,7 @@ class ChangeEventsViewController: UIViewController {
         activityIndicator.hidesWhenStopped = true
         view.addSubview(activityIndicator)
         self.tableView.allowsMultipleSelectionDuringEditing = false
+        tableView.tableFooterView = UIView()
         // "new" blank item sometimes sneaking into savedURLs dictionary
         if URLArray!.keys.contains("new") {
             URLArray!["new"] = nil
@@ -87,6 +88,7 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
             self.deleteData()
             let url = self.URLArray![self.textArray[indexPath.row]]!
             self.loadData("\(url)")
+            UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
 
             // rootController sends to welcome page, navigationController sends to QR scanning, mainContainer sends to blankish notification page, notifications sends to blank notification page, sidebarController sends to broken sidebar page
             UIApplication.shared.keyWindow?.rootViewController = self.storyboard!.instantiateViewController(withIdentifier: "rootController")

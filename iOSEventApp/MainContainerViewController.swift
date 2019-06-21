@@ -41,6 +41,7 @@ class MainContainerViewController: UIViewController {
     var currentPageInformation: (identifier: String, entityName: String?, informationPageName: String?)?
     var activityIndicator: UIActivityIndicatorView!
     
+    @IBOutlet weak var navigationView: UINavigationItem!
     @IBOutlet weak var containerView: UIView!
     weak var delegate: MenuButton?
     
@@ -58,9 +59,11 @@ class MainContainerViewController: UIViewController {
         if loader.objectsInDataModel(onContext: loader.persistentContainer.viewContext) {
             loadViewController(identifier: "notifications", entityNameForData: nil, informationPageName: nil)
             DataController.startRefreshTimer(mainContainer: self)
+//            navigationView.title = "Notification"
         }
         else {
             loadViewController(identifier: "welcome", entityNameForData: nil, informationPageName: nil)
+//            navigationView.title = "Welcome!"
         }
         
         
@@ -149,6 +152,7 @@ class MainContainerViewController: UIViewController {
             let contactPageSections = loader.fetchAllObjects(onContext: context, forName: "ContactPageSection") as? [ContactPageSection]
             contactsVC.contactArray = contacts?.sorted()
             contactsVC.contactPageSections = contactPageSections?.sorted()
+            navigationView.title = "Contacts"
         }
         else if let notificationsVC = vc as? NotificationsViewController {
             let notifications = loader.fetchAllObjects(onContext: context, forName: "Notification") as? [Notification]
@@ -156,8 +160,11 @@ class MainContainerViewController: UIViewController {
             let welcomeMessage = general?.first?.welcome_message
             notificationsVC.notificationArray = notifications?.sorted(by: >) // Syntax for newest at top
             notificationsVC.welcomeMessage = welcomeMessage
+            navigationView.title = welcomeMessage
         }
         else if let entityName = entityNameForData, var data = loader.fetchAllObjects(onContext: context, forName: entityName) {
+            // Set navigation title for info screens
+            navigationView.title = pageName
             if pageName != nil {
                 // Special information page logic, because `fetchAllObjects` fetches all information pages, but only one specific one is needed.
                 let infoPage = (data.first(where: { (object) -> Bool in
@@ -184,6 +191,20 @@ class MainContainerViewController: UIViewController {
                     takesArrayData.dataArray = data as [Any]
                 }
             }
+        }
+        // Set Navigation Title
+        if identifier == "schedule" {
+            navigationView.title = "Schedule"
+        } else if identifier == "housing" {
+            navigationView.title = "Housing"
+        } else if identifier == "prayerPartners" {
+            navigationView.title = "Prayer Partners"
+        } else if identifier == "about" {
+            navigationView.title = "About"
+        } else if identifier == "settings" {
+            navigationView.title = "Settings"
+        } else if identifier == "welcome" {
+            navigationView.title = "Welcome"
         }
         addChild(vc)
         containerView.addSubview(vc.view)
