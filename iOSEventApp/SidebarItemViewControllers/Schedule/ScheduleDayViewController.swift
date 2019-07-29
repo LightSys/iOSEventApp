@@ -113,7 +113,7 @@ class ScheduleDayViewController: UIViewController, UITableViewDataSource, UITabl
                 let themeRed:Int = Int(String(themeRGB[..<greenStartIdx]), radix:16)!
                 let themeGreen:Int = Int(String(themeRGB[greenStartIdx..<blueStartIdx]), radix:16)!
                 let themeBlue:Int = Int(String(themeRGB[blueStartIdx..<themeRGB.endIndex]), radix:16)!
-                let themeColor = UIColor(red: CGFloat(themeRed/255), green: CGFloat(themeGreen/255), blue: CGFloat(themeBlue/255), alpha: 0.15)
+                let themeColor = UIColor(red: CGFloat(themeRed)/256.0, green: CGFloat(themeGreen)/256.0, blue: CGFloat(themeBlue)/256.0, alpha: 0.15)
                 cell.backgroundColor = themeColor
                 cell.contactTextView.backgroundColor = themeColor.withAlphaComponent(0)
             }

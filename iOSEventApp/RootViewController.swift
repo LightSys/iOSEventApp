@@ -32,6 +32,10 @@ class RootViewController: UIViewController {
         closeMenu()
     }
     
+    override var preferredStatusBarStyle: UIStatusBarStyle {
+        return .lightContent
+    }
+    
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "embedNavigationController" {
             embeddedNavigationController =
@@ -47,6 +51,7 @@ class RootViewController: UIViewController {
             sidebarViewController.menuDelegate = self
         }
     }
+    
 }
 
 extension RootViewController: MenuButton {

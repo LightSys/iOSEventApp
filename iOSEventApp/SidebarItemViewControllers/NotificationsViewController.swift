@@ -96,7 +96,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
                     cell.dateLabel.text = "Yesterday at \(startTime)"
                 } else {
                     // Shouldn't happen
-                    print("Something went wrong and the most recent item was on \(mostRecentItem.day?.date!)")
+                    print("Something went wrong and the most recent item was on \(String(describing: mostRecentItem.day?.date!))")
                     cell.dateLabel.text = mostRecentItem.day?.date
                 }
                 cell.bodyTextView.text = "\(mostRecentItem.itemDescription!)"
@@ -127,7 +127,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
                     cell.dateLabel.text = "Tomorrow at \(startTime)"
                 } else {
                     // Shouldn't happen
-                    print("Something went wrong and the next item was on \(nextItem.day?.date!)")
+                    print("Something went wrong and the next item was on \(String(describing: nextItem.day?.date!))")
                     cell.dateLabel.text = nextItem.day?.date
                 }
                 cell.bodyTextView.text = "\(nextItem.itemDescription!)"

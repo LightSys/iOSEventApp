@@ -19,10 +19,6 @@ class ScheduleContainerViewController: UIViewController, TakesArrayData {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //get access to the event json and retrieve the schedule page nav title.
-        let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
-        let loader = DataController(newPersistentContainer: container)
-        let navNames = loader.fetchAllObjects(onContext: container.viewContext, forName: "SidebarAppearance") as! [SidebarAppearance]
         
         //get access to the schedule days and load them.
         if let scheduleVC = (children.first as? ScheduleViewController), (dataArray?.count ?? 0) > 0 {
