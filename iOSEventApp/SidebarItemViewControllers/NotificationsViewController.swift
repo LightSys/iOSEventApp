@@ -32,10 +32,10 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
     var scheduleItems: [ScheduleItem]?
     var hasRecentEvent = true
     var hasNextEvent = true
+    var themeSections: [Theme]?
     
     override func viewDidLoad() {
         super.viewDidLoad()
-//        headerLabel.text = welcomeMessage
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 225
         tableView.tableFooterView = UIView()
@@ -43,6 +43,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
         let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer
         let loader = DataController(newPersistentContainer: container)
         scheduleItems = loader.fetchAllObjects(onContext: container.viewContext, forName: "ScheduleItem") as? [ScheduleItem]
+        themeSections = loader.fetchAllObjects(onContext: container.viewContext, forName: "Theme") as? [Theme]
     }
     
     override func viewDidAppear(_ animated: Bool) {
@@ -103,10 +104,29 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
                 if mostRecentItem.location != "null" {
                     cell.bodyTextView.text += " at:\n\(mostRecentItem.location!)"
                 }
+                
+                let themeArray: [Theme]? = themeSections
+                for theme in themeArray! {
+                    if (theme.themeName == mostRecentItem.category!) {
+                        let themeRGB: String = String((theme.themeValue?.split(separator: "#")[0])!)
+                        let greenStartIdx = themeRGB.index(themeRGB.startIndex, offsetBy: 2)
+                        let blueStartIdx = themeRGB.index(greenStartIdx, offsetBy: 2)
+                        let themeRed:Int = Int(String(themeRGB[..<greenStartIdx]), radix:16)!
+                        let themeGreen:Int = Int(String(themeRGB[greenStartIdx..<blueStartIdx]), radix:16)!
+                        let themeBlue:Int = Int(String(themeRGB[blueStartIdx..<themeRGB.endIndex]), radix:16)!
+                        let themeColor = UIColor(red: CGFloat(themeRed)/256.0, green: CGFloat(themeGreen)/256.0, blue: CGFloat(themeBlue)/256.0, alpha: 0.15)
+                        cell.backgroundColor = themeColor
+                        cell.bodyTextView.backgroundColor = themeColor.withAlphaComponent(0)
+                    }
+                }
+                
+                
                 hasRecentEvent = true
             } else {
                 hasRecentEvent = false
             }
+            
+            
             
         } else {
             // Get upcoming event
@@ -134,6 +154,23 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
                 if nextItem.location != "null" {
                     cell.bodyTextView.text += " at:\n\(nextItem.location!)"
                 }
+                
+                let themeArray: [Theme]? = themeSections
+                for theme in themeArray! {
+                    if (theme.themeName == nextItem.category!) {
+                        let themeRGB: String = String((theme.themeValue?.split(separator: "#")[0])!)
+                        let greenStartIdx = themeRGB.index(themeRGB.startIndex, offsetBy: 2)
+                        let blueStartIdx = themeRGB.index(greenStartIdx, offsetBy: 2)
+                        let themeRed:Int = Int(String(themeRGB[..<greenStartIdx]), radix:16)!
+                        let themeGreen:Int = Int(String(themeRGB[greenStartIdx..<blueStartIdx]), radix:16)!
+                        let themeBlue:Int = Int(String(themeRGB[blueStartIdx..<themeRGB.endIndex]), radix:16)!
+                        let themeColor = UIColor(red: CGFloat(themeRed)/256.0, green: CGFloat(themeGreen)/256.0, blue: CGFloat(themeBlue)/256.0, alpha: 0.15)
+                        cell.backgroundColor = themeColor
+                        cell.bodyTextView.backgroundColor = themeColor.withAlphaComponent(0)
+                    }
+                }
+                
+                
                 hasNextEvent = true
             } else {
                 hasNextEvent = false
@@ -204,7 +241,7 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
         // Loop through today's events
         result.startTime = "9999"
         for item in scheduleItems! {
-            if (item.day!.date == today && Int(item.startTime!)! > now && Int(item.startTime!)! < Int(result.startTime!)!) {
+            if (item.day?.date == today && Int(item.startTime ?? "0")! > now && Int(item.startTime ?? "0")! < Int(result.startTime ?? "0")!) {
                 result = item
             }
         }
@@ -228,13 +265,18 @@ class NotificationsViewController: UIViewController, UITableViewDataSource, UITa
         if time.count == 4 {
             if Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! < 12 {
             return "\(time[..<time.index(time.startIndex, offsetBy: 2)]):\(time[time.index(time.startIndex, offsetBy: 2)...]) AM"
-            } else if Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! == 24 {
+            } else if Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! == 12 {
+                return "12:\(time[time.index(time.startIndex, offsetBy: 2)...]) PM"
+            } else if Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! == 24 || Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! == 00 {
                 return "12:\(time[time.index(time.startIndex, offsetBy: 2)...]) AM"
-            }else {
+            } else {
                 let afternoonTime = Int(String(time[..<time.index(time.startIndex, offsetBy: 2)]))! - 12
                 return "\(afternoonTime):\(time[time.index(time.startIndex, offsetBy: 2)...]) PM"
             }
         } else {
+            if Int(String(time[..<time.index(time.startIndex, offsetBy: 1)])) == 0 {
+                return "12:\(time[time.index(time.startIndex, offsetBy: 1)...]) AM"
+            }
             return "\(time[..<time.index(time.startIndex, offsetBy: 1)]):\(time[time.index(time.startIndex, offsetBy: 1)...]) AM"
         }
         

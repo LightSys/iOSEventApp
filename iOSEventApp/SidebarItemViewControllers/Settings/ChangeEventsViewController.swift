@@ -28,9 +28,11 @@ class ChangeEventsViewController: UIViewController {
         self.tableView.allowsMultipleSelectionDuringEditing = false
         tableView.tableFooterView = UIView()
         // "new" blank item sometimes sneaking into savedURLs dictionary
-        if URLArray!.keys.contains("new") {
-            URLArray!["new"] = nil
-            UserDefaults.standard.set(URLArray, forKey: "savedURLs")
+        if let _ = URLArray {
+            if URLArray!.keys.contains("new") {
+                URLArray!["new"] = nil
+                UserDefaults.standard.set(URLArray, forKey: "savedURLs")
+            }
         }
     }
 }
@@ -124,7 +126,9 @@ extension ChangeEventsViewController: UITableViewDataSource, UITableViewDelegate
                 tableView.deleteRows(at: [indexPath], with: UITableView.RowAnimation.automatic)
                 // If event deleted is current event, remove all data and send user to welcome screen
                 if let current = UserDefaults.standard.string(forKey: "currentEvent") {
+                    print("Current cell is: \(self.textArray[indexPath.row])\nCurrent event is: \(current)")
                     if (self.textArray[indexPath.row] == current) {
+                        print("Deleting current event")
                         self.deleteData()
                         // Send user to welcome screen
                         UIApplication.shared.keyWindow?.rootViewController = self.storyboard!.instantiateViewController(withIdentifier: "rootController")

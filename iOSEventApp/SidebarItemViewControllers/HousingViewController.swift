@@ -29,6 +29,7 @@ class HousingViewController: UIViewController, UITableViewDataSource, UITableVie
         super.viewDidLoad()
         tableView.rowHeight = UITableView.automaticDimension
         tableView.estimatedRowHeight = 231
+        tableView.tableFooterView = UIView()
         
         if let housing = dataArray as? [HousingUnit] {
             let container = (UIApplication.shared.delegate as! AppDelegate).persistentContainer

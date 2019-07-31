@@ -96,7 +96,15 @@ class DataController: NSObject {
     ///   - completion: This will be on a background thread. Notifications are forwarded from loadNotifications.
     func loadDataFromURL(_ url: URL, completion: @escaping ((_ success: Bool, _ error: [DataLoadingError]?, _ notifications: [Notification]) -> Void)) {
         
-        let task = URLSession.shared.dataTask(with: url) { (data, response, err) in
+        
+        var urlString = url.absoluteString
+        if urlString.contains("get.php") {
+            var urlSplit = urlString.components(separatedBy: "get.php")
+            urlString = String(urlSplit[0]) + "getevent.php" + String(urlSplit[1])
+            print("new url with getevent.php is: \(urlString)")
+        }
+        let newUrl = URL(string: urlString)!
+        let task = URLSession.shared.dataTask(with: newUrl) { (data, response, err) in
             guard err == nil else {
                 completion(false, [.unableToRetrieveData(err!)], [])
                 return
@@ -106,6 +114,8 @@ class DataController: NSObject {
                 return
             }
             
+            print("JSON url is: \(newUrl.absoluteString)")
+            
             var jsonDict: [String: Any]
             do {
                 guard let json = try JSONSerialization.jsonObject(with: unwrappedData) as? [String: Any] else {
@@ -113,11 +123,11 @@ class DataController: NSObject {
                     return
                 }
                 jsonDict = json
-//                print("JSON dictionary is: \(jsonDict)")
+//                print("Json dict for \(newUrl.absoluteString) is:\n\(jsonDict)")
             }
             catch {
-                completion(false, [.unableToSerializeJSON], [])
-                return
+                    completion(false, [.unableToSerializeJSON], [])
+                    return
             }
             self.persistentContainer.performBackgroundTask({ (context) in
                 
@@ -150,7 +160,7 @@ class DataController: NSObject {
                 var errors = dataLoadingErrors.compactMap({ $0 }).joined().map({ $0 }) as [DataLoadingError]
                 
                 // This should be set regardless of success or failure
-                UserDefaults.standard.set(url, forKey: "loadedDataURL")
+                UserDefaults.standard.set(newUrl, forKey: "loadedDataURL")
                 
                 guard let generalDict = general as? [String: Any], let notificationsURLString = generalDict["notifications_url"] as? String else {
                     self.trySave(onContext: context, currentErrors: errors) { (success, errorArray) in
