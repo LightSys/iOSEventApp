@@ -25,6 +25,7 @@ class SettingsViewController: UIViewController {
     private var chosenRefreshRateMinutes: Int?
     private var defaultOptionText: String?
     private let animationTime: TimeInterval = 0.2
+    public var loadDevEvents = 0
     
     override func viewDidLoad() {
         activityIndicator = UIActivityIndicatorView(style: .gray)
@@ -108,8 +109,14 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
         case 0:
-            navigationController?.popViewController(animated: true)
+            loadDevEvents = 0
+            navigationController?.pushViewController(QRScannerViewController.init(), animated: true)
         case 1:
+            if loadDevEvents == 1 {
+                loadDevEvents += 1
+            } else {
+                loadDevEvents = 0
+            }
             activityIndicator.startAnimating()
             let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
             loader.reloadAllData { (success, errors, newNotifications) in
@@ -138,17 +145,174 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
                 }
             }
         case 2:
+            loadDevEvents = 0
             pickerContainerView.isHidden = false
             UIView.animate(withDuration: animationTime) {
                 self.pickerContainerView.alpha = 1
             }
         case 3:
-            [self .performSegue(withIdentifier: "ChangeEventsSegue", sender: self)]
+            if loadDevEvents == 0 || loadDevEvents == 2{
+                loadDevEvents += 1
+            } else if loadDevEvents == 3 {
+                loadTestData()
+                loadDevEvents = 0
+                // Deselect cell and don't load change events page
+                tableView.deselectRow(at: indexPath, animated: true)
+                return
+            } else {
+                loadDevEvents = 0
+            }
+            self .performSegue(withIdentifier: "ChangeEventsSegue", sender: self)
         default:
+            loadDevEvents = 0
             print("default case") // Shouldn't happen if only 4 cells
         }
         // Cells are selectable but shouldn't stay selected
         tableView.deselectRow(at: indexPath, animated: true)
+    }
+    
+    /**
+     loadTestData will load example data for testing purposes.
+     This function will only be called if the user taps the load/delete events cell, followed by refresh, then load/delete twice more
+     Uses code from deleteData() and loadData() from ChangeEventsViewController.swift
+    */
+    func loadTestData() {
+        let alertController = UIAlertController(title: "Load Testing Data?", message: "Do you want to load testing data used by developers?", preferredStyle: .alert)
+        let okAction = UIAlertAction(title: "Load", style: UIAlertAction.Style.default) {
+            UIAlertAction in
+            self.loadData()
+            self.reload()
+        }
+        let cancelAction = UIAlertAction(title: "Cancel", style: UIAlertAction.Style.cancel) {
+            UIAlertAction in
+            return
+        }
+        alertController.addAction(okAction)
+        alertController.addAction(cancelAction)
+        self.present(alertController, animated: true, completion: nil)
+    }
+    
+    func loadData() {
+        
+        // Delete current info
+        UserDefaults.standard.set(nil, forKey: "currentEvent")
+        
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.performBackgroundTask { (context) in
+            
+            // The user won't want notifications from a different event... clear everything except chosen refresh rate
+            UserDefaults.standard.removeObject(forKey: "defaultRefreshRateMinutes")
+            UserDefaults.standard.removeObject(forKey: "loadedDataURL")
+            UserDefaults.standard.removeObject(forKey: "loadedNotificationsURL")
+            UserDefaults.standard.removeObject(forKey: "notificationsLastUpdatedAt")
+            UserDefaults.standard.removeObject(forKey: "notificationLoadedInBackground")
+            UserDefaults.standard.removeObject(forKey: "refreshedDataInBackground")
+            
+            DispatchQueue.main.async {
+                let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+                loader.deleteAllObjects(onContext: context)
+                // Refresh sidebar
+            }
+        }
+        
+        // https://jsonblob.com hosts json data free. Dev Testing data last updated 7/31/19
+        let urlString = "https://jsonblob.com/api/blob/7d5df36e-a4f6-11e9-8df4-937db7cf2e4c"
+        
+        // Load information from dev event
+        (UIApplication.shared.delegate as! AppDelegate).persistentContainer.performBackgroundTask { (context) in
+            DispatchQueue.main.async {
+                
+                let url: URL = URL(string: urlString)!
+                
+                
+                
+                let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+                loader.loadDataFromURL(url, completion: { (success, errors, _) in
+                    DispatchQueue.main.async {
+                        self.activityIndicator.stopAnimating()
+                        
+                        if success == false {
+                            let alertController = UIAlertController(title: "Failed to load data", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+                                // completion(success)
+                            })
+                            alertController.addAction(okAction)
+                            self.present(alertController, animated: true, completion: nil)
+                        }
+                        else if errors?.count ?? 0 > 0 {
+                            let alertController = UIAlertController(title: "Data loaded with some errors", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "OK", style: .default, handler: { (_) in
+                                // completion(success)
+                            })
+                            alertController.addAction(okAction)
+                            self.present(alertController, animated: true, completion: nil)
+                        }
+                        else {
+                            // completion(success)
+                        }
+                    }
+                })
+                
+                UserDefaults.standard.set("Dev Testing", forKey: "currentEvent")
+                UserDefaults.standard.set(url, forKey: "loadedDataURL")
+                UserDefaults.standard.set(url, forKey: "loadedNotificationsURL")
+                UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
+                
+                if var savedURLs = UserDefaults.standard.dictionary(forKey: "savedURLs") {
+                    savedURLs["Dev Testing"] = urlString
+                    UserDefaults.standard.set(savedURLs, forKey: "savedURLs")
+                } else {
+                    UserDefaults.standard.set(["Dev Testing": urlString], forKey: "savedURLs")
+                }
+                
+                
+                loader.reloadNotifications { (success, errors, refresh, newNotification) in
+                    DispatchQueue.main.async {
+                        guard success == true else {
+                            let alertController = UIAlertController(title: "Data refresh failed", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+                            let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                            alertController.addAction(okAction)
+                            self.present(alertController, animated: true, completion: nil)
+                            return
+                        }
+                    }
+                }
+            }
+            
+        }
+        
+        UserDefaults.standard.set(Date(), forKey: "notificationsLastUpdatedAt")
+        
+        // rootController sends to welcome page, navigationController sends to QR scanning, mainContainer sends to blankish notification page, notifications sends to blank notification page, sidebarController sends to broken sidebar page
+        UIApplication.shared.keyWindow?.rootViewController = self.storyboard!.instantiateViewController(withIdentifier: "rootController")
+    }
+    
+    func reload() {
+        let loader = DataController(newPersistentContainer: (UIApplication.shared.delegate as! AppDelegate).persistentContainer)
+        loader.reloadAllData { (success, errors, newNotifications) in
+            DataController.startRefreshTimer() // The rate or end date may have changed. (if the rate hasn't changed, the timer will be left alone)
+            DispatchQueue.main.async {
+                self.activityIndicator.stopAnimating()
+                if success == false {
+                    let alertController = UIAlertController(title: "Failed to refresh data", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+                else if errors?.count ?? 0 > 0 {
+                    let alertController = UIAlertController(title: "Data refreshed with some errors", message: DataController.messageForErrors(errors), preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+                else {
+                    let alertController = UIAlertController(title: "Data refreshed", message: nil, preferredStyle: .alert)
+                    let okAction = UIAlertAction(title: "OK", style: .default, handler: nil)
+                    alertController.addAction(okAction)
+                    self.present(alertController, animated: true, completion: nil)
+                }
+                UserNotificationController.sendNotifications(newNotifications) // may be zero notifications
+            }
+        }
     }
 }
 
