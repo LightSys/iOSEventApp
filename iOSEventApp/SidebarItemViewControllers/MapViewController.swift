@@ -6,4 +6,11 @@
 //  Copyright © 2020 LightSys. All rights reserved.
 //
 
-import Foundation
+import UIKit
+
+/*Displays Map of Events */
+class MapViewController: UIViewController {
+    override func viewDidLoad() {
+        super.viewDidLoad()
+    }
+}
