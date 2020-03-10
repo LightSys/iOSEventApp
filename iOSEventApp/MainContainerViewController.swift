@@ -200,6 +200,8 @@ class MainContainerViewController: UIViewController {
             navigationView.title = "Housing"
         } else if identifier == "prayerPartners" {
             navigationView.title = "Prayer Partners"
+        } else if identifier == "map" {
+            navigationView.title = "Map"
         } else if identifier == "about" {
             navigationView.title = "About"
         } else if identifier == "settings" {
