@@ -142,6 +142,9 @@ class SidebarTableViewController: UITableViewController {
                 else if variableSidebarItems[indexPath.row].category == "PrayerPartners" {
                     menuDelegate?.switchTo(vcName: "prayerPartners", entityNameForData: "PrayerPartnerGroup", informationPageName: nil)
                 }
+                else if variableSidebarItems[indexPath.row].category == "Map" {
+                    menuDelegate?.switchTo(vcName: "map", entityNameForData: "MapOfEvents", informationPageName: nil)
+                }
                 else {
                     menuDelegate?.switchTo(vcName: "informationPage", entityNameForData: "InformationPage", informationPageName: variableSidebarItems[indexPath.row].nav)
                 }
