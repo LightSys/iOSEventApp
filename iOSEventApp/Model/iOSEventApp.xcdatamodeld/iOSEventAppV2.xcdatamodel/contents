@@ -1,79 +1,79 @@
 <?xml version="1.0" encoding="UTF-8" standalone="yes"?>
-<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="14490.99" systemVersion="18F132" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
+<model type="com.apple.IDECoreDataModeler.DataModel" documentVersion="1.0" lastSavedToolsVersion="15702" systemVersion="18G3020" minimumToolsVersion="Automatic" sourceLanguage="Swift" userDefinedModelVersionIdentifier="">
     <entity name="Contact" representedClassName="Contact" syncable="YES" codeGenerationType="class">
-        <attribute name="address" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="phone" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="address" optional="YES" attributeType="String"/>
+        <attribute name="name" optional="YES" attributeType="String"/>
+        <attribute name="phone" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ContactPageSection" representedClassName="ContactPageSection" syncable="YES" codeGenerationType="class">
-        <attribute name="content" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="header" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="id" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="key" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="content" optional="YES" attributeType="String"/>
+        <attribute name="header" optional="YES" attributeType="String"/>
+        <attribute name="id" optional="YES" attributeType="String"/>
+        <attribute name="key" optional="YES" attributeType="String"/>
     </entity>
     <entity name="General" representedClassName="General" syncable="YES" codeGenerationType="class">
-        <attribute name="custom_time_zone" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="event_name" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="logo" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES" syncable="YES"/>
-        <attribute name="notifications_url" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="refresh" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="refresh_expire" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="refresh_rate" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="remote_viewing" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="time_zone" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="version_num" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="welcome_message" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="year" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="custom_time_zone" optional="YES" attributeType="String"/>
+        <attribute name="event_name" optional="YES" attributeType="String"/>
+        <attribute name="logo" optional="YES" attributeType="Binary" allowsExternalBinaryDataStorage="YES"/>
+        <attribute name="notifications_url" optional="YES" attributeType="String"/>
+        <attribute name="refresh" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="refresh_expire" optional="YES" attributeType="String"/>
+        <attribute name="refresh_rate" optional="YES" attributeType="String"/>
+        <attribute name="remote_viewing" optional="YES" attributeType="String"/>
+        <attribute name="time_zone" optional="YES" attributeType="String"/>
+        <attribute name="version_num" optional="YES" attributeType="String"/>
+        <attribute name="welcome_message" optional="YES" attributeType="String"/>
+        <attribute name="year" optional="YES" attributeType="String"/>
     </entity>
     <entity name="HousingUnit" representedClassName="HousingUnit" syncable="YES" codeGenerationType="class">
-        <attribute name="driver" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="hostName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="students" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="driver" optional="YES" attributeType="String"/>
+        <attribute name="hostName" optional="YES" attributeType="String"/>
+        <attribute name="students" optional="YES" attributeType="String"/>
     </entity>
     <entity name="InformationPage" representedClassName="InformationPage" syncable="YES" codeGenerationType="class">
-        <attribute name="pageName" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="infoNav" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SidebarAppearance" inverseName="infoPage" inverseEntity="SidebarAppearance" syncable="YES"/>
-        <relationship name="infoSections" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="InformationPageSection" inverseName="infoPage" inverseEntity="InformationPageSection" syncable="YES"/>
+        <attribute name="pageName" optional="YES" attributeType="String"/>
+        <relationship name="infoNav" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="SidebarAppearance" inverseName="infoPage" inverseEntity="SidebarAppearance"/>
+        <relationship name="infoSections" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="InformationPageSection" inverseName="infoPage" inverseEntity="InformationPageSection"/>
     </entity>
     <entity name="InformationPageSection" representedClassName="InformationPageSection" syncable="YES" codeGenerationType="class">
-        <attribute name="information" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="infoPage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="InformationPage" inverseName="infoSections" inverseEntity="InformationPage" syncable="YES"/>
+        <attribute name="information" optional="YES" attributeType="String"/>
+        <attribute name="order" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
+        <relationship name="infoPage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="InformationPage" inverseName="infoSections" inverseEntity="InformationPage"/>
     </entity>
     <entity name="Notification" representedClassName="Notification" syncable="YES" codeGenerationType="class">
-        <attribute name="body" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="notificationNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="refresh" optional="YES" attributeType="Boolean" usesScalarValueType="YES" syncable="YES"/>
-        <attribute name="title" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="body" optional="YES" attributeType="String"/>
+        <attribute name="date" optional="YES" attributeType="String"/>
+        <attribute name="notificationNumber" optional="YES" attributeType="Integer 16" defaultValueString="0" usesScalarValueType="YES"/>
+        <attribute name="refresh" optional="YES" attributeType="Boolean" usesScalarValueType="YES"/>
+        <attribute name="title" optional="YES" attributeType="String"/>
     </entity>
     <entity name="PrayerPartnerGroup" representedClassName="PrayerPartnerGroup" syncable="YES" codeGenerationType="class">
-        <attribute name="students" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="students" optional="YES" attributeType="String"/>
     </entity>
     <entity name="ScheduleDay" representedClassName="ScheduleDay" syncable="YES" codeGenerationType="class">
-        <attribute name="date" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ScheduleItem" inverseName="day" inverseEntity="ScheduleItem" syncable="YES"/>
+        <attribute name="date" optional="YES" attributeType="String"/>
+        <relationship name="items" optional="YES" toMany="YES" deletionRule="Nullify" destinationEntity="ScheduleItem" inverseName="day" inverseEntity="ScheduleItem"/>
     </entity>
     <entity name="ScheduleItem" representedClassName="ScheduleItem" syncable="YES" codeGenerationType="class">
-        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="itemDescription" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="length" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="location" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="startTime" optional="YES" attributeType="String" syncable="YES"/>
-        <relationship name="day" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduleDay" inverseName="items" inverseEntity="ScheduleDay" syncable="YES"/>
+        <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="itemDescription" optional="YES" attributeType="String"/>
+        <attribute name="length" optional="YES" attributeType="String"/>
+        <attribute name="location" optional="YES" attributeType="String"/>
+        <attribute name="startTime" optional="YES" attributeType="String"/>
+        <relationship name="day" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="ScheduleDay" inverseName="items" inverseEntity="ScheduleDay"/>
     </entity>
     <entity name="SidebarAppearance" representedClassName="SidebarAppearance" syncable="YES" codeGenerationType="class">
-        <attribute name="category" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="icon" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="nav" attributeType="String" syncable="YES"/>
-        <attribute name="optionalIdentifier" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="order" attributeType="String" syncable="YES"/>
-        <relationship name="infoPage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="InformationPage" inverseName="infoNav" inverseEntity="InformationPage" syncable="YES"/>
+        <attribute name="category" optional="YES" attributeType="String"/>
+        <attribute name="icon" optional="YES" attributeType="String"/>
+        <attribute name="nav" attributeType="String"/>
+        <attribute name="optionalIdentifier" optional="YES" attributeType="String"/>
+        <attribute name="order" attributeType="String"/>
+        <relationship name="infoPage" optional="YES" maxCount="1" deletionRule="Nullify" destinationEntity="InformationPage" inverseName="infoNav" inverseEntity="InformationPage"/>
     </entity>
     <entity name="Theme" representedClassName="Theme" syncable="YES" codeGenerationType="class">
-        <attribute name="themeName" optional="YES" attributeType="String" syncable="YES"/>
-        <attribute name="themeValue" optional="YES" attributeType="String" syncable="YES"/>
+        <attribute name="themeName" optional="YES" attributeType="String"/>
+        <attribute name="themeValue" optional="YES" attributeType="String"/>
     </entity>
     <elements>
         <element name="Contact" positionX="27" positionY="126" width="128" height="90"/>

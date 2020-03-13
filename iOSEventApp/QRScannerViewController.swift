@@ -5,9 +5,7 @@
 //  Created by Nathaniel Brown on 3/5/18.
 //  Copyright © 2018 LightSys. All rights reserved.
 //
-
 // The majority of this file (whatever enables it to scan QR codes) was downloaded from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code
-
 import UIKit
 import AVFoundation
 
@@ -107,13 +105,24 @@ AVCaptureMetadataOutputObjectsDelegate {
         super.viewWillAppear(animated)
         
         if captureSession.inputs.count == 0 {
-            setupSession()
+            //setupSession()
         }
         
-        // If they arrive on the scanner, they have come back from the main container – and need to (re)scan.
+        // If they arrive on the scanner, they have come back from the main container – and need to (re)scan.
         if (captureSession.isRunning == false) {
-            captureSession.startRunning()
+            //captureSession.startRunning()
         }
+    }
+    
+    override func viewDidAppear(_ animated: Bool) {
+        found(code: "https://lan.lightsys.org/events/get.php?id=2a63d094-5987-11ea-95bd-5254004a588e", completion: { (success) in
+            if success == true {
+                self.performSegue(withIdentifier: "PresentMainContainer", sender: nil)
+            }
+            else {
+                self.captureSession.startRunning()
+            }
+        })
     }
     
     // When the app is backgrounded, the capture session is automatically paused, then resumed when foregrounded.
@@ -122,12 +131,12 @@ AVCaptureMetadataOutputObjectsDelegate {
         super.viewWillDisappear(animated)
         
         if (captureSession.isRunning == true) {
-            captureSession.stopRunning()
+           // captureSession.stopRunning()
         }
     }
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        captureSession.stopRunning()
+        //captureSession.stopRunning()
         
         if let metadataObject = metadataObjects.first {
             guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
@@ -154,7 +163,7 @@ AVCaptureMetadataOutputObjectsDelegate {
     ///   - completion: Performed on the main thread
     func found(code: String, completion: @escaping ((_ success: Bool) -> Void)) {
         if let url = URL(string: code) {
-            activityIndicator.startAnimating()
+            //activityIndicator.startAnimating()
             (UIApplication.shared.delegate as! AppDelegate).persistentContainer.performBackgroundTask { (context) in
                 
                 // The user won't want notifications from a different event... clear everything except chosen refresh rate
@@ -177,7 +186,7 @@ AVCaptureMetadataOutputObjectsDelegate {
                 
                 self.loader.loadDataFromURL(url, completion: { (success, errors, _) in
                     DispatchQueue.main.async {
-                        self.activityIndicator.stopAnimating()
+                        //self.activityIndicator.stopAnimating()
                         
                         if success == false {
                             let alertController = UIAlertController(title: "Failed to load data", message: DataController.messageForErrors(errors), preferredStyle: .alert)

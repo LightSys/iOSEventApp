@@ -61,7 +61,7 @@ class SidebarTableViewController: UITableViewController {
         let loader = DataController(newPersistentContainer: container)
         themes = loader.fetchAllObjects(onContext: container.viewContext, forName: "Theme") as? [Theme]
         let context = container.viewContext
-        
+                
         let sidebarItems = (loader.fetchAllObjects(onContext: context, forName: "SidebarAppearance")
             as! [SidebarAppearance]).sorted(by: { (item1, item2) -> Bool in
                 return item1.order! < item2.order!
@@ -120,7 +120,7 @@ class SidebarTableViewController: UITableViewController {
             return 3 // Welcome, About, Settings
         }
         // Welcome not shown
-        return variableSidebarItems.count + 2 // About and Settings are constant
+        return variableSidebarItems.count + 3 // About, Settings, and Map are constant
     }
     
     override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
@@ -151,9 +151,12 @@ class SidebarTableViewController: UITableViewController {
         case variableSidebarItems.count, 1:
             // Case one is covered earlier if data is loaded. By default switch statements don't fall through in swift.
             menuDelegate?.switchTo(vcName: "about", entityNameForData: nil, informationPageName: nil)
-        default:
-            // Settings is always at index 2 or greater
+        case variableSidebarItems.count+1, 2:
             menuDelegate?.switchTo(vcName: "settings", entityNameForData: nil, informationPageName: nil)
+        default:
+            // Map is always at index 3 or greater
+            menuDelegate?.switchTo(vcName: "map", entityNameForData: nil, informationPageName: nil)
+
         }
         tableView.deselectRow(at: indexPath, animated: true)
     }
@@ -177,10 +180,14 @@ class SidebarTableViewController: UITableViewController {
             cell.sideImageView.image = UIImage(named: "ic_info")
             cell.label.text = "About"
         }
-        else {
-            // Settings is last
+        else if row == variableSidebarItems.count + 1 || row == 2 {
+            // Settings
             cell.sideImageView.image = UIImage(named: "settingsIcon")
             cell.label.text = "Settings"
+        }
+        else {
+            // Map (if data loaded)
+            cell.label.text = "Map"
         }
         // set cell color to light theme
         cell.contentView.backgroundColor = UIColor(cgColor: getThemeColors()[0])
