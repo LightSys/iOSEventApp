@@ -115,7 +115,7 @@ AVCaptureMetadataOutputObjectsDelegate {
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        found(code: "https://lan.lightsys.org/events/get.php?id=2a63d094-5987-11ea-95bd-5254004a588e", completion: { (success) in
+        found(code: "http://10.5.128.95/events/get.php?id=d6e3f4f6-a167-11ec-9249-e14cd75521a6", completion: { (success) in
             if success == true {
                 self.performSegue(withIdentifier: "PresentMainContainer", sender: nil)
             }
@@ -209,6 +209,47 @@ AVCaptureMetadataOutputObjectsDelegate {
                         }
                     }
                 })
+                
+                //Send a post to the server
+                let serverURL = code.components(separatedBy: "get.php").first
+                let eventID = code.components(separatedBy: "id=").last
+                let sendURL = serverURL! + "store-token.php"
+                
+                // Prepare URL
+                let myURL = URL(string: sendURL)!
+                var request = URLRequest(url: myURL)
+                request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+                request.httpMethod = "POST"
+                
+                // HTTP Request Parameters which will be sent in HTTP Request Body
+                let deviceToken = UserDefaults.standard
+                let parameters: [String: Any] = [
+                    "deviceToken": deviceToken.string(forKey: "userToken")!,
+                    "eventID": eventID!
+                ]
+                
+                // Set HTTP Request Body
+                request.httpBody = parameters.percentEncoded()
+                
+                // Perform HTTP Request
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    guard let data = data,
+                        let response = response as? HTTPURLResponse,
+                        error == nil else {                                              // check for fundamental networking error
+                        print("error", error ?? "Unknown error")
+                        return
+                    }
+                    guard (200 ... 299) ~= response.statusCode else {                    // check for http errors
+                        print("statusCode should be 2xx, but is \(response.statusCode)")
+                        print("response = \(response)")
+                        return
+                    }
+
+                    let responseString = String(data: data, encoding: .utf8)
+                    print("responseString = \(responseString)")
+                }
+                
+                task.resume()
             }
         }
         else {
@@ -227,4 +268,27 @@ AVCaptureMetadataOutputObjectsDelegate {
             mainContainer.delegate = delegate
         }
     }
+}
+
+extension Dictionary {
+    func percentEncoded() -> Data? {
+        return map { key, value in
+            let escapedKey = "\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            let escapedValue = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            return escapedKey + "=" + escapedValue
+        }
+        .joined(separator: "&")
+        .data(using: .utf8)
+    }
+}
+
+extension CharacterSet {
+    static let urlQueryValueAllowed: CharacterSet = {
+        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        let subDelimitersToEncode = "!$&'()*+,;="
+
+        var allowed = CharacterSet.urlQueryAllowed
+        allowed.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+        return allowed
+    }()
 }

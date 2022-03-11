@@ -8,13 +8,17 @@
 
 import UIKit
 import CoreData
+import UserNotifications
 
 @UIApplicationMain
-class AppDelegate: UIResponder, UIApplicationDelegate {
+class AppDelegate: UIResponder, UIApplicationDelegate, UNUserNotificationCenterDelegate {
     
     var window: UIWindow?
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
+        
+        //Ask the user to register for push notifications
+        registerForPushNotifications()
         
         // Can this be moved to after a qr code is scanned?
         UserNotificationController.sharedInstance.requestPermissions()
@@ -81,6 +85,45 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         }
     }
     
+    /*CODE TO REGISTER WITH APNS*/
+    //Authorize notifications with user.
+    func registerForPushNotifications() {
+      UNUserNotificationCenter.current()
+        .requestAuthorization(
+          options: [.alert, .sound, .badge]) { [weak self] granted, _ in
+          print("Permission granted: \(granted)")
+          guard granted else { return }
+          self?.getNotificationSettings()
+        }
+    }
+    
+    func getNotificationSettings() {
+      UNUserNotificationCenter.current().getNotificationSettings { settings in
+        print("Notification settings: \(settings)")
+        guard settings.authorizationStatus == .authorized else { return }
+        DispatchQueue.main.async {
+          UIApplication.shared.registerForRemoteNotifications()
+        }
+      }
+    }
+    
+    func application(
+      _ application: UIApplication,
+      didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data
+    ) {
+      let tokenParts = deviceToken.map { data in String(format: "%02.2hhx", data) }
+      let token = tokenParts.joined()
+      print("DEVICE TOKEN: \(token)")
+        let deviceToken = UserDefaults.standard
+        deviceToken.set(token, forKey: "userToken") //Store the Device Token
+    }
+    
+    func application(
+      _ application: UIApplication,
+      didFailToRegisterForRemoteNotificationsWithError error: Error
+    ) {
+      print("Failed to register: \(error)")
+    }
     // MARK: - Core Data stack
     
     lazy var persistentContainer: NSPersistentContainer = {
