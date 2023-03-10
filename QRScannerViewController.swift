@@ -108,9 +108,8 @@ AVCaptureMetadataOutputObjectsDelegate {
         if captureSession.inputs.count == 0 {
             setupSession() //needed for camera permissions
         }
-        //self.captureSession.startRunning()
         // If they arrive on the scanner, they have come back from the main container – and need to (re)scan.
-        if captureSession?.isRunning == false {
+        if captureSession.isRunning == false {
             captureSession.startRunning() //needed to run the camera
         }
     }
@@ -146,7 +145,7 @@ AVCaptureMetadataOutputObjectsDelegate {
             AudioServicesPlaySystemSound(SystemSoundID(kSystemSoundID_Vibrate))
             found(code: stringValue, completion: { (success) in
                 if success == true {
-                    self.performSegue(withIdentifier: "PresentMainContainer", sender: nil)
+                    self.performSegue(withIdentifier: "PresentMainContainer", sender: nil) //program crashes here
                 }
                 else {
                     self.captureSession.startRunning()

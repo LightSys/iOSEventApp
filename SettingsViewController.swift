@@ -83,8 +83,8 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
         
         var labelText = ""
         switch indexPath.row {
-        case 0:
-            labelText = "Scan new QR code"
+        /*case 0:
+            labelText = "Scan new QR code"*/
         case 1:
             labelText = "Refresh event data now"
         case 2:
@@ -108,9 +108,10 @@ extension SettingsViewController: UITableViewDataSource, UITableViewDelegate {
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         switch indexPath.row {
-        case 0:
+        /*case 0:
             loadDevEvents = 0
-            navigationController?.pushViewController(QRScannerViewController.init(), animated: true)
+            navigationController?.pushViewController(QRScannerViewController.init(), animated: true)*/
+            
         case 1:
             if loadDevEvents == 1 {
                 loadDevEvents += 1
