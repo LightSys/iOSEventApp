@@ -1,13 +1,10 @@
-//
 //  QRScannerViewController.swift
 //  iOSEventApp
 //
 //  Created by Nathaniel Brown on 3/5/18.
 //  Copyright © 2018 LightSys. All rights reserved.
 //
-
 // The majority of this file (whatever enables it to scan QR codes) was downloaded from https://www.hackingwithswift.com/example-code/media/how-to-scan-a-qr-code
-
 import UIKit
 import AVFoundation
 
@@ -18,7 +15,7 @@ import AVFoundation
  QR code being used is in settings. We downloaded the QR code reader.
  */
 
-// TODO: Increase the tezt size of the button text, on the ipad it's small and will not fit apple's standards
+// TODO: Increase the text size of the button text, on the ipad it's small and will not fit apple's standards
 class QRScannerViewController: UIViewController,
 AVCaptureMetadataOutputObjectsDelegate {
     
@@ -30,12 +27,14 @@ AVCaptureMetadataOutputObjectsDelegate {
     var captureSession: AVCaptureSession!
     var previewLayer: AVCaptureVideoPreviewLayer!
     
+    //new variables
+    var video = AVCaptureVideoPreviewLayer()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
         view.backgroundColor = UIColor.black
         captureSession = AVCaptureSession()
-        
     }
     
     func failed() {
@@ -107,24 +106,24 @@ AVCaptureMetadataOutputObjectsDelegate {
         super.viewWillAppear(animated)
         
         if captureSession.inputs.count == 0 {
-            //setupSession()
+            setupSession() //needed for camera permissions
         }
-        
-        // If they arrive on the scanner, they have come back from the main container – and need to (re)scan.
-        if (captureSession.isRunning == false) {
-            //captureSession.startRunning()
+        //self.captureSession.startRunning()
+        // If they arrive on the scanner, they have come back from the main container – and need to (re)scan.
+        if captureSession?.isRunning == false {
+            captureSession.startRunning() //needed to run the camera
         }
     }
     
     override func viewDidAppear(_ animated: Bool) {
-        found(code: "https://lan.lightsys.org/events/get.php?id=2a63d094-5987-11ea-95bd-5254004a588e", completion: { (success) in
+        /* found(code: "https://lan.lightsys.org/events/get.php?id=2a63d094-5987-11ea-95bd-5254004a588e", completion: { (success) in
             if success == true {
                 self.performSegue(withIdentifier: "PresentMainContainer", sender: nil)
             }
             else {
                 self.captureSession.startRunning()
             }
-        })
+        }) */
     }
     
     // When the app is backgrounded, the capture session is automatically paused, then resumed when foregrounded.
@@ -132,13 +131,14 @@ AVCaptureMetadataOutputObjectsDelegate {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         
-        if (captureSession.isRunning == true) {
-           // captureSession.stopRunning()
+        //self.captureSession.stopRunning()
+        if captureSession?.isRunning == true {
+           captureSession.stopRunning() //was commented
         }
     }
     
     func metadataOutput(_ output: AVCaptureMetadataOutput, didOutput metadataObjects: [AVMetadataObject], from connection: AVCaptureConnection) {
-        //captureSession.stopRunning()
+        captureSession.stopRunning() //was commented
         
         if let metadataObject = metadataObjects.first {
             guard let readableObject = metadataObject as? AVMetadataMachineReadableCodeObject else { return }
@@ -154,7 +154,7 @@ AVCaptureMetadataOutputObjectsDelegate {
             })
         }
         else {
-            captureSession.startRunning()
+            self.captureSession.startRunning()
         }
     }
     
@@ -165,7 +165,7 @@ AVCaptureMetadataOutputObjectsDelegate {
     ///   - completion: Performed on the main thread
     func found(code: String, completion: @escaping ((_ success: Bool) -> Void)) {
         if let url = URL(string: code) {
-            //activityIndicator.startAnimating()
+            activityIndicator.startAnimating()
             (UIApplication.shared.delegate as! AppDelegate).persistentContainer.performBackgroundTask { (context) in
                 
                 // The user won't want notifications from a different event... clear everything except chosen refresh rate
@@ -188,7 +188,7 @@ AVCaptureMetadataOutputObjectsDelegate {
                 
                 self.loader.loadDataFromURL(url, completion: { (success, errors, _) in
                     DispatchQueue.main.async {
-                        //self.activityIndicator.stopAnimating()
+                        self.activityIndicator.stopAnimating()
                         
                         if success == false {
                             let alertController = UIAlertController(title: "Failed to load data", message: DataController.messageForErrors(errors), preferredStyle: .alert)
@@ -211,6 +211,45 @@ AVCaptureMetadataOutputObjectsDelegate {
                         }
                     }
                 })
+                //Send a post to the server
+                let eventID = code.components(separatedBy: "id=").last
+                
+                // Prepare URL
+                let myURL = URL(string: code)!
+                var request = URLRequest(url: myURL)
+                request.setValue("application/x-www-form-urlencoded", forHTTPHeaderField: "Content-Type")
+                request.httpMethod = "POST"
+                
+                // HTTP Request Parameters which will be sent in HTTP Request Body
+                let deviceToken = UserDefaults.standard
+                let parameters: [String: Any] = [
+                    "deviceToken": deviceToken.string(forKey: "userToken"),
+                    "eventID": eventID
+                ]
+                
+                // Set HTTP Request Body
+                request.httpBody = parameters.percentEncoded()
+                
+                // Perform HTTP Request
+                let task = URLSession.shared.dataTask(with: request) { data, response, error in
+                    guard let data = data,
+                        let response = response as? HTTPURLResponse,
+                        error == nil else {                                              // check for fundamental networking error
+                        print("error", error ?? "Unknown error")
+                        return
+                    }
+
+                    guard (200 ... 299) ~= response.statusCode else {                    // check for http errors
+                        print("statusCode should be 2xx, but is \(response.statusCode)")
+                        print("response = \(response)")
+                        return
+                    }
+
+                    let responseString = String(data: data, encoding: .utf8)
+                    print("responseString = \(responseString)")
+                }
+                
+                task.resume()
             }
         }
         else {
@@ -229,4 +268,27 @@ AVCaptureMetadataOutputObjectsDelegate {
             mainContainer.delegate = delegate
         }
     }
+}
+
+extension Dictionary {
+    func percentEncoded() -> Data? {
+        return map { key, value in
+            let escapedKey = "\(key)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            let escapedValue = "\(value)".addingPercentEncoding(withAllowedCharacters: .urlQueryValueAllowed) ?? ""
+            return escapedKey + "=" + escapedValue
+        }
+        .joined(separator: "&")
+        .data(using: .utf8)
+    }
+}
+
+extension CharacterSet {
+    static let urlQueryValueAllowed: CharacterSet = {
+        let generalDelimitersToEncode = ":#[]@" // does not include "?" or "/" due to RFC 3986 - Section 3.4
+        let subDelimitersToEncode = "!$&'()*+,;="
+
+        var allowed = CharacterSet.urlQueryAllowed
+        allowed.remove(charactersIn: "\(generalDelimitersToEncode)\(subDelimitersToEncode)")
+        return allowed
+    }()
 }
